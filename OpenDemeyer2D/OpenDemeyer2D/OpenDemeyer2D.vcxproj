@@ -183,6 +183,10 @@ xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) 
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\RenderComponent.cpp" />
+    <ClCompile Include="Components\TextComponent.cpp" />
+    <ClCompile Include="Components\TextureComponent.cpp" />
+    <ClCompile Include="Components\Transform.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="OpenDemeyer2D.cpp" />
     <ClCompile Include="RenderManager.cpp" />
@@ -191,10 +195,12 @@ xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) 
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ComponentBase.h" />
+    <ClInclude Include="Components\RenderComponent.h" />
+    <ClInclude Include="Components\TextComponent.h" />
+    <ClInclude Include="Components\TextureComponent.h" />
     <ClInclude Include="Components\Transform.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameObject.h" />

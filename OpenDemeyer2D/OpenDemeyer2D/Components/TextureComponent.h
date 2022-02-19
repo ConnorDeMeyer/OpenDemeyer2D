@@ -1,19 +1,30 @@
 #pragma once
 #include "../ComponentBase.h"
+#include "../Texture2D.h"
+#include <string>
 
-class ComponentTemplate final : public ComponentBase
+class RenderComponent;
+
+class TextureComponent final : public ComponentBase
 {
 public:
 
-	ComponentTemplate() = default;
-	virtual ~ComponentTemplate() = default;
+	TextureComponent() = default;
+	virtual ~TextureComponent() = default;
 
 public:
 
-	
+	void BeginPlay() override;
+
+	void SetTexture(const std::shared_ptr<Texture2D>& texture);
+
+	void SetTexture(const std::string& filePath);
 
 private:
 
+	std::shared_ptr<Texture2D> m_Texture;
+
+	RenderComponent* m_pRenderComponent;
 
 };
 

@@ -20,7 +20,13 @@ public:
 		{
 			throw std::runtime_error(std::string("Failed to load font: ") + SDL_GetError());
 		}
+		m_Size = size;
+		m_Path = fullPath;
 	}
+
+	unsigned int GetSize() const { return m_Size; }
+
+	const std::string& GetPath() const { return m_Path; }
 
 	~Font()
 	{
@@ -34,4 +40,5 @@ public:
 private:
 	_TTF_Font* m_Font;
 	unsigned int m_Size;
+	std::string m_Path;
 };
