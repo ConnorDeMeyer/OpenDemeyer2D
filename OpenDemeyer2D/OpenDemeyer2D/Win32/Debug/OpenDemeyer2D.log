@@ -1,9 +1,14 @@
-﻿  ComponentBase.cpp
-  GameObject.cpp
-  OpenDemeyer2D.cpp
-  Scene.cpp
-  Transform.cpp
-  Generating Code...
+﻿  SceneManager.cpp
   OpenDemeyer2D.vcxproj -> C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\Win32\Debug\OpenDemeyer2D.exe
   C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2\lib\x86\SDL2.dll
   1 File(s) copied
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_image\lib\x86\libjpeg-9.dll
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_image\lib\x86\libpng16-16.dll
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_image\lib\x86\libtiff-5.dll
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_image\lib\x86\libwebp-7.dll
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_image\lib\x86\SDL2_image.dll
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_image\lib\x86\zlib1.dll
+  6 File(s) copied
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_ttf\lib\x86\libfreetype-6.dll
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_ttf\lib\x86\SDL2_ttf.dll
+  2 File(s) copied

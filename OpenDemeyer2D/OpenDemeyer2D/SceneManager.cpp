@@ -14,7 +14,7 @@ void SceneManager::Render() const
 {
 	for (Scene* pScene : m_Scenes)
 	{
-		delete pScene;
+		pScene->Render();
 	}
 }
 

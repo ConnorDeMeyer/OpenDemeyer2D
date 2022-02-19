@@ -54,9 +54,6 @@ private:
 	std::string m_Name;
 	ODArray<GameObject*> m_SceneTree;
 
-	// TODO not sure what this is
-	static unsigned int m_IdCounter;
-
 	/** References to object that are flagged for deletion.*/
 	ODArray<GameObject*> m_DestroyableObjects;
 };

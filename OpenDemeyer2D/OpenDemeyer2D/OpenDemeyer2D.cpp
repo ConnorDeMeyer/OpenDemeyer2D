@@ -84,7 +84,7 @@ void Engine::Run()
 		{
 			const auto currentTime = high_resolution_clock::now();
 			float deltaTime = duration<float>(currentTime - lastTime).count();
-			deltaTime = std::clamp(deltaTime, m_MinimumFps, m_TargetFps);
+			deltaTime = std::clamp(deltaTime, m_TargetFps, m_MinimumFps);
 
 			input.ProcessInput();
 			sceneManager.Update(deltaTime);

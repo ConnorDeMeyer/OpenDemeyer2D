@@ -36,3 +36,8 @@
 *.opendb
 *.ipch
 *.db-shm
+*.pdb
+*.tlog
+*.lastbuildstate
+*.pdb
+*.idb

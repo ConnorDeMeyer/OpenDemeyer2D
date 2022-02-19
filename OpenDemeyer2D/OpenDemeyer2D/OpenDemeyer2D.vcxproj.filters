@@ -34,9 +34,6 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>EngineFiles</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentBase.cpp">
-      <Filter>EngineFiles</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
