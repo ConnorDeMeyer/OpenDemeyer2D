@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="EngineFiles">
+      <UniqueIdentifier>{122805fc-e592-4380-baf7-ab6fdc9b73ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UtilityFiles">
+      <UniqueIdentifier>{2f6817a0-0aec-4034-8494-47fe34a1368c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineFiles\Singletons">
+      <UniqueIdentifier>{0ab41c82-478e-4fe1-8197-ac966f16e0ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EngineFiles\Components">
+      <UniqueIdentifier>{10cd5c9d-b53c-42bd-80c8-dcd488205630}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>EngineFiles\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>EngineFiles\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderManager.cpp">
+      <Filter>EngineFiles\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>EngineFiles\Singletons</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>EngineFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>EngineFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentBase.cpp">
+      <Filter>EngineFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>EngineFiles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenDemeyer2D.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="OD2pch.h" />
+    <ClInclude Include="ODArray.h">
+      <Filter>UtilityFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>UtilityFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>EngineFiles\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>EngineFiles\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderManager.h">
+      <Filter>EngineFiles\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>EngineFiles\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>UtilityFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>EngineFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>EngineFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentBase.h">
+      <Filter>EngineFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Transform.h">
+      <Filter>EngineFiles\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenDemeyer2D.h" />
+    <ClInclude Include="Font.h">
+      <Filter>UtilityFiles</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

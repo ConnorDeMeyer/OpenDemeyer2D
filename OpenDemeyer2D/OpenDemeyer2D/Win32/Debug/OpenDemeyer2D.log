@@ -1,0 +1,9 @@
+﻿  ComponentBase.cpp
+  GameObject.cpp
+  OpenDemeyer2D.cpp
+  Scene.cpp
+  Transform.cpp
+  Generating Code...
+  OpenDemeyer2D.vcxproj -> C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\Win32\Debug\OpenDemeyer2D.exe
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2\lib\x86\SDL2.dll
+  1 File(s) copied
