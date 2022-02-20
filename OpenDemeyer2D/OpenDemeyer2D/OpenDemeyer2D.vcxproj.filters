@@ -35,10 +35,18 @@
       <Filter>EngineFiles</Filter>
     </ClCompile>
     <ClCompile Include="OpenDemeyer2D.cpp" />
-    <ClCompile Include="Components\Transform.cpp" />
-    <ClCompile Include="Components\RenderComponent.cpp" />
-    <ClCompile Include="Components\TextComponent.cpp" />
-    <ClCompile Include="Components\TextureComponent.cpp" />
+    <ClCompile Include="Components\RenderComponent.cpp">
+      <Filter>EngineFiles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\TextComponent.cpp">
+      <Filter>EngineFiles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\TextureComponent.cpp">
+      <Filter>EngineFiles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Transform.cpp">
+      <Filter>EngineFiles\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OD2pch.h" />
@@ -79,8 +87,20 @@
     <ClInclude Include="Font.h">
       <Filter>UtilityFiles</Filter>
     </ClInclude>
-    <ClInclude Include="Components\RenderComponent.h" />
-    <ClInclude Include="Components\TextComponent.h" />
-    <ClInclude Include="Components\TextureComponent.h" />
+    <ClInclude Include="Components\RenderComponent.h">
+      <Filter>EngineFiles\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\TextComponent.h">
+      <Filter>EngineFiles\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\TextureComponent.h">
+      <Filter>EngineFiles\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Delegate.h">
+      <Filter>UtilityFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorFunctions.h">
+      <Filter>EngineFiles</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

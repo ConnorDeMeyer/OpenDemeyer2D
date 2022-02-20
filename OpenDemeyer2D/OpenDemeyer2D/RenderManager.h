@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <memory>
 
+#include "SDL2_gfxPrimitives.h"
 #include "Texture2D.h"
 #include "Singleton.h"
 #define RENDER RenderManager::GetInstance()

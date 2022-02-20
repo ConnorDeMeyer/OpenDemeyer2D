@@ -85,3 +85,14 @@ void GameObject::RemoveComponent(ComponentBase* pComponent)
 
 	m_Components.SwapRemove(pComponent);
 }
+
+void GameObject::BinaryDataOut(std::ostream&)
+{
+	// Start by sending the information about the components
+	
+}
+
+void GameObject::BinaryDataIn(std::istream&)
+{
+
+}

@@ -1,5 +1,6 @@
 ﻿#include "RenderManager.h"
 #include "SceneManager.h"
+#include "SDL2_gfxPrimitives.h"
 
 #include <stdexcept>
 
@@ -33,6 +34,8 @@ void RenderManager::Render() const
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_Renderer);
 
+	filledCircleRGBA(m_Renderer, 100, 100, 100, 255, 255, 255, 255);
+
 	SCENES.Render();
 
 	SDL_RenderPresent(m_Renderer);
@@ -45,6 +48,7 @@ void RenderManager::Destroy()
 		SDL_DestroyRenderer(m_Renderer);
 		m_Renderer = nullptr;
 	}
+	
 }
 
 void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, float x, float y) const

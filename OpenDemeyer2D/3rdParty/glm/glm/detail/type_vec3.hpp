@@ -42,9 +42,12 @@ namespace glm
 
 			union
 			{
+#pragma warning( push )
+#pragma warning( disable : 4201 )
 				struct{ T x, y, z; };
 				struct{ T r, g, b; };
 				struct{ T s, t, p; };
+#pragma warning( pop )
 
 #				if GLM_SWIZZLE == GLM_SWIZZLE_ENABLED
 					_GLM_SWIZZLE3_2_MEMBERS(T, P, glm::tvec2, x, y, z)

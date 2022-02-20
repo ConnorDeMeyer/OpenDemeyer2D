@@ -3,6 +3,7 @@
 #include "ODArray.h"
 #include <memory>
 #include "ComponentBase.h"
+#include "EditorFunctions.h"
 
 class Scene;
 class Transform;
@@ -10,7 +11,7 @@ class Transform;
 /** This class is a container for components and is responsible for updating, rendering and managing them.
  * It is part of the scene tree and is capable of having child Game objects who will maintain relative location to its parent.
  */
-class GameObject final
+class GameObject final : public IEngingeFunction
 {
 
 	friend class Scene;
@@ -85,6 +86,12 @@ public:
 
 	/** Returns a list of all children*/
 	const ODArray<GameObject*>& GetChildren() const { return m_Children; }
+
+public:
+
+	void BinaryDataOut(std::ostream&) override;
+
+	void BinaryDataIn(std::istream&) override;
 
 private:
 

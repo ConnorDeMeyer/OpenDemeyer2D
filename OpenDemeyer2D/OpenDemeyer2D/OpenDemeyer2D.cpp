@@ -49,6 +49,7 @@ void Engine::Initialize()
 	}
 
 	RENDER.Init(m_Window);
+	SDL_RenderSetLogicalSize(RENDER.GetSDLRenderer(), m_ResolutionWidth, m_ResolutionHeight);
 }
 
 void Engine::LoadGame() const
@@ -84,7 +85,7 @@ void Engine::Run()
 		{
 			const auto currentTime = high_resolution_clock::now();
 			float deltaTime = duration<float>(currentTime - lastTime).count();
-			deltaTime = std::clamp(deltaTime, m_TargetFps, m_MinimumFps);
+			m_DeltaTime = std::clamp(deltaTime, m_TargetFps, m_MinimumFps);
 
 			input.ProcessInput();
 			sceneManager.Update(deltaTime);
@@ -95,4 +96,26 @@ void Engine::Run()
 	}
 
 	Cleanup();
+}
+
+void Engine::SetResolution(int width, int height)
+{
+	SDL_RenderSetLogicalSize(RENDER.GetSDLRenderer(), width, height);
+	m_ResolutionHeight = height;
+	m_ResolutionWidth = width;
+}
+
+void Engine::SetWindowDimentions(int width, int height)
+{
+	SDL_SetWindowSize(m_Window, width, height);
+}
+
+void Engine::GetResolution(int& width, int& height)
+{
+	SDL_RenderGetLogicalSize(RENDER.GetSDLRenderer(), &width, &height);
+}
+
+void Engine::GetWindowDimensions(int& width, int& height)
+{
+	SDL_GetWindowSize(m_Window, &width, &height);
 }

@@ -42,9 +42,12 @@ namespace glm
 
 			union
 			{
+#pragma warning( push )
+#pragma warning( disable : 4201 )
 				struct { T x, y, z, w;};
 				struct { T r, g, b, a; };
 				struct { T s, t, p, q; };
+#pragma warning( pop )
 
 				typename detail::storage<T, sizeof(T) * 4, detail::is_aligned<P>::value>::type data;
 
