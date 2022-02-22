@@ -1,4 +1,4 @@
-﻿#include "OD2pch.h"
+﻿#include "OD2.pch"
 #include "OpenDemeyer2D.h"
 #include "InputManager.h"
 #include "SceneManager.h"
@@ -6,6 +6,8 @@
 #include "ResourceManager.h"
 #include "GameObject.h"
 #include "Scene.h"
+
+#include "CustomComponents/TrashTheCache.h"
 
 #include <chrono>
 #include <thread>
@@ -35,18 +37,25 @@ void Engine::Initialize()
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
 
+	SDL_DisplayMode DM;
+	SDL_GetCurrentDisplayMode(0, &DM);
+	m_ResolutionWidth = DM.w;
+	m_ResolutionHeight = DM.h;
+
 	m_Window = SDL_CreateWindow(
 		"Programming 4 assignment",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		640,
-		480,
-		SDL_WINDOW_OPENGL
+		1280,
+		720,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
 	);
 	if (m_Window == nullptr)
 	{
 		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
 	}
+	
+	SDL_MaximizeWindow(m_Window);
 
 	RENDER.Init(m_Window);
 	SDL_RenderSetLogicalSize(RENDER.GetSDLRenderer(), m_ResolutionWidth, m_ResolutionHeight);
@@ -54,7 +63,11 @@ void Engine::Initialize()
 
 void Engine::LoadGame() const
 {
-	SceneManager::GetInstance().CreateScene("Demo");
+	auto& scene = SceneManager::GetInstance().CreateScene("DemoScene");
+
+	GameObject* go = new GameObject();
+	go->AddComponent<TrashTheCache>();
+	scene.Add(go);
 }
 
 void Engine::Cleanup()
@@ -85,12 +98,15 @@ void Engine::Run()
 		{
 			const auto currentTime = high_resolution_clock::now();
 			float deltaTime = duration<float>(currentTime - lastTime).count();
-			m_DeltaTime = std::clamp(deltaTime, m_TargetFps, m_MinimumFps);
+			//m_DeltaTime = std::clamp(deltaTime, m_TargetFps, m_MinimumFps);
+			m_DeltaTime = deltaTime;
 
 			input.ProcessInput();
 			sceneManager.Update(deltaTime);
 			renderer.Render();
 
+
+			//std::this_thread::sleep_for(m_TargetFps - (high_resolution_clock::now() - currentTime))
 			lastTime = currentTime;
 		}
 	}
@@ -118,4 +134,14 @@ void Engine::GetResolution(int& width, int& height)
 void Engine::GetWindowDimensions(int& width, int& height)
 {
 	SDL_GetWindowSize(m_Window, &width, &height);
+}
+
+void Engine::RenderStats()
+{
+	ImGui::Begin("Statistics");
+
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::Text("Resolution: %.3i x %.1i", m_ResolutionWidth, m_ResolutionHeight);
+
+	ImGui::End();
 }

@@ -26,9 +26,11 @@ public:
 
 	void BeginPlay() override;
 
-	void SetTexture(std::shared_ptr<Texture2D> texture) { m_Texture = texture; }
+	void SetTexture(std::shared_ptr<Texture2D> texture);
 
 	void SetRenderAlignMode(RenderAlignMode mode) { m_RenderAlignMode = mode; }
+
+	void SetSourceRect(const SDL_Rect& srcRect);
 
 private:
 
@@ -37,6 +39,8 @@ private:
 	Transform* m_pTransform;
 
 	RenderAlignMode m_RenderAlignMode;
+
+	SDL_Rect m_SourceRect;
 
 };
 

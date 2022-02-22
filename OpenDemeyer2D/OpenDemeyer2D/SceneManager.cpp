@@ -1,6 +1,8 @@
-﻿#include "SceneManager.h"
+﻿#include "OD2.pch"
+#include "SceneManager.h"
 
 #include "Scene.h"
+#include "imgui.h"
 
 void SceneManager::Update(float deltaTime)
 {
@@ -15,6 +17,7 @@ void SceneManager::Render() const
 	for (Scene* pScene : m_Scenes)
 	{
 		pScene->Render();
+		
 	}
 }
 
@@ -33,6 +36,22 @@ Scene* SceneManager::GetScene(const std::string& name) const
 	}
 
 	return nullptr;
+}
+
+void SceneManager::RenderImGui()
+{
+	bool isOpen{};
+	ImGui::Begin("SceneGraph", &isOpen);
+
+	if (!isOpen) {
+		
+		for (Scene* pScene : m_Scenes)
+		{
+			pScene->RenderImGui();
+		}
+	}
+
+	ImGui::End();
 }
 
 SceneManager::~SceneManager()

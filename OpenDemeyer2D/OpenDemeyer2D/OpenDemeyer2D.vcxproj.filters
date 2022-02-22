@@ -13,6 +13,9 @@
     <Filter Include="EngineFiles\Components">
       <UniqueIdentifier>{10cd5c9d-b53c-42bd-80c8-dcd488205630}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EngineFiles\CustomComponents">
+      <UniqueIdentifier>{6a508384-99ff-436a-b29a-2719c98b79e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -47,9 +50,11 @@
     <ClCompile Include="Components\Transform.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
+    <ClCompile Include="CustomComponents\TrashTheCache.cpp">
+      <Filter>EngineFiles\CustomComponents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OD2pch.h" />
     <ClInclude Include="ODArray.h">
       <Filter>UtilityFiles</Filter>
     </ClInclude>
@@ -102,5 +107,11 @@
     <ClInclude Include="EditorFunctions.h">
       <Filter>EngineFiles</Filter>
     </ClInclude>
+    <ClInclude Include="CustomComponents\TrashTheCache.h">
+      <Filter>EngineFiles\CustomComponents</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="OD2.pch" />
   </ItemGroup>
 </Project>

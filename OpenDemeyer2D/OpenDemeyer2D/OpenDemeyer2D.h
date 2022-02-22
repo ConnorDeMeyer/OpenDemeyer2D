@@ -31,6 +31,9 @@ public:
 
 	SDL_Window* GetWindow() const { return m_Window; }
 
+	/** Render ImGui stats of the engine*/
+	void RenderStats();
+
 private:
 
 	// Time and frame rate data members

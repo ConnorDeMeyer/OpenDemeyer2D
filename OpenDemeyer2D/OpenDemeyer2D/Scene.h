@@ -41,6 +41,9 @@ public:
 	/** Renders the scene objects in the scene tree.*/
 	void Render() const;
 
+	/** Renders the ImGui of the gameobjects*/
+	void RenderImGui();
+
 	/** Returns the name of this scene.*/
 	const std::string& GetName() { return m_Name; }
 

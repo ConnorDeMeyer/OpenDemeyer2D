@@ -1,13 +1,14 @@
-﻿#include "GameObject.h"
+﻿#include "OD2.pch"
+#include "GameObject.h"
 #include "Scene.h"
 #include "ComponentBase.h"
 #include "Components/Transform.h"
+#include "imgui.h"
 
 GameObject::GameObject()
 	: m_Reference	{ std::shared_ptr<GameObject>(this,[](GameObject*){}) }
-	, m_pTransform	{ new Transform() }
 {
-	AddComponent(m_pTransform);
+	m_pTransform = AddComponent<Transform>();
 }
 
 GameObject::~GameObject()
@@ -32,6 +33,11 @@ void GameObject::Update(float deltaTime)
 	{
 		comp->Update(deltaTime);
 	}
+
+	for (auto obj : m_Children)
+	{
+		obj->Update(deltaTime);
+	}
 }
 
 void GameObject::Render() const
@@ -40,6 +46,11 @@ void GameObject::Render() const
 	{
 		comp->Render();
 	}
+
+	for (auto obj : m_Children)
+	{
+		obj->Render();
+	}
 }
 
 void GameObject::BeginPlay()
@@ -47,6 +58,36 @@ void GameObject::BeginPlay()
 	for (auto comp : m_Components)
 	{
 		comp->BeginPlay();
+	}
+	m_HasBeenInitialized = true;
+
+	for (auto obj : m_Children)
+	{
+		if (!obj->m_HasBeenInitialized)obj->BeginPlay();
+	}
+}
+
+void GameObject::RenderImGui()
+{
+	if (ImGui::TreeNode("Components")) {
+		size_t counter{};
+		for (auto comp : m_Components)
+		{
+			if (ImGui::TreeNode(std::string("Component" + std::to_string(counter)).c_str())) {
+				comp->RenderImGui();
+				ImGui::TreePop();
+			}
+			++counter;
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Children")) {
+		for (auto obj : m_Children)
+		{
+			obj->RenderImGui();
+		}
+		ImGui::TreePop();
 	}
 }
 
@@ -58,14 +99,6 @@ void GameObject::Destroy()
 std::weak_ptr<GameObject> GameObject::GetWeakReference()
 {
 	return m_Reference;
-}
-
-void GameObject::AddComponent(ComponentBase* pComponent)
-{
-	if (pComponent) {
-		m_Components.push_back(pComponent);
-		pComponent->SetParent(this);
-	}
 }
 
 void GameObject::RemoveComponent(ComponentBase* pComponent)
@@ -84,6 +117,35 @@ void GameObject::RemoveComponent(ComponentBase* pComponent)
 	}*/
 
 	m_Components.SwapRemove(pComponent);
+}
+
+void GameObject::AttachGameObject(GameObject* object)
+{
+	if (!object) return;
+
+	// Check the parents of object for a reference to this object.
+	// will not attach if it encounter it to avoid an infinite loop 
+
+	GameObject* parent = object;
+	while (parent)
+	{
+		if (parent == this) return;
+		parent = parent->m_Parent;
+	}
+
+	if (object->m_Parent) object->m_Parent->RemoveChild(object);
+	m_Children.push_back(object);
+	object->m_Parent = this;
+
+	if (m_HasBeenInitialized) object->BeginPlay();
+}
+
+void GameObject::RemoveChild(GameObject* pObject)
+{
+	if (!pObject) return;
+
+	m_Children.SwapRemove(pObject);
+	pObject->m_Parent = nullptr;
 }
 
 void GameObject::BinaryDataOut(std::ostream&)

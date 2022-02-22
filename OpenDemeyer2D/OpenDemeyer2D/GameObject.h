@@ -41,6 +41,9 @@ private:
 	/** Calls the BeginPlay method of the components after all components are initialized.*/
 	void BeginPlay();
 
+	/** Calls the RenderImGui() method on the components*/
+	void RenderImGui();
+
 public:
 
 	/** Will flag the Game Object for deletion at the end of the frame*/
@@ -54,16 +57,12 @@ public:
 	template <typename T>
 	T* GetComponent() const;
 
-	/** Returns all the components that are of type T.
-	* This method is slow, you should not use it in time critical situations.*/
-	template <typename T>
-	std::vector<T*> GetComponents() const;
-
 	/**
 	* Adds a component to the object
 	* Gives the engine the ability to manage the component and makes sure the component gets automatically deleted
 	*/
-	void AddComponent(ComponentBase* pComponent);
+	template<typename  T>
+	T* AddComponent();
 
 	/** Removes the component from the object.
 	* The component will be removed at the end of the frame.*/
@@ -86,6 +85,12 @@ public:
 
 	/** Returns a list of all children*/
 	const ODArray<GameObject*>& GetChildren() const { return m_Children; }
+
+	/** Attach a Game Object to this Game Object*/
+	void AttachGameObject(GameObject* pObject);
+
+	/** Removes the object from the child list*/
+	void RemoveChild(GameObject* pObject);
 
 public:
 
@@ -112,6 +117,8 @@ private:
 	std::shared_ptr<GameObject> m_Reference;
 
 	Transform* m_pTransform{};
+
+	bool m_HasBeenInitialized{};
 };
 
 
@@ -127,13 +134,18 @@ T* GameObject::GetComponent() const
 	return nullptr;
 }
 
-template<typename T>
-std::vector<T*> GameObject::GetComponents() const
+template <typename T>
+T* GameObject::AddComponent()
 {
-	std::vector<T*> components;
-	for (ComponentBase* component : m_Components)
-		if (auto value{ dynamic_cast<T>(component) }) components.push_back(value);
-	return components;
+	if (GetComponent<T>()) {
+		throw std::runtime_error("Component already in gameobject");
+	}
+	else {
+		auto comp = new T();
+		m_Components.push_back(comp);
+		if (m_HasBeenInitialized) comp->BeginPlay();
+		return comp;
+	}
 }
 
 template<typename T>

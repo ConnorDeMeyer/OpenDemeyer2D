@@ -1,3 +1,4 @@
+#include "../OD2.pch"
 #include "TextComponent.h"
 
 #include "../GameObject.h"

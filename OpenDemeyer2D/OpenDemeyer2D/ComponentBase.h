@@ -8,9 +8,11 @@ class ComponentBase
 
 	friend class GameObject;
 
-public:
+protected:
 
 	ComponentBase() = default;
+
+public:
 
 	virtual ~ComponentBase() = default;
 
@@ -26,6 +28,9 @@ private:
 
 	/** Renders the component.*/
 	virtual void Render() const {}
+
+	/** Renders the ImGui in debug mode*/
+	virtual void RenderImGui() {}
 
 	/** gets called after all components are initialized.*/
 	virtual void BeginPlay() {}

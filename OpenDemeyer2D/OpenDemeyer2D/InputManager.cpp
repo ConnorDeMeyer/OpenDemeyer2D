@@ -1,6 +1,8 @@
-﻿#include "OD2pch.h"
+﻿#include "OD2.pch"
 #include "InputManager.h"
 #include "OpenDemeyer2D.h"
+
+#include "backends/imgui_impl_sdl.h"
 
 void InputManager::ProcessInput()
 {
@@ -10,6 +12,9 @@ void InputManager::ProcessInput()
 
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
+
+		ImGui_ImplSDL2_ProcessEvent(&e);
+
 		if (e.type == SDL_QUIT) {
 			ENGINE.Quit();
 		}

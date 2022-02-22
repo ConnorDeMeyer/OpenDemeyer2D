@@ -1,8 +1,14 @@
-﻿#include "RenderManager.h"
+﻿#include "OD2.pch"
+#include "RenderManager.h"
 #include "SceneManager.h"
-#include "SDL2_gfxPrimitives.h"
 
+#include "SDL2_gfxPrimitives.h"
+#include "imgui.h"
+#include "backends/imgui_impl_sdl.h"
+#include "backends/imgui_impl_opengl2.h"
 #include <stdexcept>
+
+#include "OpenDemeyer2D.h"
 
 int GetOpenGLDriverIndex()
 {
@@ -26,6 +32,11 @@ void RenderManager::Init(SDL_Window* window)
 	{
 		throw std::runtime_error(std::string("SDL_CreateRenderer Error: ") + SDL_GetError());
 	}
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui_ImplSDL2_InitForOpenGL(window, SDL_GL_GetCurrentContext());
+	ImGui_ImplOpenGL2_Init();
 }
 
 void RenderManager::Render() const
@@ -33,16 +44,27 @@ void RenderManager::Render() const
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_Renderer);
-
-	filledCircleRGBA(m_Renderer, 100, 100, 100, 255, 255, 255, 255);
-
+	
 	SCENES.Render();
+
+	ImGui_ImplOpenGL2_NewFrame();
+	ImGui_ImplSDL2_NewFrame(m_Window);
+	ImGui::NewFrame();
+	ImGui::ShowDemoWindow();
+	SCENES.RenderImGui();
+	ENGINE.RenderStats();
+	ImGui::Render();
+	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 
 	SDL_RenderPresent(m_Renderer);
 }
 
 void RenderManager::Destroy()
 {
+	ImGui_ImplOpenGL2_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+
 	if (m_Renderer)
 	{
 		SDL_DestroyRenderer(m_Renderer);

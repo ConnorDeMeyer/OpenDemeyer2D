@@ -25,6 +25,9 @@ public:
 	/** Returns the scene corresponding to the given name (or nullptr if no scene found).*/
 	Scene* GetScene(const std::string& name) const;
 
+	/** Renders the ImGui of the scene*/
+	void RenderImGui();
+
 private:
 
 	SceneManager() = default;

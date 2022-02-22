@@ -1,6 +1,8 @@
-﻿#include "Scene.h"
+﻿#include "OD2.pch"
+#include "Scene.h"
 
 #include "GameObject.h"
+#include "imgui.h"
 
 Scene::Scene(const std::string& name)
 	: m_Name{ name }
@@ -9,8 +11,10 @@ Scene::Scene(const std::string& name)
 
 Scene::~Scene()
 {
-	for (GameObject* object : m_SceneTree)
-		delete object;
+	for (size_t i{}; i < m_SceneTree.size(); ++i)
+	{
+		delete m_SceneTree[i];
+	}
 }
 
 void Scene::Add(GameObject* pObject)
@@ -41,6 +45,7 @@ void Scene::Update(float deltaTime)
 
 	for (GameObject* object : m_DestroyableObjects)
 	{
+		m_SceneTree.SwapRemove(object);
 		DestroyObjectImmediately(object);
 	}
 }
@@ -50,6 +55,22 @@ void Scene::Render() const
 	for (GameObject* child : m_SceneTree)
 	{
 		child->Render();
+	}
+}
+
+void Scene::RenderImGui()
+{
+	if (ImGui::TreeNode(m_Name.c_str())) {
+
+		for (GameObject* child : m_SceneTree)
+		{
+			if (ImGui::TreeNode("GameObject")) {
+				child->RenderImGui();
+				ImGui::TreePop();
+			}
+		}
+
+		ImGui::TreePop();
 	}
 }
 
