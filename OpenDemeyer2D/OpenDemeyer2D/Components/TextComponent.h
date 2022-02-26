@@ -27,6 +27,8 @@ public:
 	void SetColor(const SDL_Color& color);
 	void SetSize(unsigned int size);
 
+	const std::string GetComponentName() override { return "TextComponent"; }
+
 private:
 
 	bool m_NeedsUpdate;

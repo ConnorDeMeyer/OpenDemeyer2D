@@ -10,6 +10,7 @@
 
 class Texture2D;
 class Font;
+class RenderTarget;
 
 class ResourceManager final : public Singleton<ResourceManager>
 {
@@ -26,8 +27,12 @@ public:
 	void Init(const std::string& dataPath);
 
 	std::shared_ptr<Texture2D> LoadTexture(const std::string& file);
+	std::shared_ptr<Texture2D> LoadTexture(SDL_Surface* pSurface);
+	std::shared_ptr<Texture2D> LoadTexture(int width, int height);
 
 	std::shared_ptr<Font> LoadFont(const std::string& file, unsigned int size);
+
+	std::shared_ptr<RenderTarget> CreateRenderTexture(int width, int height);
 
 private:
 

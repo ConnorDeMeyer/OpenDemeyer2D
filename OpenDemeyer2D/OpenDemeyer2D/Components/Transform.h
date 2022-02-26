@@ -16,12 +16,14 @@ public:
 
 	void RenderImGui() override;
 
-	const glm::vec2& GetPosition();
+	const std::string GetComponentName() override { return "Transform"; }
+
+	const glm::vec2& GetPosition() const;
 
 	/** Sets the position of the transform and change the position of the children of the parent*/
 	void SetPosition(const glm::vec2& pos);
 
-	const glm::vec2& GetScale();
+	const glm::vec2& GetScale() const;
 
 	/** Sets the scale of the transform and change the scale of the children of the parent*/
 	void SetScale(const glm::vec2& scale);
@@ -45,11 +47,9 @@ public:
 
 	void Rotate(float rotation);
 
-	float GetRotation();
+	float GetRotation() const;
 
 	void ApplyMatrix(const glm::mat3x3& matrix);
-
-	void UpdateValues();
 
 private:
 
@@ -57,7 +57,7 @@ private:
 	glm::vec2 m_Scale{1,1};
 	float m_Rotation{ 0 };
 
-	glm::mat3x3 m_BaseTransformation{
+	glm::mat3x3 m_localTransformation{
 		1,0,0,
 		0,1,0,
 		0,0,1
@@ -69,17 +69,6 @@ private:
 		0,0,1
 	};
 
-	enum class TransformChanges : uint8_t
-	{
-		none = 0b0,
-		position = 0b1,
-		scale = 0b10,
-		rotation = 0b100,
-		all = 0b111
-	};
-
-	uint8_t m_Changes{};
-
 };
 
 glm::vec2 GetPosFromMat(const glm::mat3x3& matrix);
@@ -88,8 +77,10 @@ glm::vec2 GetScaleFromMat(const glm::mat3x3& matrix);
 
 float GetRotationFromMat(const glm::mat3x3& matrix);
 
-glm::mat3x3 TranslationMatrix(glm::vec2 translation);
+glm::mat3x3 TranslationMatrix(const glm::vec2& translation);
 
-glm::mat3x3 ScaleMatrix(glm::vec2 scale);
+glm::mat3x3 ScaleMatrix(const glm::vec2& scale);
 
 glm::mat3x3 RotationMatrix(float rotation);
+
+glm::mat3x3 TransformationMatrix(const glm::vec2& pos, const glm::vec2& scale, float rotation);

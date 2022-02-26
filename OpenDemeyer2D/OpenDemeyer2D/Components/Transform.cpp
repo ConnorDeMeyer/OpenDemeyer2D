@@ -1,4 +1,4 @@
-#include "../OD2.pch"
+#include "../OD2pch.h"
 #include "Transform.h"
 
 #include "../GameObject.h"
@@ -6,7 +6,7 @@
 
 void Transform::BeginPlay()
 {
-	m_Transformation = m_BaseTransformation;
+	m_Transformation = m_localTransformation;
 }
 
 void Transform::RenderImGui()
@@ -36,24 +36,18 @@ void Transform::RenderImGui()
 		SetRotation(rotation);
 }
 
-const glm::vec2& Transform::GetPosition()
+const glm::vec2& Transform::GetPosition() const
 {
-	if (m_Changes == uint8_t(TransformChanges::position)) UpdateValues();
-
 	return m_Position;
 }
 
-const glm::vec2& Transform::GetScale()
+const glm::vec2& Transform::GetScale() const
 {
-	if (m_Changes == uint8_t(TransformChanges::scale)) UpdateValues();
-
 	return m_Scale;
 }
 
-float Transform::GetRotation()
+float Transform::GetRotation() const
 {
-	if (m_Changes == uint8_t(TransformChanges::rotation)) UpdateValues();
-
 	return m_Rotation;
 }
 
@@ -79,8 +73,11 @@ void Transform::SetRotation(float rotation)
 
 void Transform::Move(const glm::vec2& distance)
 {
-	glm::mat3x3 mat = TranslationMatrix(distance);
-	ApplyMatrix(mat);
+	m_Position += distance;
+	m_localTransformation = TransformationMatrix(m_Position, m_Scale, m_Rotation);
+
+	//glm::mat3x3 mat = TranslationMatrix(distance);
+	//ApplyMatrix(mat);
 	/*m_Position += distance;
 	for (GameObject* object : GetParent()->GetChildren())
 		object->GetTransform()->Move(distance);*/
@@ -88,8 +85,11 @@ void Transform::Move(const glm::vec2& distance)
 
 void Transform::Scale(const glm::vec2& scalar)
 {
-	glm::mat3x3 mat = ScaleMatrix(scalar);
-	ApplyMatrix(mat);
+	m_Scale *= scalar;
+	m_localTransformation = TransformationMatrix(m_Position, m_Scale, m_Rotation);
+
+	//glm::mat3x3 mat = ScaleMatrix(scalar);
+	//ApplyMatrix(mat);
 	/*m_Scale *= scalar;
 	for (GameObject* object : GetParent()->GetChildren())
 		object->GetTransform()->Scale(scalar);*/
@@ -97,8 +97,11 @@ void Transform::Scale(const glm::vec2& scalar)
 
 void Transform::Rotate(float rotation)
 {
-	glm::mat3x3 mat = RotationMatrix(rotation);
-	ApplyMatrix(mat);
+	m_Rotation += rotation;
+	m_localTransformation = TransformationMatrix(m_Position, m_Scale, m_Rotation);
+
+	//glm::mat3x3 mat = RotationMatrix(rotation);
+	//ApplyMatrix(mat);
 }
 
 void Transform::Scale(float scale) { Scale({ scale, scale }); }
@@ -109,30 +112,13 @@ void Transform::AddScale(float scale){ AddScale({ scale,scale }); }
 
 void Transform::ApplyMatrix(const glm::mat3x3& matrix)
 {
-	m_Transformation = m_Transformation * m_BaseTransformation;
-
-	m_Changes = uint8_t(TransformChanges::all);
+	m_Transformation = m_Transformation * m_localTransformation;
 
 	for (GameObject* object : GetParent()->GetChildren())
 	{
 		object->GetTransform()->ApplyMatrix(matrix);
 	}
 }
-
-void Transform::UpdateValues()
-{
-	if (m_Changes & 0b1)
-		m_Position = GetPosFromMat(m_Transformation);
-
-	if (m_Changes & 0b10)
-		m_Scale = GetScaleFromMat(m_Transformation);
-
-	if (m_Changes & 0b100)
-		m_Rotation = GetRotationFromMat(m_Transformation);
-
-	m_Changes = 0;
-}
-
 
 glm::vec2 GetPosFromMat(const glm::mat3x3& matrix)
 {
@@ -154,7 +140,7 @@ float GetRotationFromMat(const glm::mat3x3& matrix)
 	return atan2(matrix[1][0], matrix[1][1]);
 }
 
-glm::mat3x3 TranslationMatrix(glm::vec2 translation)
+glm::mat3x3 TranslationMatrix(const glm::vec2& translation)
 {
 	return glm::mat3x3{
 		0,0,translation.x,
@@ -163,7 +149,7 @@ glm::mat3x3 TranslationMatrix(glm::vec2 translation)
 	};
 }
 
-glm::mat3x3 ScaleMatrix(glm::vec2 scale)
+glm::mat3x3 ScaleMatrix(const glm::vec2& scale)
 {
 	return glm::mat3x3{
 		scale.x,0,0,
@@ -179,6 +165,17 @@ glm::mat3x3 RotationMatrix(float rotation)
 	return{
 		cosAngle, -sinAngle, 0,
 		sinAngle, cosAngle,0,
+		0,0,1
+	};
+}
+
+glm::mat3x3 TransformationMatrix(const glm::vec2& pos, const glm::vec2& scale, float rotation)
+{
+	float cosAngle{ cos(rotation) };
+	float sinAngle{ sin(rotation) };
+	return glm::mat3x3{
+		scale.x * cosAngle, -sinAngle * scale.x, pos.x,
+		scale.y * sinAngle, scale.y * cosAngle, pos.y,
 		0,0,1
 	};
 }

@@ -1,4 +1,4 @@
-﻿#include "OD2.pch"
+﻿#include "OD2pch.h"
 #include "GameObject.h"
 #include "Scene.h"
 #include "ComponentBase.h"
@@ -24,7 +24,7 @@ GameObject::~GameObject()
 	}
 
 	// signal scene that it has been destroyed
-	if (m_pScene) m_pScene->RemoveObject(this);
+	//if (m_pScene) m_pScene->RemoveObject(this); //TODO fix this so it doesnt invalidate the for loop when deleting the scene
 }
 
 void GameObject::Update(float deltaTime)
@@ -73,7 +73,7 @@ void GameObject::RenderImGui()
 		size_t counter{};
 		for (auto comp : m_Components)
 		{
-			if (ImGui::TreeNode(std::string("Component" + std::to_string(counter)).c_str())) {
+			if (ImGui::TreeNode(comp->GetComponentName().c_str())) {
 				comp->RenderImGui();
 				ImGui::TreePop();
 			}
@@ -82,7 +82,7 @@ void GameObject::RenderImGui()
 		ImGui::TreePop();
 	}
 
-	if (ImGui::TreeNode("Children")) {
+	if (ImGui::TreeNodeEx("Children", ImGuiTreeNodeFlags_Leaf * m_Children.empty())) {
 		for (auto obj : m_Children)
 		{
 			obj->RenderImGui();

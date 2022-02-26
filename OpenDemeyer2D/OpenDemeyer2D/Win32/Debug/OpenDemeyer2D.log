@@ -1,4 +1,4 @@
-﻿  OpenDemeyer2D.cpp
+﻿  RenderManager.cpp
   OpenDemeyer2D.vcxproj -> C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\Win32\Debug\OpenDemeyer2D.exe
   C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2\lib\x86\SDL2.dll
   1 File(s) copied
@@ -12,7 +12,5 @@
   C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_ttf\lib\x86\libfreetype-6.dll
   C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_ttf\lib\x86\SDL2_ttf.dll
   2 File(s) copied
-  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_gfx\lib\Win32\Debug\SDL2_gfx.dll
-  1 File(s) copied
-  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\DearImGui\lib\Win32\Debug\DearImGui.dll
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\glew-2.1.0\bin\Release\Win32\glew32.dll
   1 File(s) copied

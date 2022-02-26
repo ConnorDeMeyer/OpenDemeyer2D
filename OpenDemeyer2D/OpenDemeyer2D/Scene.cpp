@@ -1,4 +1,4 @@
-﻿#include "OD2.pch"
+﻿#include "OD2pch.h"
 #include "Scene.h"
 
 #include "GameObject.h"
@@ -23,6 +23,7 @@ void Scene::Add(GameObject* pObject)
 
 	m_SceneTree.push_back(pObject);
 	pObject->m_pScene = this;
+	pObject->BeginPlay();
 }
 
 void Scene::DestroyObject(GameObject* pObject)
@@ -62,10 +63,10 @@ void Scene::RenderImGui()
 {
 	if (ImGui::TreeNode(m_Name.c_str())) {
 
-		for (GameObject* child : m_SceneTree)
+		for (size_t i{}; i < m_SceneTree.size(); ++i)
 		{
-			if (ImGui::TreeNode("GameObject")) {
-				child->RenderImGui();
+			if (ImGui::TreeNode(std::string("GameObject" + std::to_string(i)).c_str())) {
+				m_SceneTree[i]->RenderImGui();
 				ImGui::TreePop();
 			}
 		}

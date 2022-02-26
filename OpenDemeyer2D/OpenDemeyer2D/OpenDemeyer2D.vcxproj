@@ -98,22 +98,21 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2_gfx\include;$(SolutionDir)\3rdParty\DearImGui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>OD2.pch</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_gfx\lib\$(Platform)\$(Configuration);$(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>xinput.lib;SDL2_gfx.lib;DearImGui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xinput.lib;glew32.lib;glew32s.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\SDL2_gfx\lib\$(Platform)\$(Configuration)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -126,7 +125,7 @@ xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2_gfx\include;$(SolutionDir)\3rdParty\DearImGui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>OD2.pch</PrecompiledHeaderFile>
     </ClCompile>
@@ -135,15 +134,14 @@ xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_gfx\lib\$(Platform)\$(Configuration);$(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>xinput.lib;SDL2_gfx.lib;DearImGui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xinput.lib;glew32.lib;glew32s.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\SDL2_gfx\lib\$(Platform)\$(Configuration)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -154,22 +152,21 @@ xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2_gfx\include;$(SolutionDir)\3rdParty\DearImGui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>OD2.pch</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_gfx\lib\$(Platform)\$(Configuration);$(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>xinput.lib;SDL2_gfx.lib;DearImGui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xinput.lib;glew32.lib;glew32s.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\SDL2_gfx\lib\$(Platform)\$(Configuration)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -182,7 +179,7 @@ xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\SDL2_gfx\include;$(SolutionDir)\3rdParty\DearImGui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>OD2.pch</PrecompiledHeaderFile>
     </ClCompile>
@@ -191,18 +188,24 @@ xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\SDL2_gfx\lib\$(Platform)\$(Configuration);$(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>xinput.lib;SDL2_gfx.lib;DearImGui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdParty\glew-2.1.0\lib\Release\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xinput.lib;glew32.lib;glew32s.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\SDL2_gfx\lib\$(Platform)\$(Configuration)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.cpp" />
+    <ClCompile Include="..\3rdParty\DearImGui\imgui.cpp" />
+    <ClCompile Include="..\3rdParty\DearImGui\imgui_demo.cpp" />
+    <ClCompile Include="..\3rdParty\DearImGui\imgui_draw.cpp" />
+    <ClCompile Include="..\3rdParty\DearImGui\imgui_tables.cpp" />
+    <ClCompile Include="..\3rdParty\DearImGui\imgui_widgets.cpp" />
     <ClCompile Include="Components\RenderComponent.cpp" />
     <ClCompile Include="Components\TextComponent.cpp" />
     <ClCompile Include="Components\TextureComponent.cpp" />
@@ -218,6 +221,15 @@ xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(
     <ClCompile Include="SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.h" />
+    <ClInclude Include="..\3rdParty\DearImGui\imconfig.h" />
+    <ClInclude Include="..\3rdParty\DearImGui\imgui.h" />
+    <ClInclude Include="..\3rdParty\DearImGui\imgui_internal.h" />
+    <ClInclude Include="..\3rdParty\DearImGui\imstb_rectpack.h" />
+    <ClInclude Include="..\3rdParty\DearImGui\imstb_textedit.h" />
+    <ClInclude Include="..\3rdParty\DearImGui\imstb_truetype.h" />
     <ClInclude Include="ComponentBase.h" />
     <ClInclude Include="Components\RenderComponent.h" />
     <ClInclude Include="Components\TextComponent.h" />
@@ -232,6 +244,7 @@ xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ODArray.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
@@ -239,7 +252,10 @@ xcopy $(SolutionDir)3rdParty\DearImGui\lib\$(Platform)\$(Configuration)\*.dll $(
     <ClInclude Include="Texture2D.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="OD2.pch" />
+    <None Include="OD2pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Engineconfig.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

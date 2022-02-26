@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <memory>
+#include <string>
 
 class GameObject;
 
@@ -32,8 +33,12 @@ private:
 	/** Renders the ImGui in debug mode*/
 	virtual void RenderImGui() {}
 
-	/** gets called after all components are initialized.*/
+	/** Gets called after all components are initialized.*/
 	virtual void BeginPlay() {}
+
+	//TODO there might be a better way to do this with typeIds
+	/** Gets the name of the component for debugging purposes*/
+	virtual const std::string GetComponentName() = 0;
 
 public:
 

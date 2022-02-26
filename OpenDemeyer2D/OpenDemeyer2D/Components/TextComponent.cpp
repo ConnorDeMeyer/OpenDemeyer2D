@@ -1,4 +1,4 @@
-#include "../OD2.pch"
+#include "../OD2pch.h"
 #include "TextComponent.h"
 
 #include "../GameObject.h"
@@ -16,13 +16,11 @@ void TextComponent::Update(float)
 		{
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
 		}
-		auto texture = SDL_CreateTextureFromSurface(RENDER.GetSDLRenderer(), surf);
-		if (texture == nullptr)
-		{
-			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());
-		}
+
+		auto texture = RESOURCES.LoadTexture(surf);
+		
 		SDL_FreeSurface(surf);
-		m_TextTexture = std::make_shared<Texture2D>(texture);
+
 		m_NeedsUpdate = false;
 
 		if (m_pRenderComp)

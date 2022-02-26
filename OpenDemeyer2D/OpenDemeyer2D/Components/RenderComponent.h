@@ -2,16 +2,8 @@
 #include "../ComponentBase.h"
 #include "../Texture2D.h"
 
+enum class RenderAlignMode : Uint8;
 class Transform;
-
-enum class RenderAlignMode : Uint8
-{
-	topLeft = 0b00,
-	topRight = 0b01,
-	bottomLeft = 0b10,
-	bottomRight = 0b11,
-	center
-};
 
 class RenderComponent final : public ComponentBase
 {
@@ -31,6 +23,8 @@ public:
 	void SetRenderAlignMode(RenderAlignMode mode) { m_RenderAlignMode = mode; }
 
 	void SetSourceRect(const SDL_Rect& srcRect);
+
+	const std::string GetComponentName() override { return "RenderComponent"; }
 
 private:
 

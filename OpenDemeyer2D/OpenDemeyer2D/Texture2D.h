@@ -1,19 +1,30 @@
 #pragma once
 #include <SDL.h>
+#include <gl/glew.h>
 
 /** Simple RAII container for the sdl texture*/
 class Texture2D final
 {
-public:
-	SDL_Texture* GetSDLTexture() const { return m_Texture; }
+	friend class RenderManager;
 
-	explicit Texture2D(SDL_Texture* texture) : m_Texture{ texture }{}
-	~Texture2D(){ SDL_DestroyTexture(m_Texture); }
+public:
+	//SDL_Texture* GetSDLTexture() const { return m_Texture; }
+
+	explicit Texture2D(GLuint id, int width, int height)
+		: m_Id{ id }, m_Width{ width }, m_Height{ height }{}
+	~Texture2D(){ glDeleteTextures(1, &m_Id); }
 	
 	Texture2D(const Texture2D&) = delete;
 	Texture2D(Texture2D&&) = delete;
 	Texture2D& operator= (const Texture2D&) = delete;
 	Texture2D& operator= (const Texture2D&&) = delete;
+
+	GLuint GetId() { return m_Id; }
+	int GetWidth() { return m_Width; }
+	int GetHeight() { return m_Height; }
+
 private:
-	SDL_Texture* m_Texture{};
+	GLuint m_Id{};
+	int m_Width{};
+	int m_Height{};
 };

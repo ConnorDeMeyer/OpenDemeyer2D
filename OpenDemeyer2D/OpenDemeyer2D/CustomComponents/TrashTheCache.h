@@ -3,6 +3,7 @@
 #include <vector>
 #include <chrono>
 #include "glm/glm.hpp"
+#include <string>
 
 class TrashTheCache : public ComponentBase
 {
@@ -12,6 +13,8 @@ public:
 	virtual ~TrashTheCache() = default;
 
 	void RenderImGui() override;
+
+	const std::string GetComponentName() override { return "TrashTheCache"; }
 
 private:
 

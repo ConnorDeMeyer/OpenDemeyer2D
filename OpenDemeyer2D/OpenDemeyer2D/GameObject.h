@@ -92,6 +92,14 @@ public:
 	/** Removes the object from the child list*/
 	void RemoveChild(GameObject* pObject);
 
+	//TODO figure out how this works again
+	//Transform* GetComponent<Transform>() const
+	//{
+	//	return m_pTransform;
+	//}
+
+	//void RemoveComponent<Transform>() const { throw std::runtime_error("Cannot remove transform component"); }
+
 public:
 
 	void BinaryDataOut(std::ostream&) override;
@@ -143,6 +151,7 @@ T* GameObject::AddComponent()
 	else {
 		auto comp = new T();
 		m_Components.push_back(comp);
+		comp->m_pParent = this;
 		if (m_HasBeenInitialized) comp->BeginPlay();
 		return comp;
 	}

@@ -20,6 +20,10 @@ public:
 
 	void SetTexture(const std::string& filePath);
 
+	void RenderImGui() override;
+
+	const std::string GetComponentName() override { return "TextureComponent"; }
+
 private:
 
 	std::shared_ptr<Texture2D> m_Texture;

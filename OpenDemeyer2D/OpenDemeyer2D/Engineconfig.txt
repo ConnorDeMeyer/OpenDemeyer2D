@@ -1,0 +1,9 @@
+GameResolution 1920 1080
+EditorResolution 1920 1080
+GameWindowSize 1920 1080
+EditorWindowSize 1920 1080
+GameWindowMaximized 1
+EditorWindowMaximized 1
+GameFullscreen 0
+EditorFullscreen 0
+RendererLayers 3
