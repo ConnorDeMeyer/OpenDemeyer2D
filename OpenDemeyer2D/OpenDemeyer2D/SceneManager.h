@@ -25,6 +25,10 @@ public:
 	/** Returns the scene corresponding to the given name (or nullptr if no scene found).*/
 	Scene* GetScene(const std::string& name) const;
 
+	void SetActiveScene(const std::string& name);
+
+	void SetActiveScene(Scene* pScene);
+
 	/** Renders the ImGui of the scene*/
 	void RenderImGui();
 
@@ -35,6 +39,8 @@ private:
 	virtual ~SceneManager();
 
 	std::vector<Scene*> m_Scenes;
+
+	Scene* m_pActiveScene{};
 
 };
 

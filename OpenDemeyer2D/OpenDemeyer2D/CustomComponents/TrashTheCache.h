@@ -16,6 +16,10 @@ public:
 
 	const std::string GetComponentName() override { return "TrashTheCache"; }
 
+	Dictionary& GetClassDefault() override;
+
+	void InitializeComponent(const Dictionary& dictionary) override;
+
 private:
 
 	struct Transform

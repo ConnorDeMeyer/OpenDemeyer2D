@@ -23,6 +23,7 @@ void Scene::Add(GameObject* pObject)
 
 	m_SceneTree.push_back(pObject);
 	pObject->m_pScene = this;
+	// TODO set m_pScene in the child objects
 	pObject->BeginPlay();
 }
 

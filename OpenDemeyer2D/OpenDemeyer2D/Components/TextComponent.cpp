@@ -7,6 +7,13 @@
 #include "../ResourceManager.h"
 #include "../RenderManager.h"
 
+static Dictionary TextDefaults
+{
+	Dictionary::EntryStruct<std::string>{"text", ""},
+	Dictionary::EntryStruct<std::string>{"font", ""},
+	Dictionary::EntryStruct<float>{"size", 11.f}
+};
+
 void TextComponent::Update(float)
 {
 	if (m_NeedsUpdate)
@@ -62,4 +69,14 @@ void TextComponent::SetSize(unsigned size)
 		m_Font = RESOURCES.LoadFont(m_Font->GetPath(), size);
 		m_NeedsUpdate = true;
 	}
+}
+
+void TextComponent::InitializeComponent(const Dictionary& dictionary)
+{
+	dictionary.GetData("text", m_Text); // TODO complete initialize component for text
+}
+
+Dictionary& TextComponent::GetClassDefault()
+{
+	return TextDefaults;
 }

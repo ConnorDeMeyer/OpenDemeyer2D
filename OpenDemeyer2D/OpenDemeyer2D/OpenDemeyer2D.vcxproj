@@ -112,7 +112,9 @@
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)OpenDemeyer2D\imgui.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,7 +143,9 @@ xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPa
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)OpenDemeyer2D\imgui.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -166,7 +170,9 @@ xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPa
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)OpenDemeyer2D\imgui.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -195,7 +201,9 @@ xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPa
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)OpenDemeyer2D\imgui.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -211,6 +219,7 @@ xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPa
     <ClCompile Include="Components\TextureComponent.cpp" />
     <ClCompile Include="Components\Transform.cpp" />
     <ClCompile Include="CustomComponents\TrashTheCache.cpp" />
+    <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="OpenDemeyer2D.cpp" />
     <ClCompile Include="RenderManager.cpp" />
@@ -237,7 +246,9 @@ xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPa
     <ClInclude Include="Components\Transform.h" />
     <ClInclude Include="CustomComponents\TrashTheCache.h" />
     <ClInclude Include="Delegate.h" />
+    <ClInclude Include="Dictionary.h" />
     <ClInclude Include="EditorFunctions.h" />
+    <ClInclude Include="FileIO.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="OpenDemeyer2D.h" />
@@ -255,7 +266,7 @@ xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPa
     <None Include="OD2pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Engineconfig.txt" />
+    <Text Include="engineconfig.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

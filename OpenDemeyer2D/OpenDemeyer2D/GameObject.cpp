@@ -119,42 +119,50 @@ void GameObject::RemoveComponent(ComponentBase* pComponent)
 	m_Components.SwapRemove(pComponent);
 }
 
-void GameObject::AttachGameObject(GameObject* object)
+void GameObject::SetParent(GameObject* pObject)
 {
-	if (!object) return;
-
-	// Check the parents of object for a reference to this object.
-	// will not attach if it encounter it to avoid an infinite loop 
-
-	GameObject* parent = object;
-	while (parent)
+	// Check if already has a parent and break link between those
+	if (m_Parent)
 	{
-		if (parent == this) return;
-		parent = parent->m_Parent;
+		m_Parent->m_Children.SwapRemove(this);
 	}
 
-	if (object->m_Parent) object->m_Parent->RemoveChild(object);
-	m_Children.push_back(object);
-	object->m_Parent = this;
+	// Set transform relative to parent
+	//TODO
 
-	if (m_HasBeenInitialized) object->BeginPlay();
+	// Set as parent
+	m_Parent = pObject;
+
+	// Set as child
+	pObject->m_Children.push_back(this);
 }
 
-void GameObject::RemoveChild(GameObject* pObject)
-{
-	if (!pObject) return;
-
-	m_Children.SwapRemove(pObject);
-	pObject->m_Parent = nullptr;
-}
-
-void GameObject::BinaryDataOut(std::ostream&)
-{
-	// Start by sending the information about the components
-	
-}
-
-void GameObject::BinaryDataIn(std::istream&)
-{
-
-}
+//void GameObject::AttachGameObject(GameObject* object)
+//{
+//	if (!object) return;
+//
+//	// Check the parents of object for a reference to this object.
+//	// will not attach if it encounter it to avoid an infinite loop 
+//
+//	GameObject* parent = object;
+//	while (parent)
+//	{
+//		if (parent == this) return;
+//		parent = parent->m_Parent;
+//	}
+//
+//	if (object->m_Parent) object->m_Parent->RemoveChild(object);
+//	m_Children.push_back(object);
+//	object->m_Parent = this;
+//	object->m_pScene = m_pScene;
+//
+//	if (m_HasBeenInitialized) object->BeginPlay();
+//}
+//
+//void GameObject::RemoveChild(GameObject* pObject)
+//{
+//	if (!pObject) return;
+//
+//	m_Children.SwapRemove(pObject);
+//	pObject->m_Parent = nullptr;
+//}

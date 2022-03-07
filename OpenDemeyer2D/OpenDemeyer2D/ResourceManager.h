@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <vector>
+#include <unordered_map>
 #include <map>
 #include <memory>
 #include <string>
@@ -38,8 +39,9 @@ private:
 
 	std::string m_DataPath;
 
-	std::map<std::string, std::weak_ptr<Texture2D>> m_LoadedImages;
+	std::unordered_map<std::string, std::weak_ptr<Texture2D>> m_LoadedImages;
 
+	// TODO change this into a unordered_map. needs a special hash funtion
 	std::map<std::pair<std::string, unsigned int>, std::weak_ptr<Font>> m_LoadedFonts;
 
 };

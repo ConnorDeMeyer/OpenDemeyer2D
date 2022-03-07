@@ -38,6 +38,21 @@ Scene* SceneManager::GetScene(const std::string& name) const
 	return nullptr;
 }
 
+void SceneManager::SetActiveScene(const std::string& name)
+{
+	for (Scene* pScene : m_Scenes)
+	{
+		if (pScene->GetName() == name) SetActiveScene(pScene);
+	}
+}
+
+void SceneManager::SetActiveScene(Scene* pScene)
+{
+	if (!pScene) return;
+
+	m_pActiveScene = pScene;
+}
+
 void SceneManager::RenderImGui()
 {
 	bool isOpen{};

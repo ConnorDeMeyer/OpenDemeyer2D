@@ -77,6 +77,9 @@
     <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="FileIO.cpp">
+      <Filter>EngineFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ODArray.h">
@@ -164,11 +167,17 @@
     <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="Dictionary.h">
+      <Filter>UtilityFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="FileIO.h">
+      <Filter>EngineFiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="OD2pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Engineconfig.txt" />
+    <Text Include="engineconfig.ini" />
   </ItemGroup>
 </Project>

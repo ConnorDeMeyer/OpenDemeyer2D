@@ -16,12 +16,3 @@ enum class ParseCommands : uint8_t
 	COMP_TEXTURE,
 	TRANSFORM
 };
-
-class IEngingeFunction
-{
-public:
-
-	virtual void BinaryDataOut(std::ostream&) = 0;
-
-	virtual void BinaryDataIn(std::istream&) = 0;
-};

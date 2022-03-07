@@ -1,6 +1,11 @@
 #include "TrashTheCache.h"
 #include "imgui.h"
 
+static Dictionary TrashTheCacheDefault
+{
+
+};
+
 void TrashTheCache::RenderImGui()
 {
 	ImGui::InputInt("# Samples", &m_Samples, 1, 2);
@@ -14,7 +19,7 @@ void TrashTheCache::RenderImGui()
 	{
 		ImGui::PlotLines("Integer",
 			m_TimeValuesInts.data(),
-			m_TimeValuesInts.size(),
+			int(m_TimeValuesInts.size()),
 			0,
 			nullptr,
 			0,
@@ -32,7 +37,7 @@ void TrashTheCache::RenderImGui()
 	{
 		ImGui::PlotLines("GameObject3D",
 			m_TimeValuesGameObject3D.data(),
-			m_TimeValuesGameObject3D.size(),
+			int(m_TimeValuesGameObject3D.size()),
 			0,
 			nullptr,
 			0,
@@ -50,7 +55,7 @@ void TrashTheCache::RenderImGui()
 	{
 		ImGui::PlotLines("GameObject3DAlt",
 			m_TimeValuesGameObject3DAlt.data(),
-			m_TimeValuesGameObject3DAlt.size(),
+			int(m_TimeValuesGameObject3DAlt.size()),
 			0,
 			nullptr,
 			0,
@@ -66,7 +71,7 @@ void TrashTheCache::RenderImGui()
 
 		ImGui::PlotLines("",
 			m_TimeValuesGameObject3DAlt.data(),
-			m_TimeValuesGameObject3DAlt.size(),
+			int(m_TimeValuesGameObject3DAlt.size()),
 			0,
 			nullptr,
 			0,
@@ -74,4 +79,13 @@ void TrashTheCache::RenderImGui()
 			ImVec2(0, 80));
 	}
 
+}
+
+Dictionary& TrashTheCache::GetClassDefault()
+{
+	return TrashTheCacheDefault;
+}
+
+void TrashTheCache::InitializeComponent(const Dictionary&)
+{
 }

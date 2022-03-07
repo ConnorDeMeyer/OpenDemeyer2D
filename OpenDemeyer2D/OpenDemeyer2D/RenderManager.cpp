@@ -117,6 +117,7 @@ void RenderManager::Render() const
 
 	SCENES.RenderImGui();
 	ENGINE.RenderStats();
+	ENGINE.RenderSettings();
 	RenderImGuiGameWindow();
 	ImGui::Render();
 
@@ -134,7 +135,7 @@ void RenderManager::Destroy()
 	SDL_GL_DeleteContext(m_pContext);
 }
 
-void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, RenderAlignMode renderMode, SDL_FRect* srcRect) const
+void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, eRenderAlignMode renderMode, SDL_FRect* srcRect) const
 {
 	float width  = (srcRect) ? srcRect->w : static_cast<float>(texture->GetWidth()) ;
 	float height = (srcRect) ? srcRect->h : static_cast<float>(texture->GetHeight());
@@ -145,7 +146,7 @@ void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, Ren
 	float vertexRight	{ 0.5f  };
 	float vertexTop		{ 0.5f  };
 
-	if (renderMode != RenderAlignMode::centered)
+	if (renderMode != eRenderAlignMode::centered)
 	{
 		vertexLeft   =	(static_cast<Uint8>(renderMode) & 0b1 ) ? -1.f : 0.f;
 		vertexRight  =	(static_cast<Uint8>(renderMode) & 0b1 ) ? 0.f  : 1.f;
@@ -198,7 +199,7 @@ void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, Ren
 	glDisable(GL_TEXTURE_2D);
 }
 
-void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, RenderAlignMode renderMode, SDL_FRect* srcRect) const
+void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, eRenderAlignMode renderMode, SDL_FRect* srcRect) const
 {
 	glPushMatrix();
 	{
@@ -209,7 +210,7 @@ void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, con
 }
 
 void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos,
-	const glm::vec2& scale, RenderAlignMode renderMode, SDL_FRect* srcRect) const
+	const glm::vec2& scale, eRenderAlignMode renderMode, SDL_FRect* srcRect) const
 {
 	glPushMatrix();
 	{
@@ -221,7 +222,7 @@ void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, con
 }
 
 void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos,
-	const glm::vec2& scale, float rotation, RenderAlignMode renderMode, SDL_FRect* srcRect) const
+	const glm::vec2& scale, float rotation, eRenderAlignMode renderMode, SDL_FRect* srcRect) const
 {
 	glPushMatrix();
 	{
@@ -242,7 +243,9 @@ void RenderManager::RenderImGuiGameWindow() const
 	auto size = ImGui::GetWindowSize();
 	size.y -= 30; // add offset
 
+#pragma warning(disable : 4312)
 	ImGui::Image((ImTextureID)m_RenderTexture->GetRenderedTexture(), size);
+#pragma warning(default : 4312)
 
 	ImGui::End();
 }

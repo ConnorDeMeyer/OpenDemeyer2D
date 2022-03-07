@@ -10,7 +10,7 @@
 
 #define RENDER RenderManager::GetInstance()
 
-enum class RenderAlignMode : Uint8
+enum class eRenderAlignMode : Uint8
 {
 	topLeft = 0b00,
 	topRight = 0b01,
@@ -30,10 +30,10 @@ public:
 	void Render() const;
 	void Destroy();
 
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, RenderAlignMode renderMode = RenderAlignMode::centered,  SDL_FRect* srcRect = nullptr) const;
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, RenderAlignMode renderMode = RenderAlignMode::centered, SDL_FRect* srcRect = nullptr) const;
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, RenderAlignMode renderMode = RenderAlignMode::centered, SDL_FRect* srcRect = nullptr) const;
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, float rotation, RenderAlignMode renderMode = RenderAlignMode::centered, SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, eRenderAlignMode renderMode = eRenderAlignMode::centered,  SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, eRenderAlignMode renderMode = eRenderAlignMode::centered, SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, eRenderAlignMode renderMode = eRenderAlignMode::centered, SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, float rotation, eRenderAlignMode renderMode = eRenderAlignMode::centered, SDL_FRect* srcRect = nullptr) const;
 
 	//void SetResolution(int w, int h);
 

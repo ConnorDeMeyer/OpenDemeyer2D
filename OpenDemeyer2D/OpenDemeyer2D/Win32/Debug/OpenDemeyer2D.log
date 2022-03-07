@@ -1,4 +1,12 @@
-﻿  RenderManager.cpp
+﻿  TextComponent.cpp
+  TextureComponent.cpp
+  FileIO.cpp
+  GameObject.cpp
+  OpenDemeyer2D.cpp
+  RenderManager.cpp
+  ResourceManager.cpp
+  Scene.cpp
+  Generating Code...
   OpenDemeyer2D.vcxproj -> C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\Win32\Debug\OpenDemeyer2D.exe
   C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2\lib\x86\SDL2.dll
   1 File(s) copied
@@ -13,4 +21,8 @@
   C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\SDL2_ttf\lib\x86\SDL2_ttf.dll
   2 File(s) copied
   C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\3rdParty\glew-2.1.0\bin\Release\Win32\glew32.dll
+  1 File(s) copied
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\OpenDemeyer2D\imgui.ini
+  1 File(s) copied
+  C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\OpenDemeyer2D\engineconfig.ini
   1 File(s) copied

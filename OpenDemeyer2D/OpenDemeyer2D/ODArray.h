@@ -23,7 +23,7 @@ public:
 	//}
 
 	/** Searches for the element and Swap Removes it.*/
-	inline void SwapRemove(T& element)
+	inline void SwapRemove(const T& element)
 	{
 		size_t size = this->size();
 		for (size_t i{}; i < size; ++size)

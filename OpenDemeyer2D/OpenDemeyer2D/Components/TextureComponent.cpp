@@ -8,6 +8,11 @@
 
 #include "../RenderManager.h"
 
+static Dictionary TextureDefaults
+{
+	Dictionary::EntryStruct<std::string>{"file", ""}
+};
+
 void TextureComponent::BeginPlay()
 {
 	m_pRenderComponent = GetParent()->GetComponent<RenderComponent>();
@@ -29,6 +34,22 @@ void TextureComponent::SetTexture(const std::string& filePath)
 
 void TextureComponent::RenderImGui()
 {
-	ImGui::Image(reinterpret_cast<ImTextureID>(m_Texture->GetId()), { 100,100 });
+#pragma warning(disable : 4312)
+	ImGui::Image((ImTextureID)(m_Texture->GetId()), { 100,100 });
+#pragma warning(default : 4312)
+}
+
+void TextureComponent::InitializeComponent(const Dictionary& dictionary)
+{
+	std::string path;
+	dictionary.GetData("file", path);
+
+	if (!path.empty())
+		SetTexture(path);
+}
+
+Dictionary& TextureComponent::GetClassDefault()
+{
+	return TextureDefaults;
 }
 

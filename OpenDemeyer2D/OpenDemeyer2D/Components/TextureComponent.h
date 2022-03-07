@@ -24,6 +24,10 @@ public:
 
 	const std::string GetComponentName() override { return "TextureComponent"; }
 
+	void InitializeComponent(const Dictionary& dictionary) override;
+
+	Dictionary& GetClassDefault() override;
+
 private:
 
 	std::shared_ptr<Texture2D> m_Texture;

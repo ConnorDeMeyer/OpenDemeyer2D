@@ -2,7 +2,7 @@
 #include "../ComponentBase.h"
 #include "../Texture2D.h"
 
-enum class RenderAlignMode : Uint8;
+enum class eRenderAlignMode : Uint8;
 class Transform;
 
 class RenderComponent final : public ComponentBase
@@ -20,11 +20,15 @@ public:
 
 	void SetTexture(std::shared_ptr<Texture2D> texture);
 
-	void SetRenderAlignMode(RenderAlignMode mode) { m_RenderAlignMode = mode; }
+	void SetRenderAlignMode(eRenderAlignMode mode) { m_RenderAlignMode = mode; }
 
 	void SetSourceRect(const SDL_Rect& srcRect);
 
 	const std::string GetComponentName() override { return "RenderComponent"; }
+
+	void InitializeComponent(const Dictionary& dictionary) override;
+
+	Dictionary& GetClassDefault() override;
 
 private:
 
@@ -32,7 +36,7 @@ private:
 
 	Transform* m_pTransform;
 
-	RenderAlignMode m_RenderAlignMode;
+	eRenderAlignMode m_RenderAlignMode;
 
 	SDL_Rect m_SourceRect;
 

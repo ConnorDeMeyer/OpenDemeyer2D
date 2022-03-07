@@ -18,12 +18,20 @@ public:
 
 	const std::string GetComponentName() override { return "Transform"; }
 
-	const glm::vec2& GetPosition() const;
+	Dictionary& GetClassDefault() override;
+
+	void InitializeComponent(const Dictionary& dictionary) override;
+
+	const glm::vec2& GetWorldPosition() const { return m_Position; }
+
+	const glm::vec2& GetLocalPosition() const { return m_LocalPosition; }
 
 	/** Sets the position of the transform and change the position of the children of the parent*/
 	void SetPosition(const glm::vec2& pos);
 
-	const glm::vec2& GetScale() const;
+	const glm::vec2& GetWorldScale() const { return m_Scale; }
+
+	const glm::vec2& GetLocalScale() const { return m_LocalScale; }
 
 	/** Sets the scale of the transform and change the scale of the children of the parent*/
 	void SetScale(const glm::vec2& scale);
@@ -47,15 +55,27 @@ public:
 
 	void Rotate(float rotation);
 
-	float GetRotation() const;
+	float GetWorldRotation() const { return m_Rotation; }
+
+	float GetLocalRotation() const { return m_LocalRotation; }
 
 	void ApplyMatrix(const glm::mat3x3& matrix);
 
 private:
 
+	/**
+	 * Call this function when local changes have been made
+	 * Will update the other values and its child game objects
+	 */
+	void UpdateLocalChanges();
+
 	glm::vec2 m_Position{0,0};
 	glm::vec2 m_Scale{1,1};
 	float m_Rotation{ 0 };
+
+	glm::vec2 m_LocalPosition{ 0,0 };
+	glm::vec2 m_LocalScale{ 1,1 };
+	float m_LocalRotation{ 0 };
 
 	glm::mat3x3 m_localTransformation{
 		1,0,0,

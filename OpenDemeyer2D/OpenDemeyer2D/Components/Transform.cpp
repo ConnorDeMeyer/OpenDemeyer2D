@@ -3,105 +3,117 @@
 
 #include "../GameObject.h"
 #include "imgui.h"
+#include "../Dictionary.h"
+
+static Dictionary TransformDefaults
+{
+	Dictionary::EntryStruct<glm::vec2>{"pos", {0,0}},
+	Dictionary::EntryStruct<glm::vec2>{"scale", {1,1}},
+	Dictionary::EntryStruct<float>{"rot", 0.f}
+};
 
 void Transform::BeginPlay()
 {
-	m_Transformation = m_localTransformation;
+	UpdateLocalChanges();
 }
 
 void Transform::RenderImGui()
 {
 	// Display Position
-	glm::vec2 position = m_Position;
+	glm::vec2 position = m_LocalPosition;
 	ImGui::InputFloat2("Position", reinterpret_cast<float*>(&position));
 
 	// Change Position
-	if (position != m_Position)
+	if (position != m_LocalPosition)
 		SetPosition(position);
 
 	// Display scale
-	glm::vec2 scale = m_Scale;
+	glm::vec2 scale = m_LocalScale;
 	ImGui::InputFloat2("Scale", reinterpret_cast<float*>(&scale));
 
 	// Change scale
-	if (scale != m_Scale)
+	const float EPSILON{ 0.0000001f };
+	if (scale != m_LocalScale && fabsf(scale.x) > EPSILON && fabsf(scale.y) > EPSILON)
 		SetScale(scale);
 
 	// Display rotation
-	float rotation = m_Rotation;
-	ImGui::InputFloat("Rotation", &rotation);
+	float rotation = m_LocalRotation;
+	ImGui::InputFloat("Rotation", &rotation, 1.f, 2.f);
 
 	// Change rotation
-	if (m_Rotation != rotation)
+	if (rotation != m_LocalRotation)
 		SetRotation(rotation);
 }
 
-const glm::vec2& Transform::GetPosition() const
+Dictionary& Transform::GetClassDefault()
 {
-	return m_Position;
+	return TransformDefaults;
 }
 
-const glm::vec2& Transform::GetScale() const
+void Transform::InitializeComponent(const Dictionary& dictionary)
 {
-	return m_Scale;
-}
-
-float Transform::GetRotation() const
-{
-	return m_Rotation;
+	dictionary.GetData("pos", m_LocalPosition);
+	dictionary.GetData("scale", m_LocalScale);
+	dictionary.GetData("rot", m_LocalRotation);
 }
 
 void Transform::SetPosition(const glm::vec2& pos)
 {
-	glm::vec2 difference = pos - m_Position;
+	glm::vec2 difference = pos - m_LocalPosition;
 	Move(difference);
 }
 
 
 void Transform::SetScale(const glm::vec2& scale)
 {
-	glm::vec2 difference = scale / m_Scale;
+	glm::vec2 difference = scale / m_LocalScale;
 	Scale(difference);
 }
 
 void Transform::SetRotation(float rotation)
 {
-	float difference = rotation - m_Rotation;
+	float difference = rotation - m_LocalRotation;
 
 	Rotate(difference);
 }
 
 void Transform::Move(const glm::vec2& distance)
 {
-	m_Position += distance;
-	m_localTransformation = TransformationMatrix(m_Position, m_Scale, m_Rotation);
-
-	//glm::mat3x3 mat = TranslationMatrix(distance);
-	//ApplyMatrix(mat);
-	/*m_Position += distance;
-	for (GameObject* object : GetParent()->GetChildren())
-		object->GetTransform()->Move(distance);*/
+	m_LocalPosition += distance;
+	UpdateLocalChanges();
 }
 
 void Transform::Scale(const glm::vec2& scalar)
 {
-	m_Scale *= scalar;
-	m_localTransformation = TransformationMatrix(m_Position, m_Scale, m_Rotation);
-
-	//glm::mat3x3 mat = ScaleMatrix(scalar);
-	//ApplyMatrix(mat);
-	/*m_Scale *= scalar;
-	for (GameObject* object : GetParent()->GetChildren())
-		object->GetTransform()->Scale(scalar);*/
+	m_LocalScale *= scalar;
+	UpdateLocalChanges();
 }
 
 void Transform::Rotate(float rotation)
 {
-	m_Rotation += rotation;
-	m_localTransformation = TransformationMatrix(m_Position, m_Scale, m_Rotation);
+	m_LocalRotation += rotation;
+	UpdateLocalChanges();
+}
 
-	//glm::mat3x3 mat = RotationMatrix(rotation);
-	//ApplyMatrix(mat);
+void Transform::UpdateLocalChanges()
+{
+	m_localTransformation = TransformationMatrix(m_LocalPosition, m_LocalScale, m_LocalRotation);
+	if (GameObject * pParent{ GetParent()->GetParent() }) {
+		m_Transformation = m_localTransformation * pParent->GetTransform()->m_Transformation;
+		m_Position = GetPosFromMat(m_Transformation);
+		m_Scale = GetScaleFromMat(m_Transformation);
+		m_Rotation = GetRotationFromMat(m_Transformation);
+	}
+	else
+	{
+		m_Transformation = m_localTransformation;
+		m_Position = m_LocalPosition;
+		m_Scale = m_LocalScale;
+		m_Rotation = m_LocalRotation;
+	}
+
+	for (GameObject* child : GetParent()->GetChildren())
+		child->GetTransform()->ApplyMatrix(m_Transformation);
 }
 
 void Transform::Scale(float scale) { Scale({ scale, scale }); }
@@ -112,23 +124,26 @@ void Transform::AddScale(float scale){ AddScale({ scale,scale }); }
 
 void Transform::ApplyMatrix(const glm::mat3x3& matrix)
 {
-	m_Transformation = m_Transformation * m_localTransformation;
+	m_Transformation = m_localTransformation * matrix;
+	m_Position = GetPosFromMat(m_Transformation);
+	m_Scale = GetScaleFromMat(m_Transformation);
+	m_Rotation = GetRotationFromMat(m_Transformation);
 
-	for (GameObject* object : GetParent()->GetChildren())
+	for (GameObject* pObject : GetParent()->GetChildren())
 	{
-		object->GetTransform()->ApplyMatrix(matrix);
+		pObject->GetTransform()->ApplyMatrix(m_Transformation);
 	}
 }
 
 glm::vec2 GetPosFromMat(const glm::mat3x3& matrix)
 {
-	return { matrix[2][0], matrix[2][1] };
+	return { matrix[0][2], matrix[1][2] };
 }
 
 glm::vec2 GetScaleFromMat(const glm::mat3x3& matrix)
 {
-	const float SquareSum0 = (matrix[0][0] * matrix[0][0]) + (matrix[0][1] * matrix[0][1]);
-	const float SquareSum1 = (matrix[1][0] * matrix[1][0]) + (matrix[1][1] * matrix[1][1]);
+	const float SquareSum0 = (matrix[0][0] * matrix[0][0]) + (matrix[1][0] * matrix[1][0]);
+	const float SquareSum1 = (matrix[0][1] * matrix[0][1]) + (matrix[1][1] * matrix[1][1]);
 
 	return
 	{ glm::sign(matrix[0][0]) * glm::sqrt(SquareSum0),

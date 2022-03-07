@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include "Singleton.h"
+#include "Dictionary.h"
+
 #define ENGINE Engine::GetInstance()
 
 struct SDL_Window;
@@ -34,6 +36,15 @@ public:
 	/** Render ImGui stats of the engine*/
 	void RenderStats();
 
+	void InitializeSettings();
+
+	void SaveSettings() const;
+
+	const Dictionary& GetSettings() const { return m_EngineSettings; }
+
+	/** Render the settings in an ImGui window*/
+	void RenderSettings();
+
 private:
 
 	// Time and frame rate data members
@@ -47,6 +58,11 @@ private:
 	SDL_Window* m_Window{};
 	int m_ResolutionWidth = 640;
 	int m_ResolutionHeight = 480;
+	
+	Dictionary m_EngineSettings;
 
+	// ImGui data members
+	const size_t INPUT_TEXT_BUFFER_SIZE = 128;
+	std::unordered_map<std::string,char*> m_SettingsInputBuffer;
 };
 

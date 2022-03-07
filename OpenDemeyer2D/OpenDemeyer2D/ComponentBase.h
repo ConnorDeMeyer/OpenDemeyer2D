@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <memory>
 #include <string>
+#include "Dictionary.h"
 
 class GameObject;
 
@@ -39,6 +40,19 @@ private:
 	//TODO there might be a better way to do this with typeIds
 	/** Gets the name of the component for debugging purposes*/
 	virtual const std::string GetComponentName() = 0;
+
+public:
+
+	/**
+	 * Returns a dictionary of the class defaults so it may be used for file initialization
+	 * key -> value
+	 */
+	virtual Dictionary& GetClassDefault() = 0;
+
+	/**
+	 * Initialize the components given the dictionary that contains the value for each parameter given in the GetClassDefault() method
+	 */
+	virtual void InitializeComponent(const Dictionary& dictionary) = 0;
 
 public:
 
