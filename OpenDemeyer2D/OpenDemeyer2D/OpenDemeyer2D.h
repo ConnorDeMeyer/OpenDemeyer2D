@@ -6,6 +6,7 @@
 #define ENGINE Engine::GetInstance()
 
 struct SDL_Window;
+class GameInstance;
 
 class Engine final : public Singleton<Engine>
 {
@@ -15,9 +16,9 @@ class Engine final : public Singleton<Engine>
 public:
 
 	void Initialize();
-	void LoadGame() const;
+	//void LoadGame() const;
 	void Cleanup();
-	void Run();
+	void Run(GameInstance* pGameInstance);
 
 	void Quit() { m_Quit = true; }
 
@@ -64,5 +65,28 @@ private:
 	// ImGui data members
 	const size_t INPUT_TEXT_BUFFER_SIZE = 128;
 	std::unordered_map<std::string,char*> m_SettingsInputBuffer;
+
+	GameInstance* m_pGameinstance{};
 };
 
+#pragma region EngineSettings
+
+#define OD_ENGINE_CONFIG_INI "engineconfig.ini"
+
+#define OD_GAME_RESOLUTION_WIDTH "GameResolutionWidth"
+#define OD_GAME_RESOLUTION_HEIGHT "GameResolutionHeight"
+#define OD_EDITOR_RESOLUTION_WIDTH "EditorResolutionWidth"
+#define OD_EDITOR_RESOLUTION_HEIGHT "EditorResolutionHeight"
+#define OD_GAME_WINDOW_SIZE_WIDTH "GameWindowSizeWidth"
+#define OD_GAME_WINDOW_SIZE_HEIGHT "GameWindowSizeHeight"
+#define OD_EDITOR_WINDOW_SIZE_WIDTH "EditorWindowSizeWidth"
+#define OD_EDITOR_WINDOW_SIZE_HEIGHT "EditorWindowSizeHeight"
+#define OD_GAME_WINDOW_MAXIMIZED "GameWindowMaximized"
+#define OD_EDITOR_WINDOW_MAXIMIZED "EditorWindowMaximized"
+#define OD_GAME_FULLSCREEN "GameFullscreen"
+#define OD_EDITOR_FULLSCREEN "EditorFullscreen"
+#define OD_RENDERER_LAYERS "RendererLayers"
+#define OD_RESOURCES_PATH "ResourcesPath"
+#define OD_KEEP_ASPECT_RATIO_EDITOR "KeepAspectRatioEditor"
+
+#pragma endregion

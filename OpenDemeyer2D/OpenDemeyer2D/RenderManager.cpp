@@ -94,6 +94,8 @@ void RenderManager::Init(SDL_Window* window)
 
 
 	m_RenderTexture = RESOURCES.CreateRenderTexture(windowResWidth, windowResHeight);
+
+	ENGINE.GetSettings().GetData(OD_KEEP_ASPECT_RATIO_EDITOR, m_bKeepAspectRatio);
 }
 
 void RenderManager::Render() const
@@ -109,9 +111,11 @@ void RenderManager::Render() const
 	SetRenderTarget(m_RenderTexture); {
 	glPushMatrix();
 		glClear(GL_COLOR_BUFFER_BIT);
-	glScalef(1, -1, 1);
-	glTranslatef(0, -static_cast<float>(windowResHeight), 0);
+		glScalef(1, -1, 1);
+		glTranslatef(0, -static_cast<float>(windowResHeight), 0);
+
 		SCENES.Render();
+
 	glPopMatrix();
 	} SetRenderTargetScreen();
 
@@ -135,7 +139,7 @@ void RenderManager::Destroy()
 	SDL_GL_DeleteContext(m_pContext);
 }
 
-void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, eRenderAlignMode renderMode, SDL_FRect* srcRect) const
+void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, eRenderAlignMode renderMode, const SDL_FRect* srcRect) const
 {
 	float width  = (srcRect) ? srcRect->w : static_cast<float>(texture->GetWidth()) ;
 	float height = (srcRect) ? srcRect->h : static_cast<float>(texture->GetHeight());
@@ -167,10 +171,10 @@ void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, eRe
 	
 	if (srcRect)
 	{
-		textLeft	= srcRect->x / srcRect->w;
-		textRight	= (srcRect->x + srcRect->w) / srcRect->w;
-		textTop		= (srcRect->y - srcRect->h) / srcRect->h;
-		textBottom	= srcRect->y / srcRect->h;
+		textLeft	= srcRect->x / texture->GetWidth();
+		textRight	= (srcRect->x + srcRect->w) / texture->GetWidth();
+		textTop		= (srcRect->y) / texture->GetHeight();
+		textBottom	= (srcRect->y + srcRect->h) / texture->GetHeight();
 	}
 
 	// Tell opengl which texture we will use
@@ -199,7 +203,7 @@ void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, eRe
 	glDisable(GL_TEXTURE_2D);
 }
 
-void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, eRenderAlignMode renderMode, SDL_FRect* srcRect) const
+void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, eRenderAlignMode renderMode, const SDL_FRect* srcRect) const
 {
 	glPushMatrix();
 	{
@@ -210,7 +214,7 @@ void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, con
 }
 
 void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos,
-	const glm::vec2& scale, eRenderAlignMode renderMode, SDL_FRect* srcRect) const
+	const glm::vec2& scale, eRenderAlignMode renderMode, const SDL_FRect* srcRect) const
 {
 	glPushMatrix();
 	{
@@ -222,7 +226,7 @@ void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, con
 }
 
 void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos,
-	const glm::vec2& scale, float rotation, eRenderAlignMode renderMode, SDL_FRect* srcRect) const
+	const glm::vec2& scale, float rotation, eRenderAlignMode renderMode, const SDL_FRect* srcRect) const
 {
 	glPushMatrix();
 	{
@@ -239,9 +243,19 @@ void RenderManager::RenderImGuiGameWindow() const
 	bool isOpen{};
 	ImGui::Begin("Game", &isOpen, ImGuiWindowFlags_NoScrollbar);
 
+	float aspectRatio = float(m_RenderTexture->GetWidth()) / float(m_RenderTexture->GetHeight());
+
 	auto pos = ImGui::GetWindowPos();
 	auto size = ImGui::GetWindowSize();
 	size.y -= 30; // add offset
+
+	if (m_bKeepAspectRatio)
+	{
+		ImVec2 newSize = { size.y * aspectRatio, size.y };
+		if (newSize.x > size.x)
+			newSize = { size.x, size.x / aspectRatio };
+		size = newSize;
+	}
 
 #pragma warning(disable : 4312)
 	ImGui::Image((ImTextureID)m_RenderTexture->GetRenderedTexture(), size);

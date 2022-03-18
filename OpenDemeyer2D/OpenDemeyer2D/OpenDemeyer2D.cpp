@@ -6,6 +6,7 @@
 #include "ResourceManager.h"
 #include "GameObject.h"
 #include "Scene.h"
+#include "GameInstance.h"
 
 #include "CustomComponents/TrashTheCache.h"
 #include "Components/RenderComponent.h"
@@ -22,27 +23,6 @@
 #include <gl/wglew.h>
 
 using namespace std::chrono;
-
-#pragma region EngineSettings
-
-#define OD_ENGINE_CONFIG_INI "engineconfig.ini"
-#define OD_GAME_RESOLUTION_WIDTH "GameResolutionWidth"
-#define OD_GAME_RESOLUTION_HEIGHT "GameResolutionHeight"
-#define OD_EDITOR_RESOLUTION_WIDTH "EditorResolutionWidth"
-#define OD_EDITOR_RESOLUTION_HEIGHT "EditorResolutionHeight"
-#define OD_GAME_WINDOW_SIZE_WIDTH "GameWindowSizeWidth"
-#define OD_GAME_WINDOW_SIZE_HEIGHT "GameWindowSizeHeight"
-#define OD_EDITOR_WINDOW_SIZE_WIDTH "EditorWindowSizeWidth"
-#define OD_EDITOR_WINDOW_SIZE_HEIGHT "EditorWindowSizeHeight"
-#define OD_GAME_WINDOW_MAXIMIZED "GameWindowMaximized"
-#define OD_EDITOR_WINDOW_MAXIMIZED "EditorWindowMaximized"
-#define OD_GAME_FULLSCREEN "GameFullscreen"
-#define OD_EDITOR_FULLSCREEN "EditorFullscreen"
-#define OD_RENDERER_LAYERS "RendererLayers"
-#define OD_RESOURCES_PATH "ResourcesPath"
-#define OD_KEEP_ASPECT_RATIO_EDITOR "KeepAspectRatioEditor"
-
-#pragma endregion
 
 void PrintSDLVersion()
 {
@@ -64,7 +44,7 @@ void Engine::Initialize()
 
 	PrintSDLVersion();
 
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
@@ -105,26 +85,26 @@ void Engine::Initialize()
 	RENDER.Init(m_Window);
 }
 
-void Engine::LoadGame() const
-{
-	auto& scene = SceneManager::GetInstance().CreateScene("DemoScene");
-
-	GameObject* go = new GameObject();
-	go->AddComponent<TrashTheCache>();
-	scene.Add(go);
-	
-	go = new GameObject();
-	go->AddComponent<RenderComponent>();
-	auto texture = go->AddComponent<TextureComponent>();
-	texture->SetTexture("34451b7e4347f9c02928f5360183a9e1ca98098c690d0f4209d81d9d3e7946a3.png");
-	scene.Add(go);
-
-	GameObject* goc = new GameObject();
-	goc->AddComponent<RenderComponent>();
-	texture = goc->AddComponent<TextureComponent>();
-	texture->SetTexture("crosshair.png");
-	goc->SetParent(go);
-}
+//void Engine::LoadGame() const
+//{
+	//auto& scene = SceneManager::GetInstance().CreateScene("DemoScene");
+	//
+	//GameObject* go = new GameObject();
+	//go->AddComponent<TrashTheCache>();
+	//scene.Add(go);
+	//
+	//go = new GameObject();
+	//go->AddComponent<RenderComponent>();
+	//auto texture = go->AddComponent<TextureComponent>();
+	//texture->SetTexture("34451b7e4347f9c02928f5360183a9e1ca98098c690d0f4209d81d9d3e7946a3.png");
+	//scene.Add(go);
+	//
+	//GameObject* goc = new GameObject();
+	//goc->AddComponent<RenderComponent>();
+	//texture = goc->AddComponent<TextureComponent>();
+	//texture->SetTexture("crosshair.png");
+	//goc->SetParent(go);
+//}
 
 void Engine::Cleanup()
 {
@@ -139,14 +119,17 @@ void Engine::Cleanup()
 	SDL_Quit();
 }
 
-void Engine::Run()
+void Engine::Run(GameInstance* pGameInstance)
 {
 	Initialize();
 
 	// tell the resource manager where he can find the game data
-	ResourceManager::GetInstance().Init("../Data/");
+	std::string dataPath;
+	m_EngineSettings.GetData(OD_RESOURCES_PATH, dataPath);
+	ResourceManager::GetInstance().Init(dataPath);
 
-	LoadGame();
+	pGameInstance->LoadGame();
+	m_pGameinstance = pGameInstance;
 
 	{
 		auto& renderer = RENDER;
@@ -232,10 +215,12 @@ void Engine::InitializeSettings()
 	m_EngineSettings.Insert("GameFullscreen", boolean);
 	m_EngineSettings.Insert("EditorFullscreen", boolean);
 
-	m_EngineSettings.Insert("ResourcesPath", std::string("../Data"));
+	m_EngineSettings.Insert("ResourcesPath", std::string("Data/"));
 
 	// Load the engineconfig.ini file
 	auto fstream = std::ifstream(OD_ENGINE_CONFIG_INI);
+
+	if (!fstream.is_open()) return;
 
 	std::string line;
 	while (fstream)

@@ -7,12 +7,12 @@
 #include "../ResourceManager.h"
 #include "../RenderManager.h"
 
-static Dictionary TextDefaults
-{
-	Dictionary::EntryStruct<std::string>{"text", ""},
-	Dictionary::EntryStruct<std::string>{"font", ""},
-	Dictionary::EntryStruct<float>{"size", 11.f}
-};
+//static Dictionary TextDefaults
+//{
+//	Dictionary::EntryStruct<std::string>{"text", ""},
+//	Dictionary::EntryStruct<std::string>{"font", ""},
+//	Dictionary::EntryStruct<float>{"size", 11.f}
+//};
 
 void TextComponent::Update(float)
 {
@@ -71,12 +71,12 @@ void TextComponent::SetSize(unsigned size)
 	}
 }
 
-void TextComponent::InitializeComponent(const Dictionary& dictionary)
-{
-	dictionary.GetData("text", m_Text); // TODO complete initialize component for text
-}
-
-Dictionary& TextComponent::GetClassDefault()
-{
-	return TextDefaults;
-}
+//void TextComponent::InitializeComponent(const Dictionary& dictionary)
+//{
+//	dictionary.GetData("text", m_Text); // TODO complete initialize component for text
+//}
+//
+//Dictionary& TextComponent::GetClassDefault()
+//{
+//	return TextDefaults;
+//}

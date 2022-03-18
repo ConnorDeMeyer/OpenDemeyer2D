@@ -28,9 +28,6 @@ private:
 	/** Updates the component.*/
 	virtual void Update(float) {}
 
-	/** Renders the component.*/
-	virtual void Render() const {}
-
 	/** Renders the ImGui in debug mode*/
 	virtual void RenderImGui() {}
 
@@ -47,12 +44,12 @@ public:
 	 * Returns a dictionary of the class defaults so it may be used for file initialization
 	 * key -> value
 	 */
-	virtual Dictionary& GetClassDefault() = 0;
+	//virtual Dictionary& GetClassDefault() = 0;
 
 	/**
 	 * Initialize the components given the dictionary that contains the value for each parameter given in the GetClassDefault() method
 	 */
-	virtual void InitializeComponent(const Dictionary& dictionary) = 0;
+	//virtual void InitializeComponent(const Dictionary& dictionary) = 0;
 
 public:
 
@@ -60,7 +57,7 @@ public:
 	std::weak_ptr<GameObject> GetWeakReference() { return m_Reference; }
 
 	/** Returns the parent of this component*/
-	GameObject* GetParent() { return m_pParent; }
+	GameObject* GetParent() const { return m_pParent; }
 
 private:
 

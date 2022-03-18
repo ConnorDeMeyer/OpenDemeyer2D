@@ -42,10 +42,7 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::Render() const
 {
-	for (auto comp : m_Components)
-	{
-		comp->Render();
-	}
+	if (m_pRenderComponent) m_pRenderComponent->Render();
 
 	for (auto obj : m_Children)
 	{
@@ -128,13 +125,22 @@ void GameObject::SetParent(GameObject* pObject)
 	}
 
 	// Set transform relative to parent
-	//TODO
+	// TODO
 
 	// Set as parent
 	m_Parent = pObject;
 
-	// Set as child
-	pObject->m_Children.push_back(this);
+	if (pObject) {
+
+		// Set as child
+		pObject->m_Children.push_back(this);
+
+		// Set the scene
+		m_pScene = pObject->m_pScene;
+
+		// initialize game object
+		if (pObject->m_HasBeenInitialized) BeginPlay();
+	}
 }
 
 //void GameObject::AttachGameObject(GameObject* object)

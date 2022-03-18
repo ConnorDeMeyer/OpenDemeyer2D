@@ -29,9 +29,9 @@ public:
 
 	const std::string GetComponentName() override { return "TextComponent"; }
 
-	void InitializeComponent(const Dictionary& dictionary) override;
+	//void InitializeComponent(const Dictionary& dictionary) override;
 
-	Dictionary& GetClassDefault() override;
+	//Dictionary& GetClassDefault() override;
 
 private:
 

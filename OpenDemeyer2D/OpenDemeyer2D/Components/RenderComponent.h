@@ -14,7 +14,7 @@ public:
 
 public:
 
-	void Render() const override;
+	void Render() const;
 
 	void BeginPlay() override;
 
@@ -22,13 +22,13 @@ public:
 
 	void SetRenderAlignMode(eRenderAlignMode mode) { m_RenderAlignMode = mode; }
 
-	void SetSourceRect(const SDL_Rect& srcRect);
+	void SetSourceRect(const SDL_FRect& srcRect);
 
 	const std::string GetComponentName() override { return "RenderComponent"; }
 
-	void InitializeComponent(const Dictionary& dictionary) override;
+	//void InitializeComponent(const Dictionary& dictionary) override;
 
-	Dictionary& GetClassDefault() override;
+	//Dictionary& GetClassDefault() override;
 
 private:
 
@@ -38,7 +38,7 @@ private:
 
 	eRenderAlignMode m_RenderAlignMode;
 
-	SDL_Rect m_SourceRect;
+	SDL_FRect m_SourceRect;
 
 };
 

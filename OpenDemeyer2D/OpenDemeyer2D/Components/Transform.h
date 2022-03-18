@@ -18,9 +18,9 @@ public:
 
 	const std::string GetComponentName() override { return "Transform"; }
 
-	Dictionary& GetClassDefault() override;
+	//Dictionary& GetClassDefault() override;
 
-	void InitializeComponent(const Dictionary& dictionary) override;
+	//void InitializeComponent(const Dictionary& dictionary) override;
 
 	const glm::vec2& GetWorldPosition() const { return m_Position; }
 

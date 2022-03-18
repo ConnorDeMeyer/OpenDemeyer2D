@@ -6,7 +6,7 @@
 class GameObject;
 
 /** Class responsible for managing GameObjects and the GameObject tree.*/
-class Scene final
+class Scene
 {
 	friend Scene& SceneManager::CreateScene(const std::string& name);
 
@@ -19,7 +19,7 @@ private:
 public:
 
 	/** Deletes every object in the scene tree.*/
-	~Scene();
+	virtual ~Scene();
 
 	Scene(const Scene& other)				= delete;
 	Scene(Scene&& other)					= delete;
@@ -46,6 +46,8 @@ public:
 
 	/** Returns the name of this scene.*/
 	const std::string& GetName() { return m_Name; }
+
+	virtual void Initialize(){};
 
 private:
 

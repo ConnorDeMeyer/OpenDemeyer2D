@@ -1,10 +1,10 @@
 #include "TrashTheCache.h"
 #include "imgui.h"
 
-static Dictionary TrashTheCacheDefault
-{
-
-};
+//static Dictionary TrashTheCacheDefault
+//{
+//
+//};
 
 void TrashTheCache::RenderImGui()
 {
@@ -81,11 +81,11 @@ void TrashTheCache::RenderImGui()
 
 }
 
-Dictionary& TrashTheCache::GetClassDefault()
-{
-	return TrashTheCacheDefault;
-}
+//Dictionary& TrashTheCache::GetClassDefault()
+//{
+//	return TrashTheCacheDefault;
+//}
 
-void TrashTheCache::InitializeComponent(const Dictionary&)
-{
-}
+//void TrashTheCache::InitializeComponent(const Dictionary&)
+//{
+//}

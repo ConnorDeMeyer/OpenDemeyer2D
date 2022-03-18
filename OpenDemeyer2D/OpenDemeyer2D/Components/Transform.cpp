@@ -5,12 +5,12 @@
 #include "imgui.h"
 #include "../Dictionary.h"
 
-static Dictionary TransformDefaults
-{
-	Dictionary::EntryStruct<glm::vec2>{"pos", {0,0}},
-	Dictionary::EntryStruct<glm::vec2>{"scale", {1,1}},
-	Dictionary::EntryStruct<float>{"rot", 0.f}
-};
+//static Dictionary TransformDefaults
+//{
+//	Dictionary::EntryStruct<glm::vec2>{"pos", {0,0}},
+//	Dictionary::EntryStruct<glm::vec2>{"scale", {1,1}},
+//	Dictionary::EntryStruct<float>{"rot", 0.f}
+//};
 
 void Transform::BeginPlay()
 {
@@ -45,17 +45,17 @@ void Transform::RenderImGui()
 		SetRotation(rotation);
 }
 
-Dictionary& Transform::GetClassDefault()
-{
-	return TransformDefaults;
-}
+//Dictionary& Transform::GetClassDefault()
+//{
+//	return TransformDefaults;
+//}
 
-void Transform::InitializeComponent(const Dictionary& dictionary)
-{
-	dictionary.GetData("pos", m_LocalPosition);
-	dictionary.GetData("scale", m_LocalScale);
-	dictionary.GetData("rot", m_LocalRotation);
-}
+//void Transform::InitializeComponent(const Dictionary& dictionary)
+//{
+//	dictionary.GetData("pos", m_LocalPosition);
+//	dictionary.GetData("scale", m_LocalScale);
+//	dictionary.GetData("rot", m_LocalRotation);
+//}
 
 void Transform::SetPosition(const glm::vec2& pos)
 {

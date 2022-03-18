@@ -16,9 +16,9 @@ public:
 
 	const std::string GetComponentName() override { return "TrashTheCache"; }
 
-	Dictionary& GetClassDefault() override;
+	//Dictionary& GetClassDefault() override;
 
-	void InitializeComponent(const Dictionary& dictionary) override;
+	//void InitializeComponent(const Dictionary& dictionary) override;
 
 private:
 

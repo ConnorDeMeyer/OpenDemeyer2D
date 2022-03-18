@@ -95,12 +95,12 @@ public:
 
 		void IStreamValue(std::istream& is) override
 		{
-			if constexpr (std::is_trivially_copyable_v<T>)
-			{
-				char* address = reinterpret_cast<char*>(&m_Value);
-				is.readsome(address, sizeof(T));
-			}
-			else
+			//if constexpr (std::is_trivially_copyable_v<T>)
+			//{
+			//	char* address = reinterpret_cast<char*>(&m_Value);
+			//	is.readsome(address, sizeof(T));
+			//}
+			//else
 			{
 				is >> m_Value;
 			}
@@ -108,12 +108,12 @@ public:
 
 		void OStreamValue(std::ostream& os) override
 		{
-			if constexpr (std::is_trivially_copyable_v<T>)
-			{
-				char* address = reinterpret_cast<char*>(&m_Value);
-				os.write(address, sizeof(T));
-			}
-			else
+			//if constexpr (std::is_trivially_copyable_v<T>)
+			//{
+			//	char* address = reinterpret_cast<char*>(&m_Value);
+			//	os.write(address, sizeof(T));
+			//}
+			//else
 			{
 				os << m_Value;
 			}

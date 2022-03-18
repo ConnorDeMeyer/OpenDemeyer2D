@@ -3,6 +3,8 @@
 #include "ODArray.h"
 #include <memory>
 #include "ComponentBase.h"
+#include "Components/Transform.h"
+#include "Components/RenderComponent.h"
 
 class Scene;
 class Transform;
@@ -80,6 +82,8 @@ public:
 	/** returns the Transform component associated with this object.*/
 	Transform* GetTransform() const { return m_pTransform; }
 
+	RenderComponent* GetRenderComponent() const { return m_pRenderComponent; }
+
 	/** Returns a list of all children*/
 	const ODArray<GameObject*>& GetChildren() const { return m_Children; }
 
@@ -94,14 +98,6 @@ public:
 
 	/** Removes the object from the child list*/
 	//void RemoveChild(GameObject* pObject);
-
-	//TODO figure out how this works again
-	//Transform* GetComponent<Transform>() const
-	//{
-	//	return m_pTransform;
-	//}
-
-	//void RemoveComponent<Transform>() const { throw std::runtime_error("Cannot remove transform component"); }
 
 private:
 
@@ -123,6 +119,8 @@ private:
 
 	Transform* m_pTransform{};
 
+	RenderComponent* m_pRenderComponent{};
+
 	bool m_HasBeenInitialized{};
 };
 
@@ -134,16 +132,33 @@ private:
 template<typename T>
 T* GameObject::GetComponent() const
 {
-	for (ComponentBase* component : m_Components)
-		if (auto returnValue{ dynamic_cast<T*>(component) }) return returnValue;
-	return nullptr;
+	if constexpr (std::is_same_v<T, Transform>) {return reinterpret_cast<T*>(m_pTransform);}
+	else if constexpr (std::is_same_v<T, Transform>) {return reinterpret_cast<T*>(m_pRenderComponent);}
+	else {
+		for (ComponentBase* component : m_Components)
+			if (auto returnValue{ dynamic_cast<T*>(component) }) return returnValue;
+		return nullptr;
+	}
 }
 
 template <typename T>
 std::enable_if_t<std::is_base_of_v<ComponentBase, T>, T*>
 GameObject::AddComponent()
 {
-	if (GetComponent<T>()) {
+	if constexpr (std::is_same_v<T, RenderComponent>)
+	{
+		if (m_pRenderComponent) throw std::runtime_error("Component already in gameobject");
+
+		m_pRenderComponent = new RenderComponent();
+		m_Components.push_back(m_pRenderComponent);
+		m_pRenderComponent->m_pParent = this;
+
+		if (m_HasBeenInitialized) m_pRenderComponent->BeginPlay();
+
+		return m_pRenderComponent;
+	}
+
+	else if (GetComponent<T>()) {
 		throw std::runtime_error("Component already in gameobject");
 	}
 	else {
@@ -160,6 +175,8 @@ GameObject::AddComponent()
 template<typename T>
 void GameObject::RemoveComponent()
 {
+	if constexpr (std::is_same_v<T, Transform>) { throw std::runtime_error("Cannot remove transform component"); }
+
 	size_t counter{};
 	for (ComponentBase* component : m_Components)
 	{

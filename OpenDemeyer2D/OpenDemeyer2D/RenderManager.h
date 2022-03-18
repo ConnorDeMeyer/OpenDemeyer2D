@@ -30,12 +30,10 @@ public:
 	void Render() const;
 	void Destroy();
 
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, eRenderAlignMode renderMode = eRenderAlignMode::centered,  SDL_FRect* srcRect = nullptr) const;
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, eRenderAlignMode renderMode = eRenderAlignMode::centered, SDL_FRect* srcRect = nullptr) const;
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, eRenderAlignMode renderMode = eRenderAlignMode::centered, SDL_FRect* srcRect = nullptr) const;
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, float rotation, eRenderAlignMode renderMode = eRenderAlignMode::centered, SDL_FRect* srcRect = nullptr) const;
-
-	//void SetResolution(int w, int h);
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, eRenderAlignMode renderMode = eRenderAlignMode::centered, const SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, eRenderAlignMode renderMode = eRenderAlignMode::centered, const SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, eRenderAlignMode renderMode = eRenderAlignMode::centered, const SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, float rotation, eRenderAlignMode renderMode = eRenderAlignMode::centered, const SDL_FRect* srcRect = nullptr) const;
 
 	void SetRenderTarget(const std::shared_ptr<RenderTarget>& renderTarget) const;
 
@@ -45,15 +43,12 @@ private:
 
 	void RenderImGuiGameWindow() const;
 
-	//void RenderImGuiImages() const;
-
 	virtual ~RenderManager() = default;
 	RenderManager() = default;
 	
 	SDL_Window* m_Window{};
 	int windowResWidth{};
 	int windowResHeight{};
-	//SDL_Color m_clearColor{};
 
 	SDL_GLContext m_pContext{};
 
@@ -65,7 +60,7 @@ private:
 
 	std::shared_ptr<RenderTarget> m_RenderTexture;
 
-	
+	bool m_bKeepAspectRatio{ true };
 
 };
 

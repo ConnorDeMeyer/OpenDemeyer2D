@@ -24,9 +24,9 @@ public:
 
 	const std::string GetComponentName() override { return "TextureComponent"; }
 
-	void InitializeComponent(const Dictionary& dictionary) override;
+	//void InitializeComponent(const Dictionary& dictionary) override;
 
-	Dictionary& GetClassDefault() override;
+	//Dictionary& GetClassDefault() override;
 
 private:
 
