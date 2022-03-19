@@ -47,16 +47,12 @@ private:
 	RenderManager() = default;
 	
 	SDL_Window* m_Window{};
-	int windowResWidth{};
-	int windowResHeight{};
+	int m_WindowResWidth{};
+	int m_WindowResHeight{};
+	int m_GameResWidth{};
+	int m_GameResHeight{};
 
 	SDL_GLContext m_pContext{};
-
-	struct imGuiRenderParameters
-	{
-		SDL_FRect dst;
-		SDL_Texture* tex;
-	};
 
 	std::shared_ptr<RenderTarget> m_RenderTexture;
 

@@ -24,7 +24,7 @@ void TextComponent::Update(float)
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
 		}
 
-		auto texture = RESOURCES.LoadTexture(surf);
+		m_TextTexture = RESOURCES.LoadTexture(surf);
 		
 		SDL_FreeSurface(surf);
 

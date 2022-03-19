@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "GameObject.h"
+#include "ComponentBase.h"
 
 template<typename... inputParameterTypes>
 class MultiDelegate final
@@ -22,8 +23,8 @@ public:
 	MultiDelegate() = default;
 	virtual ~MultiDelegate()
 	{
-		for (auto bindedEvent : m_BindedEvents)
-			delete bindedEvent;
+		for (auto BoundEvent : m_BoundEvents)
+			delete BoundEvent;
 	}
 
 	MultiDelegate(const MultiDelegate<inputParameterTypes...>& other)				= default;
@@ -31,13 +32,26 @@ public:
 	MultiDelegate& operator=(const MultiDelegate<inputParameterTypes...>& other)	= default;
 	MultiDelegate& operator=(MultiDelegate<inputParameterTypes...>&& other)			= default;
 
-	/** bind a function that will be invalidated when the IBaseClass instance goes out of scope */
-	void BindFunction(GameObject* boundObject, const std::function<void(inputParameterTypes...)>& function)
+	/** bind a function that will be invalidated when the GameObject instance goes out of scope */
+	void BindFunction(const GameObject* boundObject, const std::function<void(inputParameterTypes...)>& function)
 	{
 		if (boundObject)
 		{
 			auto weakPtr = boundObject->GetWeakReference();
-			m_BindedEvents.push_back(new BoundFunction{
+			m_BoundEvents.push_back(new BoundFunction{
+				function,
+				[weakPtr]() {return !weakPtr.expired(); }
+				});
+		}
+	}
+
+	/** bind a function that will be invalidated when the Component instance goes out of scope */
+	void BindFunction(const ComponentBase* boundComponent, const std::function<void(inputParameterTypes...)>& function)
+	{
+		if (boundComponent)
+		{
+			auto weakPtr = boundComponent->GetWeakReference();
+			m_BoundEvents.push_back(new BoundFunction{
 				function,
 				[weakPtr]() {return !weakPtr.expired(); }
 				});
@@ -47,7 +61,7 @@ public:
 	/** bind a function and a predicate that should return false if the function is invalidated */
 	void BindFunction(const std::function<bool()>& ValidPredicate, const std::function<void(inputParameterTypes...)>& function)
 	{
-		m_BindedEvents.push_back(new BoundFunction{
+		m_BoundEvents.push_back(new BoundFunction{
 				function,
 				ValidPredicate });
 	}
@@ -55,7 +69,7 @@ public:
 	/** bind a global function that should never get invalidated */
 	void BindFunction(const std::function<void(inputParameterTypes...)>& function)
 	{
-		m_BindedEvents.push_back(new BoundFunction{
+		m_BoundEvents.push_back(new BoundFunction{
 				function,
 				[]() {return true; } });
 	}
@@ -63,8 +77,14 @@ public:
 	/** Activate all the bound functions*/
 	void BroadCast(const inputParameterTypes&... input...)
 	{
-		auto it = m_BindedEvents.rbegin();
-		while (it != m_BindedEvents.rend())
+		m_BoundEvents.remove_if([](BoundFunction* function) {return !function->validPredicate(); });
+		for (BoundFunction* Boundfunction : m_BoundEvents)
+		{
+			Boundfunction->function(input...);
+		}
+
+		/*auto it = m_BoundEvents.rbegin();
+		while (it != m_BoundEvents.rend())
 		{
 			if ((*it)->validPredicate())
 			{
@@ -72,17 +92,23 @@ public:
 			}
 			else
 			{
-				m_BindedEvents.remove(*it);
+				m_BoundEvents.remove(*it);
 			}
-			if (it != m_BindedEvents.rend())++it;
+			if (it != m_BoundEvents.rend())++it;
 			else break;
-		}
+		}*/
 	}
 
 	void BroadCast(const std::tuple<inputParameterTypes...>& parameters)
 	{
-		auto it = m_BindedEvents.rbegin();
-		while (it != m_BindedEvents.rend())
+		m_BoundEvents.remove_if([](BoundFunction* function) {return !function->validPredicate(); });
+		for (BoundFunction* Boundfunction : m_BoundEvents)
+		{
+			std::apply(Boundfunction->function, parameters);
+		}
+
+		/*auto it = m_BoundEvents.rbegin();
+		while (it != m_BoundEvents.rend())
 		{
 			if ((*it)->validPredicate())
 			{
@@ -90,21 +116,21 @@ public:
 			}
 			else
 			{
-				m_BindedEvents.remove(*it);
+				m_BoundEvents.erase(*it);
 			}
-			if (it != m_BindedEvents.rend())++it;
+			if (it != m_BoundEvents.rend())++it;
 			else break;
-		}
+		}*/
 	}
 
 	void RemoveAllFunctions()
 	{
-		m_BindedEvents.clear();
+		m_BoundEvents.clear();
 	}
 
 private:
 
-	std::list<BoundFunction*> m_BindedEvents;
+	std::list<BoundFunction*> m_BoundEvents;
 
 };
 
@@ -130,16 +156,28 @@ public:
 	Delegate& operator=(Delegate<inputParameterTypes...>&& other) = default;
 
 	/** bind a function that will be invalidated when the IBaseClass instance goes out of scope */
-	void BindFunction(GameObject* boundObject, const std::function<void(inputParameterTypes...)>& function)
+	void BindFunction(const GameObject* boundObject, const std::function<void(inputParameterTypes...)>& function)
 	{
 		if (boundObject)
 		{
 			auto weakPtr = boundObject->GetWeakReference();
-			if (m_pBoundEvent) delete m_pBoundEvent;
 			m_pBoundEvent = new BoundFunction{
 				function,
 				[weakPtr]() {return !weakPtr.expired(); }
 				};
+		}
+	}
+
+	/** bind a function that will be invalidated when the Component instance goes out of scope */
+	void BindFunction(const ComponentBase* boundComponent, const std::function<void(inputParameterTypes...)>& function)
+	{
+		if (boundComponent)
+		{
+			auto weakPtr = boundComponent->GetWeakReference();
+			m_pBoundEvent = new BoundFunction{
+				function,
+				[weakPtr]() {return !weakPtr.expired(); }
+			};
 		}
 	}
 

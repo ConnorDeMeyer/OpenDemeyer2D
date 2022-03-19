@@ -51,7 +51,7 @@ public:
 	void Destroy();
 
 	/** Returns weak reference of this object that will be invalidated once this object goes out of scope*/
-	std::weak_ptr<GameObject> GetWeakReference();
+	std::weak_ptr<GameObject> GetWeakReference() const;
 
 	/** Get the parent game object or nullptr if not attached to anything*/
 	GameObject* GetParent() const { return m_Parent; }

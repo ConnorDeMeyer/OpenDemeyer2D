@@ -5,15 +5,17 @@
 	<PropertyGroup />
 	<ItemDefinitionGroup>
 		<Link>
-			<AdditionalLibraryDirectories>$(SolutionDir)3rdParty\glew-2.1.0\lib\Release\$(Platform);$(SolutionDir)3rdParty\box2d\lib\$(Configuration);$(SolutionDir)lib\$(Platform)\$(Configuration);</AdditionalLibraryDirectories>
-			<AdditionalDependencies>xinput.lib;glew32.lib;glew32s.lib;opengl32.lib;glu32.lib;OpenDemeyer2D.lib;box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalLibraryDirectories>$(SolutionDir)3rdParty\glew-2.1.0\lib\Release\$(Platform);$(SolutionDir)3rdParty\box2d\lib\$(Configuration);$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)3rdParty\steamworks\redistributable_bin;</AdditionalLibraryDirectories>
+			<AdditionalDependencies>xinput.lib;glew32.lib;glew32s.lib;opengl32.lib;glu32.lib;OpenDemeyer2D.lib;box2d.lib;steam_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
 		</Link>
 		<ClCompile>
-			<AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\OpenDemeyer2D;
+			<AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\OpenDemeyer2D;$(SolutionDir)\3rdParty\steamworks\public\steam;
 			</AdditionalIncludeDirectories>
 		</ClCompile>
 		<PostBuildEvent>
 			<Command>xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\*.dll $(OutputPath) /Y
+xcopy $(SolutionDir)OpenDemeyer2D\steam_appid.txt $(OutputPath) /R /Y
 xcopy $(SolutionDir)OpenDemeyer2D\imgui.ini $(OutputPath) /R /Y
 xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
 		</PostBuildEvent>

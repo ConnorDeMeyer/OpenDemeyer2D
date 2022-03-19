@@ -21,3 +21,8 @@ void HealthComponent::Heal(float amount)
 	m_Health = std::min(m_Health + amount, m_MaxHealth);
 	OnHeal.BroadCast(amount);
 }
+
+void HealthComponent::SetHealth(float health)
+{
+	m_Health = std::min(m_MaxHealth, health);
+}

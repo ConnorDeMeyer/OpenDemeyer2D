@@ -29,6 +29,12 @@ int GetOpenGLDriverIndex()
 
 void RenderManager::Init(SDL_Window* window)
 {
+	auto& settings = ENGINE.GetSettings();
+	
+	settings.GetData(OD_GAME_RESOLUTION_WIDTH, m_GameResWidth);
+	settings.GetData(OD_GAME_RESOLUTION_HEIGHT, m_GameResHeight);
+	settings.GetData(OD_KEEP_ASPECT_RATIO_EDITOR, m_bKeepAspectRatio);
+	
 	m_Window = window;
 
 	// Create OpenGL context 
@@ -38,7 +44,7 @@ void RenderManager::Init(SDL_Window* window)
 		std::cerr << "Core::Initialize( ), error when calling SDL_GL_CreateContext: " << SDL_GetError() << std::endl;
 		return;
 	}
-	
+
 	if (glewInit() != GLEW_OK)
 	{
 		std::cerr << "Failed to initialize GLEW " << SDL_GetError() << std::endl;
@@ -59,18 +65,18 @@ void RenderManager::Init(SDL_Window* window)
 		//SDL_GL_SetSwapInterval(0);
 	}
 
-	SDL_GL_GetDrawableSize(window, &windowResWidth, &windowResHeight);
+	SDL_GL_GetDrawableSize(window, &m_WindowResWidth, &m_WindowResHeight);
 
 	// Set the Projection matrix to the identity matrix
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
 	// Set up a two-dimensional orthographic viewing region.
-	gluOrtho2D(0, windowResWidth, 0, windowResHeight); // y from bottom to top
+	gluOrtho2D(0, m_GameResWidth, 0, m_GameResHeight); // y from bottom to top
 
 	// Set the viewport to the client window area
 	// The viewport is the rectangular region of the window where the image is drawn.
-	glViewport(0, 0, windowResWidth, windowResHeight);
+	glViewport(0, 0, m_GameResWidth, m_GameResHeight);
 
 	// Set the Modelview matrix to the identity matrix
 	glMatrixMode(GL_MODELVIEW);
@@ -92,10 +98,7 @@ void RenderManager::Init(SDL_Window* window)
 	ImGui_ImplSDL2_InitForOpenGL(window, SDL_GL_GetCurrentContext());
 	ImGui_ImplOpenGL3_Init("#version 130");
 
-
-	m_RenderTexture = RESOURCES.CreateRenderTexture(windowResWidth, windowResHeight);
-
-	ENGINE.GetSettings().GetData(OD_KEEP_ASPECT_RATIO_EDITOR, m_bKeepAspectRatio);
+	m_RenderTexture = RESOURCES.CreateRenderTexture(m_GameResWidth, m_GameResHeight);
 }
 
 void RenderManager::Render() const
@@ -112,7 +115,7 @@ void RenderManager::Render() const
 	glPushMatrix();
 		glClear(GL_COLOR_BUFFER_BIT);
 		glScalef(1, -1, 1);
-		glTranslatef(0, -static_cast<float>(windowResHeight), 0);
+		glTranslatef(0, -static_cast<float>(m_GameResHeight), 0);
 
 		SCENES.Render();
 
@@ -273,5 +276,5 @@ void RenderManager::SetRenderTarget(const std::shared_ptr<RenderTarget>& renderT
 void RenderManager::SetRenderTargetScreen() const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, windowResWidth, windowResHeight);
+	glViewport(0, 0, m_WindowResWidth, m_WindowResHeight);
 }

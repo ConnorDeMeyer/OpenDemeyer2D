@@ -22,8 +22,7 @@ void Scene::Add(GameObject* pObject)
 	if (pObject->m_pScene) throw ObjectAlreadyInASceneException();
 
 	m_SceneTree.push_back(pObject);
-	pObject->m_pScene = this;
-	// TODO set m_pScene in the child objects
+	SetScene(pObject);
 	pObject->BeginPlay();
 }
 
@@ -47,9 +46,10 @@ void Scene::Update(float deltaTime)
 
 	for (GameObject* object : m_DestroyableObjects)
 	{
-		m_SceneTree.SwapRemove(object);
+		object->SetParent(nullptr);
 		DestroyObjectImmediately(object);
 	}
+	m_DestroyableObjects.clear();
 }
 
 void Scene::Render() const
@@ -79,4 +79,13 @@ void Scene::RenderImGui()
 void Scene::RemoveObject(GameObject* object)
 {
 	m_SceneTree.SwapRemove(object);
+}
+
+void Scene::SetScene(GameObject* object)
+{
+	object->m_pScene = this;
+	for (auto child : object->m_Children)
+	{
+		SetScene(child);
+	}
 }

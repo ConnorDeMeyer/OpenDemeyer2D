@@ -12,7 +12,9 @@ class ComponentBase
 
 protected:
 
-	ComponentBase() = default;
+	ComponentBase()
+		: m_Reference{ std::shared_ptr<ComponentBase>(this,[](ComponentBase*) {}) }
+	{}
 
 public:
 
@@ -36,7 +38,7 @@ private:
 
 	//TODO there might be a better way to do this with typeIds
 	/** Gets the name of the component for debugging purposes*/
-	virtual const std::string GetComponentName() = 0;
+	virtual const std::string GetComponentName() { return "Component???"; }
 
 public:
 
@@ -54,7 +56,7 @@ public:
 public:
 
 	/** Returns weak reference of this component that will be invalidated once this component goes out of scope*/
-	std::weak_ptr<GameObject> GetWeakReference() { return m_Reference; }
+	std::weak_ptr<ComponentBase> GetWeakReference() const { return m_Reference; }
 
 	/** Returns the parent of this component*/
 	GameObject* GetParent() const { return m_pParent; }
@@ -69,6 +71,6 @@ private:
 	GameObject* m_pParent{};
 
 	/** Shared pointer with empty destructor for which you can ask a weak reference to*/
-	std::shared_ptr<GameObject> m_Reference;
+	std::shared_ptr<ComponentBase> m_Reference;
 
 };

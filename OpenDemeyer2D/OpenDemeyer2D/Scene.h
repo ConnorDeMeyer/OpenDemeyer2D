@@ -47,12 +47,15 @@ public:
 	/** Returns the name of this scene.*/
 	const std::string& GetName() { return m_Name; }
 
-	virtual void Initialize(){};
+	virtual void Initialize(){}
 
 private:
 
 	/** Remove the object from the scene tree list*/
 	void RemoveObject(GameObject* object);
+
+	/** Sets a reference to the scene inside the object and its children*/
+	void SetScene(GameObject* object);
 
 private:
 

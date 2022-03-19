@@ -94,7 +94,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -108,8 +108,10 @@
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)OpenDemeyer2D\imgui.ini $(OutputPath) /R /Y
-xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)BurgerTime\imgui.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)BurgerTime\Engineconfig.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\*.dll $(OutputPath) /Y
+xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -118,7 +120,7 @@ xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -134,15 +136,17 @@ xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)OpenDemeyer2D\imgui.ini $(OutputPath) /R /Y
-xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)BurgerTime\imgui.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)BurgerTime\Engineconfig.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\*.dll $(OutputPath) /Y
+xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -156,8 +160,10 @@ xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)OpenDemeyer2D\imgui.ini $(OutputPath) /R /Y
-xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)BurgerTime\imgui.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)BurgerTime\Engineconfig.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\*.dll $(OutputPath) /Y
+xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -166,7 +172,7 @@ xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -182,17 +188,25 @@ xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)OpenDemeyer2D\imgui.ini $(OutputPath) /R /Y
-xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
+xcopy $(SolutionDir)BurgerTime\imgui.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)BurgerTime\Engineconfig.ini $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\*.dll $(OutputPath) /Y
+xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BurgerTimeGI.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PeterPepper.cpp" />
+    <ClCompile Include="PlayerResources.cpp" />
+    <ClCompile Include="PlayerUI.cpp" />
     <ClCompile Include="PPSpriteMovement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimeGI.h" />
+    <ClInclude Include="PeterPepper.h" />
+    <ClInclude Include="PlayerResources.h" />
+    <ClInclude Include="PlayerUI.h" />
     <ClInclude Include="PPSpriteMovement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

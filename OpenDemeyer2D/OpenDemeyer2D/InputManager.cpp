@@ -9,6 +9,7 @@
 
 void InputManager::ProcessInput()
 {
+	SDL_GetMouseState(&m_MouseX, &m_MouseY);
 	
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
@@ -46,6 +47,19 @@ void InputManager::ProcessInput()
 			HandleControllerAxis(e);
 		}
 	}
+
+	for (auto mousePress : m_MousePressedActions)
+		if (IsMouseButtonPressed(mousePress.first))
+			mousePress.second.BroadCast(float(m_MouseX), float(m_MouseY));
+
+	//for (auto keyPress : m_KeyPressedActions)
+	//	if (IsKeyPressed(keyPress.first))
+	//		keyPress.second.BroadCast();
+
+	//for (int i{}; i < MaxControllers; ++i)
+	//	for (auto controllerBtn : m_pControllerPressedActions[i])
+	//		if (IsKeyPressed(controllerBtn.first))
+	//			controllerBtn.second.BroadCast();
 }
 
 int InputManager::RegisterInputComponent(InputComponent* comp)

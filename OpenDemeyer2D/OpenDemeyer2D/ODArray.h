@@ -26,7 +26,7 @@ public:
 	inline void SwapRemove(const T& element)
 	{
 		size_t size = this->size();
-		for (size_t i{}; i < size; ++size)
+		for (size_t i{}; i < size; ++i)
 		{
 			if (this->operator[](i) == element)
 			{

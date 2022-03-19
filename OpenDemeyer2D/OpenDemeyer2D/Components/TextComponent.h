@@ -27,6 +27,10 @@ public:
 	void SetColor(const SDL_Color& color);
 	void SetSize(unsigned int size);
 
+	const std::shared_ptr<Texture2D>& getTexture() const { return m_TextTexture; }
+
+	const std::shared_ptr<Font>& getFont() const { return m_Font; }
+
 	const std::string GetComponentName() override { return "TextComponent"; }
 
 	//void InitializeComponent(const Dictionary& dictionary) override;

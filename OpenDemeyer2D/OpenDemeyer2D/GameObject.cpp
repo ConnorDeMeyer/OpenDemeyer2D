@@ -93,7 +93,7 @@ void GameObject::Destroy()
 	m_pScene->DestroyObject(this);
 }
 
-std::weak_ptr<GameObject> GameObject::GetWeakReference()
+std::weak_ptr<GameObject> GameObject::GetWeakReference() const
 {
 	return m_Reference;
 }

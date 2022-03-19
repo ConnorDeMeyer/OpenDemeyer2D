@@ -14,10 +14,28 @@
     <ClCompile Include="PPSpriteMovement.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerResources.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PeterPepper.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerUI.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimeGI.h" />
     <ClInclude Include="PPSpriteMovement.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerResources.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PeterPepper.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerUI.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

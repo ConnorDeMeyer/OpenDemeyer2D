@@ -88,5 +88,6 @@ private:
 #define OD_RENDERER_LAYERS "RendererLayers"
 #define OD_RESOURCES_PATH "ResourcesPath"
 #define OD_KEEP_ASPECT_RATIO_EDITOR "KeepAspectRatioEditor"
+#define OD_GAME_TITLE "GameTitle"
 
 #pragma endregion

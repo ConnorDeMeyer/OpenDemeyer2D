@@ -42,14 +42,15 @@ void SpriteComponent::Update(float deltaTime)
 		m_CurrentFrameY = m_CurrentFrame / horizontalFrames;
 		m_CurrentFrameX = m_CurrentFrame % horizontalFrames;
 
-		if (m_pRenderComponent)
-			m_pRenderComponent->SetSourceRect(SDL_FRect{
-				m_CurrentFrameX * m_FrameDimension.x,
-				m_CurrentFrameY * m_FrameDimension.y,
-				m_FrameDimension.x,
-				m_FrameDimension.y
-				});
 	}
+	if (m_pRenderComponent)
+		m_pRenderComponent->SetSourceRect(SDL_FRect{
+			m_CurrentFrameX * m_FrameDimension.x,
+			m_CurrentFrameY * m_FrameDimension.y,
+			m_FrameDimension.x,
+			m_FrameDimension.y
+			});
+	
 }
 
 void SpriteComponent::SetTexture(const std::shared_ptr<Texture2D>& texture)
@@ -73,13 +74,14 @@ void SpriteComponent::RenderImGui()
 
 void SpriteComponent::SetFrameOffset(int offset)
 {
+	int placeholder = m_FrameOffset;
 	m_FrameOffset = offset;
-	SetCurrentFrame(m_CurrentFrame + offset);
+	SetCurrentFrame(m_CurrentFrame + placeholder - m_FrameOffset);
 }
 
 void SpriteComponent::SetCurrentFrame(int frame)
 {
-	m_CurrentFrame = frame;
+	m_CurrentFrame = frame + m_FrameOffset;
 	int horizontalFrames{ int(m_Texture->GetWidth() / m_FrameDimension.x) };
 	m_CurrentFrameY = m_CurrentFrame / horizontalFrames;
 	m_CurrentFrameX = m_CurrentFrame % horizontalFrames;

@@ -89,6 +89,12 @@
     <ClCompile Include="Components\HealthComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Components\CollisionComponent.cpp">
+      <Filter>EngineFiles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SteamAPI.cpp">
+      <Filter>EngineFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ODArray.h">
@@ -199,6 +205,12 @@
     </ClInclude>
     <ClInclude Include="Components\HealthComponent.h">
       <Filter>EngineFiles\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\CollisionComponent.h">
+      <Filter>EngineFiles\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SteamAPI.h">
+      <Filter>EngineFiles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

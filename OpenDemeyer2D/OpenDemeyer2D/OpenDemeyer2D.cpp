@@ -22,6 +22,11 @@
 #include <gl/glew.h>
 #include <gl/wglew.h>
 
+
+#include <steam_api.h>
+
+#include "SteamAPI.h"
+
 using namespace std::chrono;
 
 void PrintSDLVersion()
@@ -42,6 +47,24 @@ void Engine::Initialize()
 {
 	InitializeSettings();
 
+#if defined(DEBUG) || defined(_DEBUG)
+	m_EngineSettings.GetData(OD_EDITOR_RESOLUTION_WIDTH, m_ResolutionWidth);
+	m_EngineSettings.GetData(OD_EDITOR_RESOLUTION_HEIGHT, m_ResolutionHeight);
+	int w, h;
+	m_EngineSettings.GetData(OD_EDITOR_WINDOW_SIZE_WIDTH, w);
+	m_EngineSettings.GetData(OD_EDITOR_WINDOW_SIZE_HEIGHT, h);
+	bool maximizeWindow{};
+	m_EngineSettings.GetData(OD_EDITOR_WINDOW_MAXIMIZED, maximizeWindow);
+#else
+	m_EngineSettings.GetData(OD_GAME_RESOLUTION_HEIGHT, m_ResolutionWidth);
+	m_EngineSettings.GetData(OD_GAME_RESOLUTION_HEIGHT, m_ResolutionHeight);
+	int w, h;
+	m_EngineSettings.GetData(OD_GAME_WINDOW_SIZE_WIDTH, w);
+	m_EngineSettings.GetData(OD_GAME_WINDOW_SIZE_HEIGHT, h);
+	bool maximizeWindow{};
+	m_EngineSettings.GetData(OD_GAME_WINDOW_MAXIMIZED, maximizeWindow);
+#endif
+
 	PrintSDLVersion();
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
@@ -55,15 +78,12 @@ void Engine::Initialize()
 
 	SDL_DisplayMode DM;
 	SDL_GetCurrentDisplayMode(0, &DM);
-	m_EngineSettings.GetData(OD_EDITOR_RESOLUTION_WIDTH, m_ResolutionWidth);
-	m_EngineSettings.GetData(OD_EDITOR_RESOLUTION_HEIGHT, m_ResolutionHeight);
-	int w, h;
-	m_EngineSettings.GetData(OD_EDITOR_WINDOW_SIZE_WIDTH, w);
-	m_EngineSettings.GetData(OD_EDITOR_WINDOW_SIZE_HEIGHT, h);
 
+	std::string windowTitle;
+	m_EngineSettings.GetData(OD_GAME_TITLE, windowTitle);
 
 	m_Window = SDL_CreateWindow(
-		"Programming 4 assignment",
+		windowTitle.c_str(),
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		w,
@@ -76,39 +96,30 @@ void Engine::Initialize()
 	}
 
 	// Maximize window if it the setting is on
-	bool maximizeWindow{};
-	m_EngineSettings.GetData(OD_EDITOR_WINDOW_MAXIMIZED, maximizeWindow);
 	if (maximizeWindow) {
 		SDL_MaximizeWindow(m_Window);
+	}
+
+	/** Initialize steam*/
+	if (!SteamAPI_Init())
+	{
+		std::cout << "Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed)." << std::endl;
+	}
+	else
+	{
+		ACHIEVEMENTS.Init();
+		std::cout << "Successfully initialized steam." << std::endl;
 	}
 
 	RENDER.Init(m_Window);
 }
 
-//void Engine::LoadGame() const
-//{
-	//auto& scene = SceneManager::GetInstance().CreateScene("DemoScene");
-	//
-	//GameObject* go = new GameObject();
-	//go->AddComponent<TrashTheCache>();
-	//scene.Add(go);
-	//
-	//go = new GameObject();
-	//go->AddComponent<RenderComponent>();
-	//auto texture = go->AddComponent<TextureComponent>();
-	//texture->SetTexture("34451b7e4347f9c02928f5360183a9e1ca98098c690d0f4209d81d9d3e7946a3.png");
-	//scene.Add(go);
-	//
-	//GameObject* goc = new GameObject();
-	//goc->AddComponent<RenderComponent>();
-	//texture = goc->AddComponent<TextureComponent>();
-	//texture->SetTexture("crosshair.png");
-	//goc->SetParent(go);
-//}
-
 void Engine::Cleanup()
 {
 	RENDER.Destroy();
+
+	// Close steam
+	SteamAPI_Shutdown();
 
 	// cleanup ImGui variables
 	for (auto& buffer : m_SettingsInputBuffer)
@@ -139,6 +150,8 @@ void Engine::Run(GameInstance* pGameInstance)
 		auto lastTime = high_resolution_clock::now();
 		while (!m_Quit)
 		{
+			SteamAPI_RunCallbacks();
+
 			const auto currentTime = high_resolution_clock::now();
 			float deltaTime = duration<float>(currentTime - lastTime).count();
 			m_DeltaTime = std::min(deltaTime, m_MinimumFps);
@@ -192,30 +205,31 @@ void Engine::InitializeSettings()
 {
 	// Load default values
 	int integer{ 1920 };
-	m_EngineSettings.Insert("GameResolutionWidth", integer);
-	m_EngineSettings.Insert("EditorResolutionWidth", integer);
-	m_EngineSettings.Insert("GameWindowSizeWidth", integer);
-	m_EngineSettings.Insert("EditorWindowSizeWidth", integer);
+	m_EngineSettings.Insert(OD_GAME_RESOLUTION_WIDTH, integer);
+	m_EngineSettings.Insert(OD_EDITOR_RESOLUTION_WIDTH, integer);
+	m_EngineSettings.Insert(OD_GAME_WINDOW_SIZE_WIDTH, integer);
+	m_EngineSettings.Insert(OD_EDITOR_WINDOW_SIZE_WIDTH, integer);
 
 	integer = 1080;
-	m_EngineSettings.Insert("GameResolutionHeight", integer);
-	m_EngineSettings.Insert("EditorResolutionHeight", integer);
-	m_EngineSettings.Insert("GameWindowSizeHeight", integer);
-	m_EngineSettings.Insert("EditorWindowSizeHeight", integer);
+	m_EngineSettings.Insert(OD_GAME_RESOLUTION_HEIGHT, integer);
+	m_EngineSettings.Insert(OD_EDITOR_RESOLUTION_HEIGHT, integer);
+	m_EngineSettings.Insert(OD_GAME_WINDOW_SIZE_HEIGHT, integer);
+	m_EngineSettings.Insert(OD_EDITOR_WINDOW_SIZE_HEIGHT, integer);
 
 	integer = 3;
-	m_EngineSettings.Insert("RendererLayers", integer);
+	m_EngineSettings.Insert(OD_RENDERER_LAYERS, integer);
 
 	bool boolean{ true };
-	m_EngineSettings.Insert("GameWindowMaximized", boolean);
-	m_EngineSettings.Insert("EditorWindowMaximized", boolean);
-	m_EngineSettings.Insert("KeepAspectRatioEditor", boolean);
+	m_EngineSettings.Insert(OD_GAME_WINDOW_MAXIMIZED, boolean);
+	m_EngineSettings.Insert(OD_EDITOR_WINDOW_MAXIMIZED, boolean);
+	m_EngineSettings.Insert(OD_KEEP_ASPECT_RATIO_EDITOR, boolean);
 
 	boolean = false;
-	m_EngineSettings.Insert("GameFullscreen", boolean);
-	m_EngineSettings.Insert("EditorFullscreen", boolean);
+	m_EngineSettings.Insert(OD_GAME_FULLSCREEN, boolean);
+	m_EngineSettings.Insert(OD_EDITOR_FULLSCREEN, boolean);
 
-	m_EngineSettings.Insert("ResourcesPath", std::string("Data/"));
+	m_EngineSettings.Insert(OD_RESOURCES_PATH, std::string("Data/"));
+	m_EngineSettings.Insert(OD_GAME_TITLE, std::string("OpenDemeyer2D"));
 
 	// Load the engineconfig.ini file
 	auto fstream = std::ifstream(OD_ENGINE_CONFIG_INI);
@@ -278,13 +292,14 @@ void Engine::RenderSettings()
 	ImGui::Begin("Engine Settings");
 
 	auto it = m_EngineSettings.begin();
-	auto itBuffer = m_SettingsInputBuffer.begin();
-	while (it != m_EngineSettings.end() && itBuffer != m_SettingsInputBuffer.end())
+	while (it != m_EngineSettings.end())
 	{
-		ImGui::InputText(it->first.c_str(), itBuffer->second, INPUT_TEXT_BUFFER_SIZE);
-
+		auto itBuffer = m_SettingsInputBuffer.find(it->first);
+		if (itBuffer != m_SettingsInputBuffer.end())
+		{
+			ImGui::InputText(it->first.c_str(), itBuffer->second, INPUT_TEXT_BUFFER_SIZE);
+		}
 		++it;
-		++itBuffer;
 	}
 
 	if (ImGui::Button("Save settings"))
