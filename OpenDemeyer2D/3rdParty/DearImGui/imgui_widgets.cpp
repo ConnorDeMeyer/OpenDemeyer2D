@@ -6883,7 +6883,7 @@ bool ImGui::BeginMenuEx(const char* label, const char* icon, bool enabled)
     }
 
     // Tag menu as used. Next time BeginMenu() with same ID is called it will append to existing menu
-    g.MenusIdSubmittedThisFrame.push_back(id);
+    g.MenusIdSubmittedThisFrame.emplace_back(id);
 
     ImVec2 label_size = CalcTextSize(label, NULL, true);
 
@@ -7249,7 +7249,7 @@ bool    ImGui::BeginTabBarEx(ImGuiTabBar* tab_bar, const ImRect& tab_bar_bb, ImG
         PushOverrideID(tab_bar->ID);
 
     // Add to stack
-    g.CurrentTabBarStack.push_back(GetTabBarRefFromTabBar(tab_bar));
+    g.CurrentTabBarStack.emplace_back(GetTabBarRefFromTabBar(tab_bar));
     g.CurrentTabBar = tab_bar;
 
     // Append with multiple BeginTabBar()/EndTabBar() pairs.
@@ -7643,7 +7643,7 @@ void ImGui::TabBarAddTab(ImGuiTabBar* tab_bar, ImGuiTabItemFlags tab_flags, ImGu
     if (new_tab.LastFrameVisible == -1)
         new_tab.LastFrameVisible = g.FrameCount - 1;
     new_tab.Window = window;                                // Required so tab bar layout can compute the tab width before tab submission
-    tab_bar->Tabs.push_back(new_tab);
+    tab_bar->Tabs.emplace_back(new_tab);
 }
 
 // The *TabId fields be already set by the docking system _before_ the actual TabItem was created, so we clear them regardless.
@@ -8006,7 +8006,7 @@ bool    ImGui::TabItemEx(ImGuiTabBar* tab_bar, const char* label, bool* p_open, 
     bool tab_is_new = false;
     if (tab == NULL)
     {
-        tab_bar->Tabs.push_back(ImGuiTabItem());
+        tab_bar->Tabs.emplace_back(ImGuiTabItem());
         tab = &tab_bar->Tabs.back();
         tab->ID = id;
         tab->Width = size.x;

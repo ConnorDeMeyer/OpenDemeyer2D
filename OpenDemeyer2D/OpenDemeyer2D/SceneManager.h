@@ -32,6 +32,11 @@ public:
 	/** Renders the ImGui of the scene*/
 	void RenderImGui();
 
+	/** Returns the scene that is currently being updated and rendered*/
+	Scene* GetActiveScene() const { return m_pActiveScene; }
+
+	void PhysicsStep(float timeStep, int velocityIterations, int positionIterations);
+
 private:
 
 	SceneManager() = default;

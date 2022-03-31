@@ -1,12 +1,16 @@
 ﻿#pragma once
+#include <b2_world.h>
+
 #include "SceneManager.h"
 #include <vector>
 #include "ODArray.h"
+#include <memory>
 
 class GameObject;
+class b2World;
 
 /** Class responsible for managing GameObjects and the GameObject tree.*/
-class Scene
+class Scene final : public b2ContactListener
 {
 	friend Scene& SceneManager::CreateScene(const std::string& name);
 
@@ -47,7 +51,18 @@ public:
 	/** Returns the name of this scene.*/
 	const std::string& GetName() { return m_Name; }
 
-	virtual void Initialize(){}
+	/** Returns the Box2D physics world.*/
+	b2World* GetPhysicsWorld() const { return m_pb2World; }
+
+private:
+
+	void BeginContact(b2Contact* contact) override;
+
+	void EndContact(b2Contact* contact) override;
+
+	void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
+
+	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
 
 private:
 
@@ -64,6 +79,8 @@ private:
 
 	/** References to object that are flagged for deletion.*/
 	ODArray<GameObject*> m_DestroyableObjects;
+
+	b2World* m_pb2World{};
 };
 
 struct ObjectAlreadyInASceneException : public std::exception

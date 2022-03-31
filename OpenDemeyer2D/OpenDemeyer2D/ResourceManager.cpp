@@ -9,7 +9,7 @@
 #include <SDL.h>
 #include <gl/glew.h>
 
-
+#include "Surface2D.h"
 #include "RenderManager.h"
 #include "Texture2D.h"
 #include "Font.h"
@@ -212,4 +212,36 @@ std::shared_ptr<RenderTarget> ResourceManager::CreateRenderTexture(int width, in
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	return std::make_shared<RenderTarget>(frameBuffer, renderedTexture, width, height);
+}
+
+std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file)
+{
+	// Don't load the same image if it is already loaded
+	auto it = m_LoadedSurfaces.find(file);
+	if (it != m_LoadedSurfaces.end())
+	{
+		if (!it->second.expired())
+			return it->second.lock();
+	}
+
+	// Load the image if it isn't loaded already
+	const auto fullPath = m_DataPath + file;
+	SDL_Surface* pLoadedSurface = IMG_Load(fullPath.c_str());
+	if (!pLoadedSurface)
+	{
+		throw std::runtime_error(std::string("Failed to load surface: ") + SDL_GetError());
+	}
+	
+	std::shared_ptr<Surface2D> sharedSurface = std::make_shared<Surface2D>(pLoadedSurface);
+
+	// Add it to the list
+	m_LoadedSurfaces.insert(std::make_pair(file, sharedSurface));
+
+	return sharedSurface;
+}
+
+std::shared_ptr<Surface2D> ResourceManager::LoadSurface(int width, int height)
+{
+	SDL_Surface* pSurface = SDL_CreateRGBSurfaceWithFormat(0,width,height,32,SDL_PIXELFORMAT_RGBA32);
+	return std::make_shared<Surface2D>(pSurface);
 }

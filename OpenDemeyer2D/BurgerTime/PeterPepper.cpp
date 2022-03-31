@@ -2,7 +2,7 @@
 
 #include "Components/InputComponent.h"
 #include "GameObject.h"
-#include "Components/CollisionComponent.h"
+#include "Components/PhysicsComponent.h"
 #include "Components/SpriteComponent.h"
 #include "PPSpriteMovement.h"
 
@@ -10,20 +10,14 @@ void PeterPepper::BeginPlay()
 {
 	auto input = GetParent()->GetComponent<InputComponent>();
 	auto sprite = GetParent()->GetComponent<SpriteComponent>();
-	auto collision = GetParent()->GetComponent<CollisionComponent>();
+	auto collision = GetParent()->GetComponent<PhysicsComponent>();
 	
 	input->BindKeyPressed(SDLK_d, [this] {this->MoveRight(1.f); });
 	input->BindKeyPressed(SDLK_a, [this] {this->MoveRight(-1.f); });
 
-	collision->OnOverlap.BindFunction(this, [this] {OnLifeLost.BroadCast(); });
-	collision->OnOverlap.BindFunction(input, [input] {input->SetActive(false); });
+	collision->OnOverlap.BindFunction(this, [this](PhysicsComponent*) {OnLifeLost.BroadCast(); });
+	collision->OnOverlap.BindFunction(input, [input](PhysicsComponent*) {input->SetActive(false); });
 	sprite->OnAnimationEnd.BindFunction(input, [input] {input->SetActive(true); });
-
-	//// debug press space to die
-	//if (collision && input)
-	//{
-	//	input->BindKeyDown(SDLK_SPACE, [collision] {collision->OnOverlap.BroadCast(); });
-	//}
 
 }
 

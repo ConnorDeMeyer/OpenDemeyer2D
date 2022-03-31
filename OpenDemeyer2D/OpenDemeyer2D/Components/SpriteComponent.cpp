@@ -74,9 +74,8 @@ void SpriteComponent::RenderImGui()
 
 void SpriteComponent::SetFrameOffset(int offset)
 {
-	int placeholder = m_FrameOffset;
 	m_FrameOffset = offset;
-	SetCurrentFrame(m_CurrentFrame + placeholder - m_FrameOffset);
+	SetCurrentFrame(m_CurrentFrame - m_FrameOffset);
 }
 
 void SpriteComponent::SetCurrentFrame(int frame)

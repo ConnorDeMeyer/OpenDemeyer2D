@@ -4,7 +4,7 @@
 #include "PeterPepper.h"
 #include "Components/SpriteComponent.h"
 #include "Components/InputComponent.h"
-#include "Components/CollisionComponent.h"
+#include "Components/PhysicsComponent.h"
 
 void PPSpriteMovement::BeginPlay()
 {

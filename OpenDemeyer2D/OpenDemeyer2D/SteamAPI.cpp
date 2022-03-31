@@ -1,4 +1,9 @@
-﻿#include "SteamAPI.h"
+﻿/**
+ * Taken from the Steamwords API website
+ * Example for the space wars game
+ */
+
+#include "SteamAPI.h"
 
 #include <isteamuser.h>
 #include <isteamutils.h>

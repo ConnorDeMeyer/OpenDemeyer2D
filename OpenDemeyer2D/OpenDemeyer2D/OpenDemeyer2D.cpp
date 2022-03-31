@@ -8,11 +8,6 @@
 #include "Scene.h"
 #include "GameInstance.h"
 
-#include "CustomComponents/TrashTheCache.h"
-#include "Components/RenderComponent.h"
-#include "Components/TextComponent.h"
-#include "Components/TextureComponent.h"
-
 #include <chrono>
 #include <thread>
 #include <fstream>
@@ -155,13 +150,18 @@ void Engine::Run(GameInstance* pGameInstance)
 			const auto currentTime = high_resolution_clock::now();
 			float deltaTime = duration<float>(currentTime - lastTime).count();
 			m_DeltaTime = std::min(deltaTime, m_MinimumFps);
+			m_TimeLag += m_DeltaTime;
 
 			input.ProcessInput();
+			for (; m_TimeLag >= 0.f; m_TimeLag -= m_PhysicsTimeStep)
+				sceneManager.PhysicsStep(m_PhysicsTimeStep, m_PhysicsVelocityIter, m_PhysicsPositionIterations);
 			sceneManager.Update(m_DeltaTime);
 			renderer.Render();
 
+			const auto waitTime = currentTime + milliseconds(long long(m_TargetFps * 1000.f)) - high_resolution_clock::now();
 
-			//std::this_thread::sleep_for(m_TargetFps - (high_resolution_clock::now() - currentTime))
+			std::this_thread::sleep_for(waitTime);
+
 			lastTime = currentTime;
 		}
 	}

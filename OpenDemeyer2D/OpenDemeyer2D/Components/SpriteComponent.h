@@ -40,7 +40,7 @@ public:
 
 	void SetLooping(bool isLooping) { m_bLoop = isLooping; }
 
-	MultiDelegate<> OnAnimationEnd;
+	Delegate<> OnAnimationEnd;
 
 	const std::string GetComponentName() override { return "SpriteComponent"; }
 

@@ -15,9 +15,9 @@ public:
 
 	int GetLives() const { return m_Lives; }
 
-	MultiDelegate<> OnLifeLost;
+	Delegate<> OnLifeLost;
 
-	MultiDelegate<int> OnScoreGain;
+	Delegate<int> OnScoreGain;
 
 	int GetScore() const { return m_Score; }
 
@@ -29,7 +29,7 @@ protected:
 
 	glm::vec2 m_Direction{};
 
-	float m_MovementSpeed{ 10.f };
+	float m_MovementSpeed{ 1.f };
 
 	int m_Lives{ 5 };
 

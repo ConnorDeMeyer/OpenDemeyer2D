@@ -1,30 +1,26 @@
 ﻿#include "OD2pch.h"
 #include "SceneManager.h"
 
+#include <b2_contact.h>
+
 #include "Scene.h"
 #include "imgui.h"
 
 void SceneManager::Update(float deltaTime)
 {
-	for (Scene* pScene : m_Scenes)
-	{
-		pScene->Update(deltaTime);
-	}
+	m_pActiveScene->Update(deltaTime);
 }
 
 void SceneManager::Render() const
 {
-	for (Scene* pScene : m_Scenes)
-	{
-		pScene->Render();
-		
-	}
+	m_pActiveScene->Render();
 }
 
 Scene& SceneManager::CreateScene(const std::string& name)
 {
 	Scene* pScene = new Scene(name);
-	m_Scenes.push_back(pScene);
+	m_Scenes.emplace_back(pScene);
+	if (!m_pActiveScene) m_pActiveScene = pScene;
 	return *pScene;
 }
 
@@ -67,6 +63,13 @@ void SceneManager::RenderImGui()
 	}
 
 	ImGui::End();
+}
+
+void SceneManager::PhysicsStep(float timeStep, int velocityIterations, int positionIterations)
+{
+	b2World* physicsWorld = m_pActiveScene->GetPhysicsWorld();
+	physicsWorld->Step(timeStep, velocityIterations, positionIterations);
+	physicsWorld->ClearForces();
 }
 
 SceneManager::~SceneManager()

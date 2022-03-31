@@ -133,7 +133,7 @@ void GameObject::SetParent(GameObject* pObject)
 	if (pObject) {
 
 		// Set as child
-		pObject->m_Children.push_back(this);
+		pObject->m_Children.emplace_back(this);
 
 		// Set the scene
 		m_pScene = pObject->m_pScene;
@@ -158,7 +158,7 @@ void GameObject::SetParent(GameObject* pObject)
 //	}
 //
 //	if (object->m_Parent) object->m_Parent->RemoveChild(object);
-//	m_Children.push_back(object);
+//	m_Children.emplace_back(object);
 //	object->m_Parent = this;
 //	object->m_pScene = m_pScene;
 //

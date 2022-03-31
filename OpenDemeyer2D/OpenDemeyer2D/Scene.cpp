@@ -3,10 +3,15 @@
 
 #include "GameObject.h"
 #include "imgui.h"
+#include "Components/PhysicsComponent.h"
+
+#include <box2d.h>
 
 Scene::Scene(const std::string& name)
 	: m_Name{ name }
 {
+	m_pb2World = new b2World(b2Vec2{0, 0});
+	m_pb2World->SetContactListener(this);
 }
 
 Scene::~Scene()
@@ -15,20 +20,22 @@ Scene::~Scene()
 	{
 		delete m_SceneTree[i];
 	}
+
+	delete m_pb2World;
 }
 
 void Scene::Add(GameObject* pObject)
 {
 	if (pObject->m_pScene) throw ObjectAlreadyInASceneException();
 
-	m_SceneTree.push_back(pObject);
+	m_SceneTree.emplace_back(pObject);
 	SetScene(pObject);
 	pObject->BeginPlay();
 }
 
 void Scene::DestroyObject(GameObject* pObject)
 {
-	m_DestroyableObjects.push_back(pObject);
+	m_DestroyableObjects.emplace_back(pObject);
 }
 
 void Scene::DestroyObjectImmediately(GameObject* pObject)
@@ -74,6 +81,39 @@ void Scene::RenderImGui()
 
 		ImGui::TreePop();
 	}
+}
+
+void Scene::BeginContact(b2Contact* contact)
+{
+	PhysicsComponent* compA = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureA()->GetUserData().pointer);
+	PhysicsComponent* compB = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureB()->GetUserData().pointer);
+
+	compA->OnOverlap.BroadCast(compB);
+	compB->OnOverlap.BroadCast(compA);
+}
+
+void Scene::EndContact(b2Contact* contact)
+{
+	PhysicsComponent* compA = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureA()->GetUserData().pointer);
+	PhysicsComponent* compB = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureB()->GetUserData().pointer);
+
+	compA->OnEndOverlap.BroadCast(compB);
+	compB->OnEndOverlap.BroadCast(compA);
+}
+
+void Scene::PreSolve(b2Contact*, const b2Manifold*)
+{
+
+}
+
+void Scene::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
+{
+	PhysicsComponent* compA = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureA()->GetUserData().pointer);
+	PhysicsComponent* compB = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureB()->GetUserData().pointer);
+
+	compA->OnHit.BroadCast(compB, 
+		reinterpret_cast<const glm::vec2&>(impulse->normalImpulses), 
+		reinterpret_cast<const glm::vec2&>(impulse->tangentImpulses));
 }
 
 void Scene::RemoveObject(GameObject* object)

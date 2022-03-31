@@ -20,9 +20,11 @@ void InputManager::ProcessInput()
 			ENGINE.Quit();
 		}
 		else if (e.type == SDL_KEYDOWN) {
+			if (e.key.repeat) break;
 			HandleKeyDown(e);
 		}
 		else if (e.type == SDL_KEYUP) {
+			if (e.key.repeat) break;
 			HandleKeyUp(e);
 		}
 		else if (e.type == SDL_MOUSEBUTTONDOWN) {
@@ -46,20 +48,20 @@ void InputManager::ProcessInput()
 		else if (e.type == SDL_CONTROLLERAXISMOTION) {
 			HandleControllerAxis(e);
 		}
+		else if (e.type == SDL_WINDOWEVENT) {
+			HandleWindowEvent(e);
+		}
 	}
 
-	for (auto mousePress : m_MousePressedActions)
-		if (IsMouseButtonPressed(mousePress.first))
-			mousePress.second.BroadCast(float(m_MouseX), float(m_MouseY));
+	for (auto& mousePress : m_PressedKeys)
+		m_KeyPressedActions[mousePress].BroadCast();
 
-	//for (auto keyPress : m_KeyPressedActions)
-	//	if (IsKeyPressed(keyPress.first))
-	//		keyPress.second.BroadCast();
+	for (auto& keyPress : m_PressedMouseButtons)
+		m_MousePressedActions[keyPress].BroadCast(float(m_MouseX), float(m_MouseY));
 
-	//for (int i{}; i < MaxControllers; ++i)
-	//	for (auto controllerBtn : m_pControllerPressedActions[i])
-	//		if (IsKeyPressed(controllerBtn.first))
-	//			controllerBtn.second.BroadCast();
+	for (int i{}; i < MaxControllers; ++i)
+		for (auto& controllerBtn : m_PressedControllerButtons[i])
+			m_pControllerPressedActions[i][controllerBtn].BroadCast();
 }
 
 int InputManager::RegisterInputComponent(InputComponent* comp)
@@ -104,11 +106,11 @@ void InputManager::UnregisterInputComponent(InputComponent* comp)
 	}
 }
 
-bool InputManager::IsKeyPressed(SDL_Keycode SDLK_key) const
+bool InputManager::IsKeyPressed(SDL_Scancode key) const
 {
 	const Uint8* keyState = SDL_GetKeyboardState(nullptr);
 
-	return (keyState[SDLK_key]);
+	return (keyState[key]);
 }
 
 bool InputManager::IsMouseButtonPressed(Uint8 SDL_BUTTON) const
@@ -118,7 +120,7 @@ bool InputManager::IsMouseButtonPressed(Uint8 SDL_BUTTON) const
 	return mouseState & SDL_BUTTON;
 }
 
-bool InputManager::IsControllerButtonDown(SDL_GameControllerButton SDL_CONTROLLER_BUTTON, Uint8 controllerId) const
+bool InputManager::IsControllerButtonPressed(SDL_GameControllerButton SDL_CONTROLLER_BUTTON, Uint8 controllerId) const
 {
 	return SDL_GameControllerGetButton(m_pControllers[controllerId], SDL_CONTROLLER_BUTTON);
 }
@@ -130,6 +132,7 @@ void InputManager::HandleKeyDown(const SDL_Event& e)
 	{
 		it->second.BroadCast();
 	}
+	m_PressedKeys.emplace_back(e.key.keysym.sym);
 }
 
 void InputManager::HandleKeyUp(const SDL_Event& e)
@@ -139,6 +142,7 @@ void InputManager::HandleKeyUp(const SDL_Event& e)
 	{
 		it->second.BroadCast();
 	}
+	m_PressedKeys.SwapRemove(e.key.keysym.sym);
 }
 
 void InputManager::HandleMouseDown(const SDL_Event& e)
@@ -148,6 +152,7 @@ void InputManager::HandleMouseDown(const SDL_Event& e)
 	{
 		it->second.BroadCast(float(e.button.x), float(e.button.y));
 	}
+	m_PressedMouseButtons.emplace_back(e.button.button);
 }
 
 void InputManager::HandleMouseUp(const SDL_Event& e)
@@ -157,6 +162,7 @@ void InputManager::HandleMouseUp(const SDL_Event& e)
 	{
 		it->second.BroadCast(float(e.button.x), float(e.button.y));
 	}
+	m_PressedMouseButtons.SwapRemove(e.button.button);
 }
 
 void InputManager::HandleMouseMotion(const SDL_Event& e)
@@ -176,6 +182,7 @@ void InputManager::HandleControllerButtonUp(const SDL_Event& e)
 	{
 		it->second.BroadCast();
 	}
+	m_PressedControllerButtons[e.cbutton.which].SwapRemove(SDL_GameControllerButton(e.cbutton.button));
 }
 
 void InputManager::HandleControllerButtonDown(const SDL_Event& e)
@@ -185,6 +192,7 @@ void InputManager::HandleControllerButtonDown(const SDL_Event& e)
 	{
 		it->second.BroadCast();
 	}
+	m_PressedControllerButtons[e.cbutton.which].emplace_back(SDL_GameControllerButton(e.cbutton.button));
 }
 
 void InputManager::HandleControllerAxis(const SDL_Event& e)
@@ -194,4 +202,22 @@ void InputManager::HandleControllerAxis(const SDL_Event& e)
 	{
 		it->second.BroadCast(float(e.caxis.value) / float(SDL_JOYSTICK_AXIS_MAX));
 	}
+}
+
+void InputManager::HandleWindowEvent(const SDL_Event& e)
+{
+	switch (e.window.event)
+	{
+	case SDL_WINDOWEVENT_FOCUS_LOST:
+		ClearAllInputs();
+		break;
+	}
+}
+
+void InputManager::ClearAllInputs()
+{
+	m_PressedKeys.clear();
+	m_PressedMouseButtons.clear();
+	for (int i{}; i < MaxControllers; ++i)
+		m_PressedControllerButtons[i].clear();
 }

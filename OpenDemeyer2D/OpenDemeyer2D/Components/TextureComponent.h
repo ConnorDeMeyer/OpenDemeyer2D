@@ -28,6 +28,8 @@ public:
 
 	const SDL_FRect& GetSourceRect() const { return m_SourceRect; }
 
+	const std::shared_ptr<Texture2D>& GetTexture() const { return m_Texture; }
+
 	//void InitializeComponent(const Dictionary& dictionary) override;
 
 	//Dictionary& GetClassDefault() override;

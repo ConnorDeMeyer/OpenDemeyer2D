@@ -93,6 +93,8 @@ public:
 	 */
 	void SetParent(GameObject* pObject);
 
+	Scene* GetScene() const { return m_pScene; }
+
 	/** Attach a Game Object to this Game Object*/
 	//void AttachGameObject(GameObject* pObject);
 
@@ -150,7 +152,7 @@ GameObject::AddComponent()
 		if (m_pRenderComponent) throw std::runtime_error("Component already in gameobject");
 
 		m_pRenderComponent = new RenderComponent();
-		m_Components.push_back(m_pRenderComponent);
+		m_Components.emplace_back(m_pRenderComponent);
 		m_pRenderComponent->m_pParent = this;
 
 		if (m_HasBeenInitialized) m_pRenderComponent->BeginPlay();
@@ -163,7 +165,7 @@ GameObject::AddComponent()
 	}
 	else {
 		auto comp = new T();
-		m_Components.push_back(comp);
+		m_Components.emplace_back(comp);
 
 		comp->m_pParent = this;
 

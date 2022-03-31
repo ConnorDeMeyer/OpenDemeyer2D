@@ -1,8 +1,8 @@
 #pragma once
 #include "../ComponentBase.h"
 #include "../Texture2D.h"
+#include "../RenderManager.h"
 
-enum class eRenderAlignMode : Uint8;
 class Transform;
 
 class RenderComponent final : public ComponentBase

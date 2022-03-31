@@ -16,11 +16,11 @@ public:
 	inline float GetHealth() const { return m_Health; }
 	inline float GetMaxHealth() const { return m_MaxHealth; }
 
-	MultiDelegate<> OnDeath;
+	Delegate<> OnDeath;
 
-	MultiDelegate<float> OnDamage;
+	Delegate<float> OnDamage;
 
-	MultiDelegate<float> OnHeal;
+	Delegate<float> OnHeal;
 
 private:
 

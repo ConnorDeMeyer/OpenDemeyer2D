@@ -13,9 +13,6 @@
     <Filter Include="EngineFiles\Components">
       <UniqueIdentifier>{10cd5c9d-b53c-42bd-80c8-dcd488205630}</UniqueIdentifier>
     </Filter>
-    <Filter Include="EngineFiles\CustomComponents">
-      <UniqueIdentifier>{6a508384-99ff-436a-b29a-2719c98b79e1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ImGui">
       <UniqueIdentifier>{d9f98363-5549-43fd-8ac5-5dfbfd688306}</UniqueIdentifier>
     </Filter>
@@ -53,9 +50,6 @@
     <ClCompile Include="Components\Transform.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
-    <ClCompile Include="CustomComponents\TrashTheCache.cpp">
-      <Filter>EngineFiles\CustomComponents</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rdParty\DearImGui\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -89,11 +83,14 @@
     <ClCompile Include="Components\HealthComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Components\CollisionComponent.cpp">
+    <ClCompile Include="Components\PhysicsComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
     <ClCompile Include="SteamAPI.cpp">
       <Filter>EngineFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\TextPixelComponent.cpp">
+      <Filter>EngineFiles\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +146,6 @@
     <ClInclude Include="EditorFunctions.h">
       <Filter>EngineFiles</Filter>
     </ClInclude>
-    <ClInclude Include="CustomComponents\TrashTheCache.h">
-      <Filter>EngineFiles\CustomComponents</Filter>
-    </ClInclude>
     <ClInclude Include="RenderTarget.h">
       <Filter>UtilityFiles</Filter>
     </ClInclude>
@@ -206,11 +200,17 @@
     <ClInclude Include="Components\HealthComponent.h">
       <Filter>EngineFiles\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Components\CollisionComponent.h">
+    <ClInclude Include="Components\PhysicsComponent.h">
       <Filter>EngineFiles\Components</Filter>
     </ClInclude>
     <ClInclude Include="SteamAPI.h">
       <Filter>EngineFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\TextPixelComponent.h">
+      <Filter>EngineFiles\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Surface2D.h">
+      <Filter>UtilityFiles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

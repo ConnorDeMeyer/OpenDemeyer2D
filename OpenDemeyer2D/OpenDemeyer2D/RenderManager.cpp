@@ -157,8 +157,8 @@ void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, eRe
 	{
 		vertexLeft   =	(static_cast<Uint8>(renderMode) & 0b1 ) ? -1.f : 0.f;
 		vertexRight  =	(static_cast<Uint8>(renderMode) & 0b1 ) ? 0.f  : 1.f;
-		vertexTop    =	(static_cast<Uint8>(renderMode) & 0b10) ? -1.f : 0.f;
-		vertexBottom =	(static_cast<Uint8>(renderMode) & 0b10) ? 0.f  : 1.f;
+		vertexBottom =	(static_cast<Uint8>(renderMode) & 0b10) ? 0.f  : -1.f;
+		vertexTop	 =	(static_cast<Uint8>(renderMode) & 0b10) ? 1.f  : 0.f;
 	}
 
 	vertexLeft   *= width ;

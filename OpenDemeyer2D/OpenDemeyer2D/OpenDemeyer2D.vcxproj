@@ -200,15 +200,15 @@
     <ClCompile Include="..\3rdParty\DearImGui\imgui_draw.cpp" />
     <ClCompile Include="..\3rdParty\DearImGui\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\DearImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Components\CollisionComponent.cpp" />
+    <ClCompile Include="Components\PhysicsComponent.cpp" />
     <ClCompile Include="Components\HealthComponent.cpp" />
     <ClCompile Include="Components\InputComponent.cpp" />
     <ClCompile Include="Components\RenderComponent.cpp" />
     <ClCompile Include="Components\SpriteComponent.cpp" />
     <ClCompile Include="Components\TextComponent.cpp" />
+    <ClCompile Include="Components\TextPixelComponent.cpp" />
     <ClCompile Include="Components\TextureComponent.cpp" />
     <ClCompile Include="Components\Transform.cpp" />
-    <ClCompile Include="CustomComponents\TrashTheCache.cpp" />
     <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="OpenDemeyer2D.cpp" />
@@ -231,15 +231,15 @@
     <ClInclude Include="..\3rdParty\DearImGui\imstb_textedit.h" />
     <ClInclude Include="..\3rdParty\DearImGui\imstb_truetype.h" />
     <ClInclude Include="ComponentBase.h" />
-    <ClInclude Include="Components\CollisionComponent.h" />
+    <ClInclude Include="Components\PhysicsComponent.h" />
     <ClInclude Include="Components\HealthComponent.h" />
     <ClInclude Include="Components\InputComponent.h" />
     <ClInclude Include="Components\RenderComponent.h" />
     <ClInclude Include="Components\SpriteComponent.h" />
     <ClInclude Include="Components\TextComponent.h" />
+    <ClInclude Include="Components\TextPixelComponent.h" />
     <ClInclude Include="Components\TextureComponent.h" />
     <ClInclude Include="Components\Transform.h" />
-    <ClInclude Include="CustomComponents\TrashTheCache.h" />
     <ClInclude Include="Delegate.h" />
     <ClInclude Include="Dictionary.h" />
     <ClInclude Include="EditorFunctions.h" />
@@ -259,6 +259,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SteamAPI.h" />
+    <ClInclude Include="Surface2D.h" />
     <ClInclude Include="Texture2D.h" />
   </ItemGroup>
   <ItemGroup>

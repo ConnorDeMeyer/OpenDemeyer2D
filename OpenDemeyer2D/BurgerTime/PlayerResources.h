@@ -18,9 +18,9 @@ public:
 
 	void SetSourceRect(const SDL_FRect& rect);
 
-	MultiDelegate<> OnLoseResource;
+	Delegate<> OnLoseResource;
 
-	MultiDelegate<> OnLostAllResources;
+	Delegate<> OnLostAllResources;
 
 	const std::string GetComponentName() override { return "PlayerResource"; }
 

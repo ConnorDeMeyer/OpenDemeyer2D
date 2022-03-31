@@ -12,6 +12,7 @@
 class Texture2D;
 class Font;
 class RenderTarget;
+class Surface2D;
 
 class ResourceManager final : public Singleton<ResourceManager>
 {
@@ -35,6 +36,9 @@ public:
 
 	std::shared_ptr<RenderTarget> CreateRenderTexture(int width, int height);
 
+	std::shared_ptr<Surface2D> LoadSurface(const std::string& file);
+	std::shared_ptr<Surface2D> LoadSurface(int width, int height);
+
 private:
 
 	std::string m_DataPath;
@@ -44,4 +48,5 @@ private:
 	// TODO change this into a unordered_map. needs a special hash funtion
 	std::map<std::pair<std::string, unsigned int>, std::weak_ptr<Font>> m_LoadedFonts;
 
+	std::unordered_map<std::string, std::weak_ptr<Surface2D>> m_LoadedSurfaces;
 };

@@ -19,9 +19,9 @@ public:
 	Texture2D& operator= (const Texture2D&) = delete;
 	Texture2D& operator= (const Texture2D&&) = delete;
 
-	GLuint GetId() { return m_Id; }
-	int GetWidth() { return m_Width; }
-	int GetHeight() { return m_Height; }
+	GLuint GetId() const { return m_Id; }
+	int GetWidth() const { return m_Width; }
+	int GetHeight() const { return m_Height; }
 
 private:
 	GLuint m_Id{};

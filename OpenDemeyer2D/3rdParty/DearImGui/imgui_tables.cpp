@@ -3438,7 +3438,7 @@ void ImGui::TableSettingsInstallHandler(ImGuiContext* context)
     ini_handler.ReadLineFn = TableSettingsHandler_ReadLine;
     ini_handler.ApplyAllFn = TableSettingsHandler_ApplyAll;
     ini_handler.WriteAllFn = TableSettingsHandler_WriteAll;
-    g.SettingsHandlers.push_back(ini_handler);
+    g.SettingsHandlers.emplace_back(ini_handler);
 }
 
 //-------------------------------------------------------------------------
@@ -3804,7 +3804,7 @@ ImGuiOldColumns* ImGui::FindOrCreateColumns(ImGuiWindow* window, ImGuiID id)
         if (window->ColumnsStorage[n].ID == id)
             return &window->ColumnsStorage[n];
 
-    window->ColumnsStorage.push_back(ImGuiOldColumns());
+    window->ColumnsStorage.emplace_back(ImGuiOldColumns());
     ImGuiOldColumns* columns = &window->ColumnsStorage.back();
     columns->ID = id;
     return columns;
@@ -3869,7 +3869,7 @@ void ImGui::BeginColumns(const char* str_id, int columns_count, ImGuiOldColumnFl
         {
             ImGuiOldColumnData column;
             column.OffsetNorm = n / (float)columns_count;
-            columns->Columns.push_back(column);
+            columns->Columns.emplace_back(column);
         }
     }
 

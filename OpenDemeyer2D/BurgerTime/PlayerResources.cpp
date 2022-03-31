@@ -45,7 +45,7 @@ void PlayerResources::AddResource()
 	}
 
 	go->SetParent(GetParent());
-	m_Resources.push_back(go);
+	m_Resources.emplace_back(go);
 	UpdateResources();
 }
 

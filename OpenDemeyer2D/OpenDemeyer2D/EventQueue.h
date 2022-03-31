@@ -18,7 +18,7 @@ public:
 
 	static void AddMessage(const EventParameters&... eventParameters)
 	{
-		m_InputQueue.push_back(std::tuple<EventParameters...>(eventParameters...));
+		m_InputQueue.emplace_back(std::tuple<EventParameters...>(eventParameters...));
 	}
 
 	static const std::tuple<EventParameters...>& GetMessage()

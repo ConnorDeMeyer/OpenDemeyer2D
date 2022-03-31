@@ -15,7 +15,7 @@ void RenderComponent::Render() const
 	if (m_Texture && m_pTransform)
 	{
 		RENDER.RenderTexture(m_Texture, m_pTransform->GetWorldPosition(), m_pTransform->GetWorldScale(), m_pTransform->GetWorldRotation(),
-			eRenderAlignMode::centered, &m_SourceRect);
+			m_RenderAlignMode, &m_SourceRect);
 	}
 }
 

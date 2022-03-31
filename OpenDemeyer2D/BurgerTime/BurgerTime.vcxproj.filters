@@ -23,6 +23,15 @@
     <ClCompile Include="PlayerUI.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="GameplayPrefabs.cpp">
+      <Filter>Prefabs</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BurgerPiece.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimeGI.h" />
@@ -36,6 +45,15 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="PlayerUI.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameplayPrefabs.h">
+      <Filter>Prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BurgerPiece.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
