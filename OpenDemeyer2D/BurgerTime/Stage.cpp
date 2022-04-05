@@ -21,39 +21,9 @@ constexpr char level1[stageSize]
 	3,1,3,1,3,1,3,3,3
 };
 
-struct burgerPieceInfo
-{
-	BurgerPieceType type;
-	uint8_t posX;
-	uint8_t posY;
-};
-
-constexpr int burgerPiecesAmount{ 16 };
-constexpr burgerPieceInfo burgerPiecesLayout[burgerPiecesAmount]
-{
-	{BurgerPieceType::topBun, 0,7},
-	{BurgerPieceType::topBun, 1,9},
-	{BurgerPieceType::topBun, 2,9},
-	{BurgerPieceType::topBun, 3,9},
-
-	{BurgerPieceType::lettuce, 0,5},
-	{BurgerPieceType::lettuce, 1,4},
-	{BurgerPieceType::lettuce, 2,7},
-	{BurgerPieceType::lettuce, 3,7},
-
-	{BurgerPieceType::meat, 0,2},
-	{BurgerPieceType::meat, 1,2},
-	{BurgerPieceType::meat, 2,4},
-	{BurgerPieceType::meat, 3,5},
-
-	{BurgerPieceType::bottomBun, 0,0},
-	{BurgerPieceType::bottomBun, 1,0},
-	{BurgerPieceType::bottomBun, 2,0},
-	{BurgerPieceType::bottomBun, 3,3}
-};
-
 void Stage::LoadStageTexture()
 {
+
 	SDL_Surface* pLevelLayout = SDL_CreateRGBSurfaceWithFormat(0, 208, 160, 32, SDL_PIXELFORMAT_RGBA32);
 	//SDL_Rect rect{ 0,0,208,160 };
 	//SDL_FillRect(pLevelLayout, &rect, 0xEEEEEEFF);
@@ -133,6 +103,37 @@ void Stage::LoadStageTexture()
 
 void Stage::LoadStageItems()
 {
+	struct burgerPieceInfo
+	{
+		BurgerPieceType type;
+		uint8_t posX;
+		uint8_t posY;
+	};
+
+	constexpr int burgerPiecesAmount{ 16 };
+	constexpr burgerPieceInfo burgerPiecesLayout[burgerPiecesAmount]
+	{
+		{BurgerPieceType::topBun, 0,7},
+		{BurgerPieceType::topBun, 1,9},
+		{BurgerPieceType::topBun, 2,9},
+		{BurgerPieceType::topBun, 3,9},
+
+		{BurgerPieceType::lettuce, 0,5},
+		{BurgerPieceType::lettuce, 1,4},
+		{BurgerPieceType::lettuce, 2,7},
+		{BurgerPieceType::lettuce, 3,7},
+
+		{BurgerPieceType::meat, 0,2},
+		{BurgerPieceType::meat, 1,2},
+		{BurgerPieceType::meat, 2,4},
+		{BurgerPieceType::meat, 3,5},
+
+		{BurgerPieceType::bottomBun, 0,0},
+		{BurgerPieceType::bottomBun, 1,0},
+		{BurgerPieceType::bottomBun, 2,0},
+		{BurgerPieceType::bottomBun, 3,3}
+	};
+
 	for (int i{}; i < burgerPiecesAmount; ++i)
 	{
 		auto& info = burgerPiecesLayout[i];
@@ -149,8 +150,65 @@ void Stage::LoadStageItems()
 	}
 }
 
+bool Stage::CanMoveInDirection(const glm::vec2& position, movementDirection direction)
+{
+	constexpr int BigHorizontalTiles = stageWidth / 2;
+	constexpr int smallHorizontalTiles = stageWidth - BigHorizontalTiles;
+	constexpr int PositionMap[stageWidth + BigHorizontalTiles]
+	{
+		0,1,1,2,3,3,4,5,5,6,7,7,8
+	};
+
+	assert(position.x >= 0.f && position.x < smallHorizontalTiles * 16.f + BigHorizontalTiles * 32.f);
+	assert(position.y >= 0.f && position.y < stageHeight * 16.f);
+
+	int xPos = PositionMap[int(position.x / 16.f)];
+	int yPos = int(position.y / 16.f);
+	int arrayPos{ xPos + yPos * stageWidth };
+
+	switch (direction)
+	{
+	case movementDirection::right:
+		if (fmod(position.x, 16.f) <= 8.f) // go until the center of a tile
+			return true;
+		if (xPos < stageWidth - 1 && (int(m_Tiles[arrayPos + 1]) & 0b1))
+			return true;
+		break;
+	case movementDirection::left:
+		if (fmod(position.x, 16.f) >= 8.f) // go until the center of a tile
+			return true;
+		if (xPos > 0 && (int(m_Tiles[arrayPos - 1]) & 0b1))
+			return true;
+		break;
+	case movementDirection::up:
+	{
+		if ((!(xPos & 0b1) && fabsf(fmod(position.x, 16.f) - 8.f) < 1.f) ||
+			((xPos & 0b1) && fabsf(fmod(position.x, 32.f) - 16.f) < 1.f))// has te be in the center of the tile
+			if (int(m_Tiles[arrayPos]) & 0b10) // if on platform tile
+				return true;
+		break;
+	}
+	case movementDirection::down:
+		if ((!(xPos & 0b1) && fabsf(fmod(position.x, 16.f) - 8.f) < 1.f) ||
+			((xPos & 0b1) && fabsf(fmod(position.x, 32.f) - 16.f) < 1.f))// has te be in the center of the tile
+			if (yPos > 0 && int(m_Tiles[arrayPos - stageWidth]) & 0b10) // if above platform tile
+				return true;
+		break;
+	default:
+		assert(false);
+	}
+
+	return false;
+}
+
 void Stage::BeginPlay()
 {
+	for (int y{}; y < stageHeight; ++y)
+		for (int x{}; x < stageWidth; ++x)
+		{
+			m_Tiles[x + y * stageWidth] = tiles(level1[x + y * stageWidth]);
+		}
+
 	LoadStageTexture();
 	LoadStageItems();
 
