@@ -142,24 +142,24 @@ void RenderManager::Destroy()
 	SDL_GL_DeleteContext(m_pContext);
 }
 
-void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, eRenderAlignMode renderMode, const SDL_FRect* srcRect) const
+void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pivot, const SDL_FRect* srcRect) const
 {
 	float width  = (srcRect) ? srcRect->w : static_cast<float>(texture->GetWidth()) ;
 	float height = (srcRect) ? srcRect->h : static_cast<float>(texture->GetHeight());
 
 	// Vertex coordinates for centered orientation
-	float vertexLeft	{ -0.5f };
-	float vertexBottom	{ -0.5f };
-	float vertexRight	{ 0.5f  };
-	float vertexTop		{ 0.5f  };
+	float vertexLeft	{ pivot.x - 1.f };
+	float vertexBottom	{ pivot.y - 1.f };
+	float vertexRight	{ pivot.x  };
+	float vertexTop		{ pivot.y  };
 
-	if (renderMode != eRenderAlignMode::centered)
-	{
-		vertexLeft   =	(static_cast<Uint8>(renderMode) & 0b1 ) ? -1.f : 0.f;
-		vertexRight  =	(static_cast<Uint8>(renderMode) & 0b1 ) ? 0.f  : 1.f;
-		vertexBottom =	(static_cast<Uint8>(renderMode) & 0b10) ? 0.f  : -1.f;
-		vertexTop	 =	(static_cast<Uint8>(renderMode) & 0b10) ? 1.f  : 0.f;
-	}
+	//if (renderMode != eRenderAlignMode::centered)
+	//{
+	//	vertexLeft   =	(static_cast<Uint8>(renderMode) & 0b1 ) ? -1.f : 0.f;
+	//	vertexRight  =	(static_cast<Uint8>(renderMode) & 0b1 ) ? 0.f  : 1.f;
+	//	vertexBottom =	(static_cast<Uint8>(renderMode) & 0b10) ? 0.f  : -1.f;
+	//	vertexTop	 =	(static_cast<Uint8>(renderMode) & 0b10) ? 1.f  : 0.f;
+	//}
 
 	vertexLeft   *= width ;
 	vertexRight  *= width ;
@@ -206,37 +206,37 @@ void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, eRe
 	glDisable(GL_TEXTURE_2D);
 }
 
-void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, eRenderAlignMode renderMode, const SDL_FRect* srcRect) const
+void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& pivot, const SDL_FRect* srcRect) const
 {
 	glPushMatrix();
 	{
 		glTranslatef(pos.x, pos.y, 0);
-		RenderTexture(texture, renderMode, srcRect);
+		RenderTexture(texture, pivot, srcRect);
 	}
 	glPopMatrix();
 }
 
 void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos,
-	const glm::vec2& scale, eRenderAlignMode renderMode, const SDL_FRect* srcRect) const
+	const glm::vec2& scale, const glm::vec2& pivot, const SDL_FRect* srcRect) const
 {
 	glPushMatrix();
 	{
 		glTranslatef(pos.x, pos.y, 0);
 		glScalef(scale.x, scale.y, 1);
-		RenderTexture(texture, renderMode, srcRect);
+		RenderTexture(texture, pivot, srcRect);
 	}
 	glPopMatrix();
 }
 
 void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos,
-	const glm::vec2& scale, float rotation, eRenderAlignMode renderMode, const SDL_FRect* srcRect) const
+	const glm::vec2& scale, float rotation, const glm::vec2& pivot, const SDL_FRect* srcRect) const
 {
 	glPushMatrix();
 	{
 		glTranslatef(pos.x, pos.y, 0);
 		glRotatef(static_cast<GLfloat>(rotation), 0, 0, 1);
 		glScalef(scale.x, scale.y, 1);
-		RenderTexture(texture, renderMode, srcRect);
+		RenderTexture(texture, pivot, srcRect);
 	}
 	glPopMatrix();
 }

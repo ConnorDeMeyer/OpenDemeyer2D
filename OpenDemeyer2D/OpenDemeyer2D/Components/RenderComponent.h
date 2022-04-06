@@ -20,11 +20,13 @@ public:
 
 	void SetTexture(std::shared_ptr<Texture2D> texture);
 
-	void SetRenderAlignMode(eRenderAlignMode mode) { m_RenderAlignMode = mode; }
+	void SetRenderAlignMode(eRenderAlignMode mode);
 
 	void SetSourceRect(const SDL_FRect& srcRect);
 
 	const std::string GetComponentName() override { return "RenderComponent"; }
+
+	void SetPivot(const glm::vec2& pivot) { m_Pivot = pivot; }
 
 	//void InitializeComponent(const Dictionary& dictionary) override;
 
@@ -36,9 +38,9 @@ private:
 
 	Transform* m_pTransform;
 
-	eRenderAlignMode m_RenderAlignMode;
-
 	SDL_FRect m_SourceRect;
+
+	glm::vec2 m_Pivot{};
 
 };
 

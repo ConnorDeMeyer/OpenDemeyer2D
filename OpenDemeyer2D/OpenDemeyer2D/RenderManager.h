@@ -16,6 +16,10 @@ enum class eRenderAlignMode : Uint8
 	topRight = 0b01,
 	bottomLeft = 0b10,
 	bottomRight = 0b11,
+	top,
+	bottom,
+	right,
+	left,
 	centered
 };
 
@@ -30,10 +34,10 @@ public:
 	void Render() const;
 	void Destroy();
 
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, eRenderAlignMode renderMode = eRenderAlignMode::centered, const SDL_FRect* srcRect = nullptr) const;
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, eRenderAlignMode renderMode = eRenderAlignMode::centered, const SDL_FRect* srcRect = nullptr) const;
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, eRenderAlignMode renderMode = eRenderAlignMode::centered, const SDL_FRect* srcRect = nullptr) const;
-	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, float rotation, eRenderAlignMode renderMode = eRenderAlignMode::centered, const SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pivot = {0.5f,0.5f}, const SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr) const;
+	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, float rotation, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr) const;
 
 	void SetRenderTarget(const std::shared_ptr<RenderTarget>& renderTarget) const;
 
