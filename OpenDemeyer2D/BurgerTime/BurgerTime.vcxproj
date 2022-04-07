@@ -208,6 +208,7 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
     <ClCompile Include="PlayerUI.cpp" />
     <ClCompile Include="PPSpriteMovement.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="StageMovement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerPiece.h" />
@@ -218,6 +219,7 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
     <ClInclude Include="PlayerUI.h" />
     <ClInclude Include="PPSpriteMovement.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="StageMovement.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

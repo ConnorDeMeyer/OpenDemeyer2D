@@ -6,6 +6,9 @@
 #include "BurgerPiece.h"
 #include "BurgerPiece.h"
 #include "Components/TextureComponent.h"
+#include "GameplayPrefabs.h"
+#include "PeterPepper.h"
+#include "StageMovement.h"
 
 constexpr char level1[stageSize]
 {
@@ -75,7 +78,7 @@ void Stage::LoadStageTexture()
 				}
 			}
 
-			if (level1[x + stageWidth * y] & 0b1) // draw the platforms
+			if (level1[x + stageWidth * y] & 0b01) // draw the platforms
 			{
 				if (isOdd)
 				{
@@ -150,55 +153,110 @@ void Stage::LoadStageItems()
 	}
 }
 
+void Stage::SpawnPlayer()
+{
+	m_pPeterPepper = PeterPepperFactory();
+	auto stageMovement = m_pPeterPepper->GetComponent<StageMovement>();
+	stageMovement->SetStage(this);
+
+	m_pPeterPepper->SetParent(GetParent());
+	m_pPeterPepper->GetTransform()->SetPosition({ 104,3 });
+}
+
+constexpr int BigHorizontalTiles = stageWidth / 2;
+constexpr int smallHorizontalTiles = stageWidth - BigHorizontalTiles;
+constexpr int PositionMap[stageWidth + BigHorizontalTiles]
+{
+	0,1,1,2,3,3,4,5,5,6,7,7,8
+};
+constexpr float ladderPositionMap[stageWidth]
+{
+	8.f, 32.f, 56.f, 80.f, 104.f, 128.f, 152.f, 176.f, 200.f
+};
+
 bool Stage::CanMoveInDirection(const glm::vec2& position, movementDirection direction)
 {
-	constexpr int BigHorizontalTiles = stageWidth / 2;
-	constexpr int smallHorizontalTiles = stageWidth - BigHorizontalTiles;
-	constexpr int PositionMap[stageWidth + BigHorizontalTiles]
-	{
-		0,1,1,2,3,3,4,5,5,6,7,7,8
-	};
 
 	assert(position.x >= 0.f && position.x < smallHorizontalTiles * 16.f + BigHorizontalTiles * 32.f);
 	assert(position.y >= 0.f && position.y < stageHeight * 16.f);
 
 	int xPos = PositionMap[int(position.x / 16.f)];
-	int yPos = int(position.y / 16.f);
+	int yPos = stageHeight - 1 - int((position.y) / 16.f);
 	int arrayPos{ xPos + yPos * stageWidth };
+
+	if (xPos < 0 || xPos >= stageWidth || yPos < 0 || yPos > stageHeight)
+		return false;
+
+	float xTilePos = fmod(position.x, 16.f);
+	float yTilePos = fmod(position.y, 16.f);
 
 	switch (direction)
 	{
 	case movementDirection::right:
-		if (fmod(position.x, 16.f) <= 8.f) // go until the center of a tile
-			return true;
-		if (xPos < stageWidth - 1 && (int(m_Tiles[arrayPos + 1]) & 0b1))
-			return true;
+	{
+		bool isOnGround{ fabsf(yTilePos - 3.f) <= .5f && int(m_Tiles[arrayPos]) & 0b1 };
+		if (isOnGround) {
+			if (xTilePos <= 7.5f || // go until the center of a tile
+					(xPos < stageWidth - 1 && 
+					(int(m_Tiles[arrayPos + 1]) & 0b1))) // go right if the tile next to it is not empty 
+				return true;
+		}
 		break;
+	}
 	case movementDirection::left:
-		if (fmod(position.x, 16.f) >= 8.f) // go until the center of a tile
-			return true;
-		if (xPos > 0 && (int(m_Tiles[arrayPos - 1]) & 0b1))
-			return true;
+	{
+		bool isOnGround{ fabsf(yTilePos - 3.f) <= .5f && int(m_Tiles[arrayPos]) & 0b1 };
+		if (isOnGround) {
+			if (xTilePos >= 8.5f || // go until the center of a tile
+				(xPos > 0 && (int(m_Tiles[arrayPos - 1]) & 0b1)))
+				return true;
+		}
 		break;
+	}
 	case movementDirection::up:
 	{
-		if ((!(xPos & 0b1) && fabsf(fmod(position.x, 16.f) - 8.f) < 1.f) ||
-			((xPos & 0b1) && fabsf(fmod(position.x, 32.f) - 16.f) < 1.f))// has te be in the center of the tile
-			if (int(m_Tiles[arrayPos]) & 0b10) // if on platform tile
-				return true;
+		bool isOnLadder{ bool(int(m_Tiles[arrayPos]) & 0b10) };
+		bool isLadderDown{ yPos < stageHeight - 1 && bool(int(m_Tiles[arrayPos + stageWidth]) & 0b10) };
+		bool isAboveGround{ yTilePos >= 2.5f };
+		auto ladderPos = ladderPositionMap[xPos];
+		if (fabsf(ladderPos - position.x) <= 1.f && (isOnLadder || (!isAboveGround && isLadderDown)))
+			return true;
 		break;
 	}
 	case movementDirection::down:
-		if ((!(xPos & 0b1) && fabsf(fmod(position.x, 16.f) - 8.f) < 1.f) ||
-			((xPos & 0b1) && fabsf(fmod(position.x, 32.f) - 16.f) < 1.f))// has te be in the center of the tile
-			if (yPos > 0 && int(m_Tiles[arrayPos - stageWidth]) & 0b10) // if above platform tile
-				return true;
+	{
+		bool isOnLadder{ bool(int(m_Tiles[arrayPos]) & 0b10) };
+		bool isLadderDown{yPos < stageHeight - 1 && bool(int(m_Tiles[arrayPos + stageWidth]) & 0b10)};
+		bool isAboveGround{ yTilePos >= 3.5f };
+		auto ladderPos = ladderPositionMap[xPos];
+		if (fabsf(ladderPos - position.x) <= 1.f && 
+			((isAboveGround && isOnLadder) || (!isAboveGround && isLadderDown)) )
+			return true;
 		break;
+	}
 	default:
 		assert(false);
 	}
 
 	return false;
+}
+
+void Stage::SnapToGridX(Transform* transform)
+{
+	auto pos = transform->GetLocalPosition();
+	int xPos = PositionMap[int(pos.x / 16.f)];
+	auto ladderPos = ladderPositionMap[xPos];
+	if (fabsf(ladderPos - pos.x) <= 1.f)
+		transform->SetPosition({ ladderPositionMap[xPos], pos.y });
+}
+
+void Stage::SnapToGridY(Transform* transform)
+{
+	auto pos = transform->GetLocalPosition();
+	int yPos = int(pos.y / 16.f);
+	float yTilePos = fmod(pos.y, 16.f);
+	if (fabsf(yTilePos - 3.f) <= 1.f)
+		transform->SetPosition({ pos.x, yTilePos + float(yPos) * 16.f });
 }
 
 void Stage::BeginPlay()
@@ -211,6 +269,8 @@ void Stage::BeginPlay()
 
 	LoadStageTexture();
 	LoadStageItems();
+
+	SpawnPlayer();
 
 	if (auto renderComp{ GetParent()->GetRenderComponent() }) {
 		renderComp->SetTexture(m_StageTexture);

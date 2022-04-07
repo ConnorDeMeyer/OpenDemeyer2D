@@ -32,6 +32,9 @@
     <ClCompile Include="BurgerPiece.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="StageMovement.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimeGI.h" />
@@ -54,6 +57,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="BurgerPiece.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="StageMovement.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

@@ -23,6 +23,9 @@ void PPSpriteMovement::BeginPlay()
 		m_pSpriteComponent->SetTotalFrames(3);
 		m_pSpriteComponent->OnAnimationEnd.BindFunction(this, [this] { this->ResetAnimation(); });
 	}
+	
+	auto pRender = GetParent()->GetComponent<RenderComponent>();
+	pRender->SetPivot({ 0.5f,1.f });
 }
 
 void PPSpriteMovement::Update(float)

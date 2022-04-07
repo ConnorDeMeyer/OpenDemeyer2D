@@ -12,17 +12,18 @@
 #include "Components/RenderComponent.h"
 #include "Components/SpriteComponent.h"
 #include "Components/TextPixelComponent.h"
+#include "StageMovement.h"
 
 GameObject* PeterPepperFactory()
 {
 	auto PeterPepperObj = new GameObject();
-	PhysicsComponent* collision = PeterPepperObj->AddComponent<PhysicsComponent>();
-	collision->SetAsBox(8, 8);
+	PeterPepperObj->AddComponent<PhysicsComponent>();
 	PeterPepperObj->AddComponent<RenderComponent>();
 	PeterPepperObj->AddComponent<InputComponent>();
 	PeterPepperObj->AddComponent<SpriteComponent>();
 	PeterPepperObj->AddComponent<PPSpriteMovement>();
 	PeterPepperObj->AddComponent<PeterPepper>();
+	PeterPepperObj->AddComponent<StageMovement>();
 	return PeterPepperObj;
 }
 

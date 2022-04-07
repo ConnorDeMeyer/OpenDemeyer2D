@@ -26,11 +26,19 @@ constexpr int stageWidth = 9;
 constexpr int stageHeight = 10;
 constexpr int stageSize = stageWidth * stageHeight;
 
+class Transform;
+
 class Stage final : public ComponentBase
 {
 public:
 	
 	void BeginPlay() override;
+
+	bool CanMoveInDirection(const glm::vec2& position, movementDirection direction);
+
+	void SnapToGridX(Transform* transform);
+
+	void SnapToGridY(Transform* transform);
 
 private:
 
@@ -40,11 +48,11 @@ private:
 
 	void SpawnPlayer();
 
-	bool CanMoveInDirection(const glm::vec2& position, movementDirection direction);
-
 private:
 
 	std::array<tiles, stageSize> m_Tiles{};
 
 	std::shared_ptr<Texture2D> m_StageTexture;
+
+	GameObject* m_pPeterPepper{};
 };
