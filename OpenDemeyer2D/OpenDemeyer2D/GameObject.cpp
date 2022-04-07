@@ -80,9 +80,12 @@ void GameObject::RenderImGui()
 	}
 
 	if (ImGui::TreeNodeEx("Children", ImGuiTreeNodeFlags_Leaf * m_Children.empty())) {
-		for (auto obj : m_Children)
+		for (size_t i{}; i < m_Children.size(); ++i)
 		{
-			obj->RenderImGui();
+			if (ImGui::TreeNode(std::string("GameObject" + std::to_string(i)).c_str())) {
+				m_Children[i]->RenderImGui();
+				ImGui::TreePop();
+			}
 		}
 		ImGui::TreePop();
 	}

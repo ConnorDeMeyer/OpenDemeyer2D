@@ -9,6 +9,9 @@ void BurgerPiece::BeginPlay()
 	m_pRenderComp = GetParent()->GetComponent<RenderComponent>();
 	m_pTextureComp = GetParent()->GetComponent<TextureComponent>();
 
+	if (m_pRenderComp)
+		m_pRenderComp->SetRenderLayer(1);
+
 	UpdateTexture();
 }
 

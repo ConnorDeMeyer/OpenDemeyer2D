@@ -20,6 +20,12 @@ void PhysicsComponent::BeginPlay()
 	if (!m_pBody) CreateBody();
 }
 
+void PhysicsComponent::Update(float)
+{
+	auto transform = GetParent()->GetTransform();
+	m_pBody->SetTransform(reinterpret_cast<const b2Vec2&>(transform->GetWorldPosition()), transform->GetWorldRotation());
+}
+
 const glm::vec2& PhysicsComponent::GetLinearVelocity() const
 {
 	return reinterpret_cast<const glm::vec2&>(m_pBody->GetLinearVelocity());

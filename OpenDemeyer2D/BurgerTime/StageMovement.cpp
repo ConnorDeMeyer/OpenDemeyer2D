@@ -58,7 +58,7 @@ void StageMovement::RenderImGui()
 		m_HorizontalMovementSpeed = horSpeed;
 
 	float verSpeed{ m_VerticalMovementSpeed };
-	ImGui::InputFloat("Horizontal Speed", &verSpeed);
+	ImGui::InputFloat("Vertical Speed", &verSpeed);
 
 	if (verSpeed != m_VerticalMovementSpeed)
 		m_VerticalMovementSpeed = verSpeed;

@@ -1,5 +1,12 @@
 ﻿#include "OD2pch.h"
 #include "RenderManager.h"
+
+
+#include <b2_body.h>
+#include <b2_circle_shape.h>
+#include <b2_fixture.h>
+#include <b2_polygon_shape.h>
+
 #include "SceneManager.h"
 #include "ResourceManager.h"
 
@@ -12,6 +19,7 @@
 #include <gl/wglew.h>
 
 #include "OpenDemeyer2D.h"
+#include "Scene.h"
 
 int GetOpenGLDriverIndex()
 {
@@ -98,26 +106,42 @@ void RenderManager::Init(SDL_Window* window)
 	ImGui_ImplSDL2_InitForOpenGL(window, SDL_GL_GetCurrentContext());
 	ImGui_ImplOpenGL3_Init("#version 130");
 
-	m_RenderTexture = RESOURCES.CreateRenderTexture(m_GameResWidth, m_GameResHeight);
+	int renderLayers{};
+	settings.GetData(OD_RENDERER_LAYERS, renderLayers);
+	m_RenderLayers.reserve(renderLayers);
+	for (int i{}; i < renderLayers; ++i)
+	{
+		m_RenderLayers.emplace_back(RESOURCES.CreateRenderTexture(m_GameResWidth, m_GameResHeight));
+	}
+	m_ImGuiRenderTarget = RESOURCES.CreateRenderTexture(m_GameResWidth, m_GameResHeight);
 }
 
-void RenderManager::Render() const
+void RenderManager::Render()
 {
-
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	for (auto& renderTarget : m_RenderLayers)
+	{
+		glClearColor(0, 0, 0, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, renderTarget->GetFrameBuffer());
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_Window);
 	ImGui::NewFrame();
 
-	SetRenderTarget(m_RenderTexture); {
+	SetRenderTarget(m_RenderLayers[0]); {
 	glPushMatrix();
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glScalef(1, -1, 1);
 		glTranslatef(0, -static_cast<float>(m_GameResHeight), 0);
 
 		SCENES.Render();
+
+		if (m_bShowHitboxes) RenderHitboxes();
 
 	glPopMatrix();
 	} SetRenderTargetScreen();
@@ -126,6 +150,7 @@ void RenderManager::Render() const
 	ENGINE.RenderStats();
 	ENGINE.RenderSettings();
 	RenderImGuiGameWindow();
+	RenderImGuiRenderInfo();
 	ImGui::Render();
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -142,103 +167,16 @@ void RenderManager::Destroy()
 	SDL_GL_DeleteContext(m_pContext);
 }
 
-void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pivot, const SDL_FRect* srcRect) const
-{
-	float width  = (srcRect) ? srcRect->w : static_cast<float>(texture->GetWidth()) ;
-	float height = (srcRect) ? srcRect->h : static_cast<float>(texture->GetHeight());
-
-	// Vertex coordinates for centered orientation
-	float vertexLeft	{ pivot.x - 1.f };
-	float vertexBottom	{ pivot.y - 1.f };
-	float vertexRight	{ pivot.x  };
-	float vertexTop		{ pivot.y  };
-
-	//if (renderMode != eRenderAlignMode::centered)
-	//{
-	//	vertexLeft   =	(static_cast<Uint8>(renderMode) & 0b1 ) ? -1.f : 0.f;
-	//	vertexRight  =	(static_cast<Uint8>(renderMode) & 0b1 ) ? 0.f  : 1.f;
-	//	vertexBottom =	(static_cast<Uint8>(renderMode) & 0b10) ? 0.f  : -1.f;
-	//	vertexTop	 =	(static_cast<Uint8>(renderMode) & 0b10) ? 1.f  : 0.f;
-	//}
-
-	vertexLeft   *= width ;
-	vertexRight  *= width ;
-	vertexTop    *= height;
-	vertexBottom *= height;
-
-	// Texture coordinates
-	float textLeft	 { 0 };
-	float textRight	 { 1 };
-	float textBottom { 1 };
-	float textTop	 { 0 };
-	
-	if (srcRect)
-	{
-		textLeft	= srcRect->x / texture->GetWidth();
-		textRight	= (srcRect->x + srcRect->w) / texture->GetWidth();
-		textTop		= (srcRect->y) / texture->GetHeight();
-		textBottom	= (srcRect->y + srcRect->h) / texture->GetHeight();
-	}
-
-	// Tell opengl which texture we will use
-	glBindTexture(GL_TEXTURE_2D, texture->m_Id);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-	// Draw
-	glEnable(GL_TEXTURE_2D);
-	{
-		glBegin(GL_QUADS);
-		{
-			glTexCoord2f(textLeft, textBottom);
-			glVertex2f(vertexLeft, vertexBottom);
-
-			glTexCoord2f(textLeft, textTop);
-			glVertex2f(vertexLeft, vertexTop);
-
-			glTexCoord2f(textRight, textTop);
-			glVertex2f(vertexRight, vertexTop);
-
-			glTexCoord2f(textRight, textBottom);
-			glVertex2f(vertexRight, vertexBottom);
-		}
-		glEnd();
-	}
-	glDisable(GL_TEXTURE_2D);
-}
-
-void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& pivot, const SDL_FRect* srcRect) const
-{
-	glPushMatrix();
-	{
-		glTranslatef(pos.x, pos.y, 0);
-		RenderTexture(texture, pivot, srcRect);
-	}
-	glPopMatrix();
-}
-
 void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos,
-	const glm::vec2& scale, const glm::vec2& pivot, const SDL_FRect* srcRect) const
+	const glm::vec2& scale, float rotation, const glm::vec2& pivot, const SDL_FRect* srcRect, int renderTarget) const
 {
-	glPushMatrix();
-	{
-		glTranslatef(pos.x, pos.y, 0);
-		glScalef(scale.x, scale.y, 1);
-		RenderTexture(texture, pivot, srcRect);
-	}
-	glPopMatrix();
+	RenderTexture(texture->GetId(), texture->GetWidth(), texture->GetHeight(), pos, scale, rotation, pivot, srcRect, renderTarget);
 }
 
-void RenderManager::RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos,
-	const glm::vec2& scale, float rotation, const glm::vec2& pivot, const SDL_FRect* srcRect) const
+void RenderManager::RenderTexture(const std::shared_ptr<RenderTarget>& texture, const glm::vec2& pos,
+	const glm::vec2& scale, float rotation, const glm::vec2& pivot, const SDL_FRect* srcRect, int renderTarget) const
 {
-	glPushMatrix();
-	{
-		glTranslatef(pos.x, pos.y, 0);
-		glRotatef(static_cast<GLfloat>(rotation), 0, 0, 1);
-		glScalef(scale.x, scale.y, 1);
-		RenderTexture(texture, pivot, srcRect);
-	}
-	glPopMatrix();
+	RenderTexture(texture->GetRenderedTexture(), texture->GetWidth(), texture->GetHeight(), pos, scale, rotation, pivot, srcRect, renderTarget);
 }
 
 void RenderManager::RenderImGuiGameWindow() const
@@ -246,7 +184,7 @@ void RenderManager::RenderImGuiGameWindow() const
 	bool isOpen{};
 	ImGui::Begin("Game", &isOpen, ImGuiWindowFlags_NoScrollbar);
 
-	float aspectRatio = float(m_RenderTexture->GetWidth()) / float(m_RenderTexture->GetHeight());
+	float aspectRatio = float(m_GameResWidth) / float(m_GameResHeight);
 
 	auto pos = ImGui::GetWindowPos();
 	auto size = ImGui::GetWindowSize();
@@ -260,11 +198,84 @@ void RenderManager::RenderImGuiGameWindow() const
 		size = newSize;
 	}
 
+	SetRenderTarget(m_ImGuiRenderTarget);
+	for (auto& renderTarget : m_RenderLayers)
+	{
+		RenderTexture(renderTarget, glm::vec2{ 0,renderTarget->GetHeight() }, { 1,-1 }, 0, { 1,1 });
+	}
+	SetRenderTargetScreen();
+
 #pragma warning(disable : 4312)
-	ImGui::Image((ImTextureID)m_RenderTexture->GetRenderedTexture(), size);
+	ImGui::Image((ImTextureID)m_ImGuiRenderTarget->GetRenderedTexture(), size);
 #pragma warning(default : 4312)
 
 	ImGui::End();
+}
+
+void RenderManager::RenderImGuiRenderInfo()
+{
+	ImGui::Begin("Render Information");
+
+	float width = ImGui::GetWindowSize().x;
+
+	//bool renderHitboxes{ m_bShowHitboxes };
+	ImGui::Checkbox("Show hitboxes", &m_bShowHitboxes);
+
+	for (size_t i{}; i < m_RenderLayers.size(); ++i)
+	{
+		std::string text{ "Render Target " };
+		text += std::to_string(i);
+		ImGui::Text(text.c_str());
+
+		float aspectRatio = float(m_RenderLayers[i]->GetWidth()) / float(m_RenderLayers[i]->GetHeight());
+		
+#pragma warning(disable : 4312)
+		ImGui::Image((ImTextureID)m_RenderLayers[i]->GetRenderedTexture(), { width, width / aspectRatio });
+#pragma warning(default : 4312)
+	}
+
+	ImGui::End();
+}
+
+void RenderManager::RenderHitboxes() const
+{
+	static_assert(sizeof(b2Vec2) == sizeof(glm::vec2));
+
+	SetRenderTarget(m_RenderLayers.back());
+
+	auto pWorld = SCENES.GetActiveScene()->GetPhysicsWorld();
+
+	SetColor({ 255,55,255,200 });
+
+	for (auto pBody{ pWorld->GetBodyList() }; pBody; pBody = pBody->GetNext())
+	{
+		auto& position = pBody->GetPosition();
+		for (auto fixture{ pBody->GetFixtureList() }; fixture; fixture = fixture->GetNext())
+		{
+			switch (fixture->GetType())
+			{
+			case b2Shape::Type::e_polygon:
+				{
+					auto polygon = reinterpret_cast<b2PolygonShape*>(fixture->GetShape());
+					b2Vec2 positions[b2_maxPolygonVertices]{};
+					for (int32 i{}; i < polygon->m_count; ++i)
+					{
+						positions[i] = polygon->m_vertices[i] + position;
+					}
+					RenderPolygon(reinterpret_cast<glm::vec2*>(positions), polygon->m_count, true);
+				}
+				break;
+			case b2Shape::Type::e_circle:
+				{
+					auto circle = reinterpret_cast<b2CircleShape*>(fixture->GetShape());
+					glm::vec2 center = { position.x + circle->m_p.x,position.y + circle->m_p.y };
+					RenderEllipse(center, { circle->m_radius, circle->m_radius }, true);
+				}
+				break;
+			}
+		}
+			
+	}
 }
 
 void RenderManager::SetRenderTarget(const std::shared_ptr<RenderTarget>& renderTarget) const
@@ -277,4 +288,157 @@ void RenderManager::SetRenderTargetScreen() const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, m_WindowResWidth, m_WindowResHeight);
+}
+
+void RenderManager::RenderTexture(GLuint glId, int w, int h, const glm::vec2& pos, const glm::vec2& scale, float rotation,
+	const glm::vec2& pivot, const SDL_FRect* srcRect, int renderTarget) const
+{
+	if (renderTarget != -1) {
+		assert(int(m_RenderLayers.size()) > renderTarget && renderTarget >= 0);
+		SetRenderTarget(m_RenderLayers[renderTarget]);
+	}
+
+	glPushMatrix();
+	{
+		glTranslatef(pos.x, pos.y, 0);
+		glRotatef(static_cast<GLfloat>(rotation), 0, 0, 1);
+		glScalef(scale.x, scale.y, 1);
+
+		{
+			float width = (srcRect) ? srcRect->w : static_cast<float>(w);
+			float height = (srcRect) ? srcRect->h : static_cast<float>(h);
+
+			// Vertex coordinates for centered orientation
+			float vertexLeft{ pivot.x - 1.f };
+			float vertexBottom{ pivot.y - 1.f };
+			float vertexRight{ pivot.x };
+			float vertexTop{ pivot.y };
+
+			vertexLeft *= width;
+			vertexRight *= width;
+			vertexTop *= height;
+			vertexBottom *= height;
+
+			// Texture coordinates
+			float textLeft{ 0 };
+			float textRight{ 1 };
+			float textBottom{ 1 };
+			float textTop{ 0 };
+
+			if (srcRect)
+			{
+				textLeft = srcRect->x / w;
+				textRight = (srcRect->x + srcRect->w) / w;
+				textTop = (srcRect->y) / h;
+				textBottom = (srcRect->y + srcRect->h) / h;
+			}
+
+			// Tell opengl which texture we will use
+			glBindTexture(GL_TEXTURE_2D, glId);
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+			// Draw
+			glEnable(GL_TEXTURE_2D);
+			{
+				glBegin(GL_QUADS);
+				{
+					glTexCoord2f(textLeft, textBottom);
+					glVertex2f(vertexLeft, vertexBottom);
+
+					glTexCoord2f(textLeft, textTop);
+					glVertex2f(vertexLeft, vertexTop);
+
+					glTexCoord2f(textRight, textTop);
+					glVertex2f(vertexRight, vertexTop);
+
+					glTexCoord2f(textRight, textBottom);
+					glVertex2f(vertexRight, vertexBottom);
+				}
+				glEnd();
+			}
+			glDisable(GL_TEXTURE_2D);
+		}
+
+	}
+	glPopMatrix();
+
+	//SetRenderTargetScreen();
+}
+
+/**
+ * STATIC FUNCTIONS
+ */
+
+void RenderManager::SetColor(const SDL_Color& color)
+{
+	glColor4ub(color.r, color.g, color.b, color.a);
+}
+
+void RenderManager::RenderPoint(const glm::vec2& pos, float pointSize, SDL_Color* pColor)
+{
+	if (pColor) SetColor(*pColor);
+
+	glPointSize(pointSize);
+	glBegin(GL_POINTS);
+	glVertex2f(pos.x, pos.y);
+	glEnd();
+}
+
+void RenderManager::RenderLine(const glm::vec2& begin, const glm::vec2& end, float thickness, SDL_Color* pColor)
+{
+	if (pColor) SetColor(*pColor);
+
+	glLineWidth(thickness);
+	glBegin(GL_LINES);
+	glVertex2f(begin.x, begin.y);
+	glVertex2f(end.x, end.y);
+	glEnd();
+}
+
+void RenderManager::RenderRect(const SDL_FRect& rect, bool filled, SDL_Color* pColor)
+{
+	if (pColor) SetColor(*pColor);
+
+	glBegin(filled ? GL_POLYGON : GL_LINE_LOOP);
+	glVertex2f(rect.x, rect.y);
+	glVertex2f(rect.x + rect.w, rect.y);
+	glVertex2f(rect.x + rect.w, rect.y + rect.h);
+	glVertex2f(rect.x, rect.y + rect.h);
+	glEnd();
+}
+
+void RenderManager::RenderPolygon(const std::vector<glm::vec2>& points, bool filled, SDL_Color* pColor)
+{
+	if (pColor) SetColor(*pColor);
+
+	RenderPolygon(points.data(), points.size(), filled, pColor);
+}
+
+void RenderManager::RenderPolygon(const glm::vec2* points, size_t size, bool filled, SDL_Color* pColor)
+{
+	if (pColor) SetColor(*pColor);
+
+	glBegin(filled ? GL_POLYGON : GL_LINE_LOOP);
+	for (size_t i{}; i < size; ++i)
+	{
+		glVertex2f(points[i].x, points[i].y);
+	}
+	glEnd();
+}
+
+// SOURCE: Digital Arts and Entertainment programming 2 framework
+void RenderManager::RenderEllipse(const glm::vec2& center, const glm::vec2& radii, bool filled, SDL_Color* pColor)
+{
+	if (pColor) SetColor(*pColor);
+
+	float dAngle{ radii.x > radii.y ? float(M_PI / radii.x) : float(M_PI / radii.y) };
+
+	glBegin(filled ? GL_POLYGON : GL_LINE_LOOP);
+	{
+		for (float angle = 0.0; angle < float(2 * M_PI); angle += dAngle)
+		{
+			glVertex2f(center.x + radii.x * float(cos(angle)), center.y + radii.y * float(sin(angle)));
+		}
+	}
+	glEnd();
 }

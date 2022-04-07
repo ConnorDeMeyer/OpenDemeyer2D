@@ -13,6 +13,7 @@ void PeterPepper::BeginPlay()
 	auto sprite = GetParent()->GetComponent<SpriteComponent>();
 	auto collision = GetParent()->GetComponent<PhysicsComponent>();
 	auto movement = GetParent()->GetComponent<StageMovement>();
+	auto render = GetParent()->GetRenderComponent();
 
 	input->BindKeyPressed(SDLK_d, [movement] {movement->Move(movementDirection::right); });
 	input->BindKeyPressed(SDLK_a, [movement] {movement->Move(movementDirection::left); });
@@ -24,6 +25,8 @@ void PeterPepper::BeginPlay()
 	sprite->OnAnimationEnd.BindFunction(input, [input] {input->SetActive(true); });
 
 	collision->SetAsBox(8, 8);
+
+	render->SetRenderLayer(2);
 }
 
 void PeterPepper::LoseLife()

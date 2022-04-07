@@ -14,6 +14,8 @@ public:
 	
 	void BeginPlay() override;
 
+	void Update(float) override;
+
 	/** Get the Box2D body of this component.*/
 	b2Body* GetBody() const { return m_pBody; }
 

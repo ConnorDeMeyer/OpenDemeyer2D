@@ -28,6 +28,10 @@ public:
 
 	void SetPivot(const glm::vec2& pivot) { m_Pivot = pivot; }
 
+	void SetRenderLayer(int renderLayer) { m_RenderLayer = renderLayer; }
+
+	int GetRenderLayer() const { return m_RenderLayer; }
+
 	//void InitializeComponent(const Dictionary& dictionary) override;
 
 	//Dictionary& GetClassDefault() override;
@@ -41,6 +45,8 @@ private:
 	SDL_FRect m_SourceRect;
 
 	glm::vec2 m_Pivot{};
+
+	int m_RenderLayer{};
 
 };
 
