@@ -101,6 +101,20 @@ void Stage::LoadStageTexture()
 
 	SDL_FreeSurface(pLevelLayout);
 
+	auto sheetTexture = RESOURCES.LoadTexture("Bitmaps/FullSheet.png");
+	// burger holders at the bottom
+	for (int i{}; i < 4; ++i)
+	{
+		auto go = new GameObject();
+		auto render = go->AddComponent<RenderComponent>();
+		auto texture = go->AddComponent<TextureComponent>();
+		texture->SetTexture(sheetTexture);
+		texture->SetSourceRect({ 112.f, 104.f, 48.f, 16.f });
+		render->SetRenderAlignMode(eRenderAlignMode::left);
+
+		go->GetTransform()->SetPosition({ 8.f + 48.f * i, -32.f });
+		go->SetParent(GetParent());
+	}
 	
 }
 
@@ -255,6 +269,23 @@ void Stage::SnapToGridY(Transform* transform)
 	float yTilePos = fmod(pos.y, 16.f);
 	if (fabsf(yTilePos - 3.f) <= 1.f)
 		transform->SetPosition({ pos.x, yTilePos + float(yPos) * 16.f });
+}
+
+float Stage::GetNextPlatformDown(const glm::vec2& pos)
+{
+	int xPos = PositionMap[int(pos.x / 16.f)];
+	int yPos = stageHeight - 0 - int((pos.y) / 16.f);
+	while (yPos < stageHeight)
+	{
+		int arrayPos{ xPos + yPos * stageWidth };
+		if (int(m_Tiles[arrayPos]) & 0b1)
+		{
+			return (stageHeight - yPos -  1) * 16.f + 5.f;
+		}
+		++yPos;
+	}
+
+	return -36.f + float(m_FallenHamburgers[xPos / 2]++) * 8.f;
 }
 
 void Stage::BeginPlay()

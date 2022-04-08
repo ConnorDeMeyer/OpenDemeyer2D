@@ -79,6 +79,8 @@ private:
 
 	/** References to object that are flagged for deletion.*/
 	ODArray<GameObject*> m_DestroyableObjects;
+	
+	std::vector<GameObject*> m_UninitializedObject;
 
 	b2World* m_pb2World{};
 };

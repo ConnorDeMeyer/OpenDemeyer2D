@@ -1,7 +1,10 @@
 ﻿#pragma once
 
+#include <unordered_map>
+#include <typeindex>
 #include "ODArray.h"
 #include <memory>
+
 #include "ComponentBase.h"
 #include "Components/Transform.h"
 #include "Components/RenderComponent.h"
@@ -61,6 +64,9 @@ public:
 	template <typename T>
 	T* GetComponent() const;
 
+	template <typename T>
+	T* GetComponentByCast() const;
+
 	/**
 	* Adds a component to the object
 	* Gives the engine the ability to manage the component and makes sure the component gets automatically deleted
@@ -104,7 +110,9 @@ public:
 private:
 
 	/** Container of all the components attached to this GameObject.*/
-	ODArray<ComponentBase*> m_Components;
+	//ODArray<ComponentBase*> m_Components;
+
+	std::unordered_map<std::type_index, ComponentBase*> m_Components;
 
 	/** Container of children attached to this GameObject.*/
 	ODArray<GameObject*> m_Children;
@@ -137,10 +145,17 @@ T* GameObject::GetComponent() const
 	if constexpr (std::is_same_v<T, Transform>) {return reinterpret_cast<T*>(m_pTransform);}
 	else if constexpr (std::is_same_v<T, Transform>) {return reinterpret_cast<T*>(m_pRenderComponent);}
 	else {
-		for (ComponentBase* component : m_Components)
-			if (auto returnValue{ dynamic_cast<T*>(component) }) return returnValue;
-		return nullptr;
+		auto it = m_Components.find(typeid(T));
+		return (it != m_Components.end()) ? reinterpret_cast<T*>(it->second) : nullptr;
 	}
+}
+
+template <typename T>
+T* GameObject::GetComponentByCast() const
+{
+	for (auto component : m_Components)
+		if (auto returnValue{ dynamic_cast<T*>(component.second) }) return returnValue;
+	return nullptr;
 }
 
 template <typename T>
@@ -152,20 +167,18 @@ GameObject::AddComponent()
 		if (m_pRenderComponent) throw std::runtime_error("Component already in gameobject");
 
 		m_pRenderComponent = new RenderComponent();
-		m_Components.emplace_back(m_pRenderComponent);
+		m_Components.insert({ typeid(T), m_pRenderComponent });
 		m_pRenderComponent->m_pParent = this;
 
 		if (m_HasBeenInitialized) m_pRenderComponent->BeginPlay();
 
 		return m_pRenderComponent;
 	}
-
-	else if (GetComponent<T>()) {
-		throw std::runtime_error("Component already in gameobject");
-	}
-	else {
-		auto comp = new T();
-		m_Components.emplace_back(comp);
+	else
+	{
+		assert(!GetComponent<T>()); // Make sure the component is not already added
+		T* comp = new T();
+		m_Components.insert({ typeid(T), comp });
 
 		comp->m_pParent = this;
 
@@ -179,14 +192,20 @@ void GameObject::RemoveComponent()
 {
 	if constexpr (std::is_same_v<T, Transform>) { throw std::runtime_error("Cannot remove transform component"); }
 
-	size_t counter{};
-	for (ComponentBase* component : m_Components)
+	auto it = m_Components.find(typeid(T));
+	if (it != m_Components.end())
 	{
-		if (dynamic_cast<T*>(component))
-		{
-			delete component;
-			m_Components.SwapRemove(counter);
-			break;
-		} else ++counter;
+		delete it->second;
+		m_Components.erase(it);
 	}
+	//size_t counter{};
+	//for (ComponentBase* component : m_Components)
+	//{
+	//	if (dynamic_cast<T*>(component))
+	//	{
+	//		delete component;
+	//		m_Components.SwapRemove(counter);
+	//		break;
+	//	} else ++counter;
+	//}
 }

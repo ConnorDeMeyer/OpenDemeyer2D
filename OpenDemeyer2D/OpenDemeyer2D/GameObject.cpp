@@ -15,7 +15,7 @@ GameObject::~GameObject()
 {
 	for (auto comp : m_Components)
 	{
-		delete comp;
+		delete comp.second;
 	}
 
 	for (auto obj : m_Children)
@@ -31,7 +31,7 @@ void GameObject::Update(float deltaTime)
 {
 	for (auto comp : m_Components)
 	{
-		comp->Update(deltaTime);
+		comp.second->Update(deltaTime);
 	}
 
 	for (auto obj : m_Children)
@@ -54,7 +54,7 @@ void GameObject::BeginPlay()
 {
 	for (auto comp : m_Components)
 	{
-		comp->BeginPlay();
+		comp.second->BeginPlay();
 	}
 	m_HasBeenInitialized = true;
 
@@ -70,8 +70,8 @@ void GameObject::RenderImGui()
 		size_t counter{};
 		for (auto comp : m_Components)
 		{
-			if (ImGui::TreeNode(comp->GetComponentName().c_str())) {
-				comp->RenderImGui();
+			if (ImGui::TreeNode(comp.second->GetComponentName().c_str())) {
+				comp.second->RenderImGui();
 				ImGui::TreePop();
 			}
 			++counter;
@@ -116,7 +116,15 @@ void GameObject::RemoveComponent(ComponentBase* pComponent)
 		else ++counter;
 	}*/
 
-	m_Components.SwapRemove(pComponent);
+	//m_Components.SwapRemove(pComponent);
+	for (auto it = m_Components.begin(); it != m_Components.end(); ++it)
+	{
+		if (it->second == pComponent) {
+			m_Components.erase(it);
+			delete pComponent;
+			break;
+		}
+	}
 }
 
 void GameObject::SetParent(GameObject* pObject)

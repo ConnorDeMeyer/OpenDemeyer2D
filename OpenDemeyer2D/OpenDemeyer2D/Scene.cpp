@@ -28,9 +28,7 @@ void Scene::Add(GameObject* pObject)
 {
 	if (pObject->m_pScene) throw ObjectAlreadyInASceneException();
 
-	m_SceneTree.emplace_back(pObject);
-	SetScene(pObject);
-	pObject->BeginPlay();
+	m_UninitializedObject.emplace_back(pObject);
 }
 
 void Scene::DestroyObject(GameObject* pObject)
@@ -46,6 +44,15 @@ void Scene::DestroyObjectImmediately(GameObject* pObject)
 
 void Scene::Update(float deltaTime)
 {
+	// initialized objects
+	for (GameObject* pObject : m_UninitializedObject)
+	{
+		m_SceneTree.emplace_back(pObject);
+		SetScene(pObject);
+		pObject->BeginPlay();
+	}
+	m_UninitializedObject.clear();
+
 	for (GameObject* child : m_SceneTree)
 	{
 		child->Update(deltaTime);

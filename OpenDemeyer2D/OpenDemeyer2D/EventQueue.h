@@ -21,11 +21,26 @@ public:
 		m_InputQueue.emplace_back(std::tuple<EventParameters...>(eventParameters...));
 	}
 
-	static const std::tuple<EventParameters...>& GetMessage()
+	static std::tuple<EventParameters...> GetMessage()
 	{
 		auto message = m_InputQueue.front();
 		m_InputQueue.pop_front();
 		return message;
+	}
+
+	static const std::tuple<EventParameters...>& PeekMessage()
+	{
+		return m_InputQueue.front();
+	}
+
+	static void PopMessage()
+	{
+		m_InputQueue.pop_front();
+	}
+
+	static bool HasMessage()
+	{
+		return !m_InputQueue.empty();
 	}
 
 private:

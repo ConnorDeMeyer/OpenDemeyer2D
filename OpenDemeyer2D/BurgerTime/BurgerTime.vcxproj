@@ -98,11 +98,13 @@
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
@@ -125,6 +127,7 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,6 +135,7 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
@@ -152,11 +156,13 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
@@ -179,6 +185,7 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -186,6 +193,7 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>box2d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
@@ -207,6 +215,7 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
     <ClCompile Include="PlayerResources.cpp" />
     <ClCompile Include="PlayerUI.cpp" />
     <ClCompile Include="PPSpriteMovement.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageMovement.cpp" />
   </ItemGroup>
@@ -218,6 +227,7 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
     <ClInclude Include="PlayerResources.h" />
     <ClInclude Include="PlayerUI.h" />
     <ClInclude Include="PPSpriteMovement.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageMovement.h" />
   </ItemGroup>

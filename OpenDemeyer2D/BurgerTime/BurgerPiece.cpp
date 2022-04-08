@@ -5,8 +5,11 @@
 #include "Components/TextureComponent.h"
 #include "Components/PhysicsComponent.h"
 #include "PeterPepper.h"
+#include "Score.h"
 
 #include <functional>
+
+#include "Stage.h"
 
 void BurgerPiece::BeginPlay()
 {
@@ -31,6 +34,8 @@ void BurgerPiece::BeginPlay()
 			std::bind(&BurgerPiece::SegmentOverlap, this, pSegment, std::placeholders::_1));
 
 		m_pSegments[i] = pSegment;
+
+		m_RestHeight = GetParent()->GetTransform()->GetLocalPosition().y;
 	}
 
 	SetType(m_Type);
@@ -48,10 +53,52 @@ void BurgerPiece::SetType(BurgerPieceType type)
 	}
 }
 
+void BurgerPiece::Update(float deltaTime)
+{
+	if (m_FallDelay >= 0.f)
+	{
+		m_FallDelay -= deltaTime;
+		return;
+	}
+	if (m_IsFalling)
+	{
+		GetParent()->GetTransform()->Move({ 0,-48.f * deltaTime });
+		auto pos = GetParent()->GetTransform()->GetLocalPosition();
+		if (pos.y <= m_RestHeight)
+		{
+			GetParent()->GetTransform()->SetPosition({pos.x, m_RestHeight});
+			m_IsFalling = false;
+			m_FallDelay = 0.5f;
+			for (int i{}; i < 4; ++i)
+			{
+				m_HitSegments[i] = false;
+			}
+		}
+	}
+}
+
+void BurgerPiece::FallDown()
+{
+	if (auto pStage = GetParent()->GetParent()->GetComponent<Stage>())
+	{
+		GetParent()->GetTransform()->Move({ 0,-2.f });
+
+		for (int i{}; i < 4; ++i)
+			m_pSegments[i]->GetTransform()->Move({ 0,2 });
+
+		m_RestHeight = pStage->GetNextPlatformDown(GetParent()->GetTransform()->GetLocalPosition());
+		m_IsFalling = true;
+
+		//Add score
+		ScoreEventQueue::AddMessage(ScoreEvent::drop_Burger, GetParent()->GetTransform()->GetWorldPosition());
+	}
+}
+
 
 void BurgerPiece::SegmentOverlap(GameObject* pSegment, PhysicsComponent* other)
 {
-	if (!other->GetParent()->GetComponent<PeterPepper>()) return;
+	if (!other->GetParent()->GetComponent<PeterPepper>() && !m_IsFalling && m_FallDelay < 0.f &&
+		!other->GetParent()->GetParent()->GetComponent<BurgerPiece>()) return;
 
 	for (int i{}; i < 4; ++i)
 	{
@@ -59,7 +106,12 @@ void BurgerPiece::SegmentOverlap(GameObject* pSegment, PhysicsComponent* other)
 		{
 			m_HitSegments[i] = true;
 			m_pSegments[i]->GetTransform()->Move({ 0,-2.f });
-			break;
+
+			for (int j{}; j < 4; ++j)
+				if (m_HitSegments[j] != true) return;
+
+			FallDown();
+			return;
 		}
 	}
 }

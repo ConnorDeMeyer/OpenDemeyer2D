@@ -24,8 +24,11 @@ public:
 
 	void SetType(BurgerPieceType type);
 
+	void Update(float) override;
 
 private:
+
+	void FallDown();
 
 	void SegmentOverlap(GameObject* pSegment, PhysicsComponent* other);
 
@@ -35,7 +38,14 @@ private:
 
 	bool m_HitSegments[4]{};
 
+	float m_RestHeight{};
+
+	float m_FallDelay{};
+
 	BurgerPieceType m_Type{};
+
+	bool m_IsFalling{};
+
 
 };
 

@@ -120,6 +120,8 @@ void Engine::Cleanup()
 	for (auto& buffer : m_SettingsInputBuffer)
 		delete[] buffer.second;
 
+	delete m_pGameinstance;
+
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;
 	SDL_Quit();

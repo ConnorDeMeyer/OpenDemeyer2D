@@ -10,6 +10,7 @@
 #include "Components/InputComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/RenderComponent.h"
+#include "Score.h"
 #include "Components/SpriteComponent.h"
 #include "Components/TextPixelComponent.h"
 #include "StageMovement.h"
@@ -79,5 +80,17 @@ void AddGameUI(Scene* pScene)
 		Pepper->GetTransform()->SetPosition({ 184.f, 248.f });
 
 		pScene->Add(Pepper);
+	}
+	{
+		GameObject* score = new GameObject();
+		auto render = score->AddComponent<RenderComponent>();
+		auto text = score->AddComponent<TextPixelComponent>();
+		score->AddComponent<Score>();
+		text->setFontTexture(RESOURCES.LoadSurface("Bitmaps/Text.png"));
+		text->SetText("0");
+		score->GetTransform()->SetPosition({ 128.f, 240.f });
+		render->SetRenderAlignMode(eRenderAlignMode::topRight);
+
+		pScene->Add(score);
 	}
 }

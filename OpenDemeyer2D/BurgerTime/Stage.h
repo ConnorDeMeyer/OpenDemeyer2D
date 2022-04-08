@@ -40,6 +40,8 @@ public:
 
 	void SnapToGridY(Transform* transform);
 
+	float GetNextPlatformDown(const glm::vec2& pos);
+
 private:
 
 	void LoadStageTexture();
@@ -55,4 +57,6 @@ private:
 	std::shared_ptr<Texture2D> m_StageTexture;
 
 	GameObject* m_pPeterPepper{};
+
+	Uint8 m_FallenHamburgers[4]{};
 };
