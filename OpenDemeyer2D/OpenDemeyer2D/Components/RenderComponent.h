@@ -26,15 +26,13 @@ public:
 
 	const std::string GetComponentName() override { return "RenderComponent"; }
 
+	void RenderImGui() override;
+
 	void SetPivot(const glm::vec2& pivot) { m_Pivot = pivot; }
 
 	void SetRenderLayer(int renderLayer) { m_RenderLayer = renderLayer; }
 
 	int GetRenderLayer() const { return m_RenderLayer; }
-
-	//void InitializeComponent(const Dictionary& dictionary) override;
-
-	//Dictionary& GetClassDefault() override;
 
 private:
 

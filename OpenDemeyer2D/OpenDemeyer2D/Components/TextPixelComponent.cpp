@@ -5,6 +5,8 @@
 #include "../RenderManager.h"
 #include "../Surface2D.h"
 
+#include "imgui.h"
+
 void TextPixelComponent::Update(float)
 {
 	if (m_NeedsUpdate)
@@ -101,4 +103,42 @@ void TextPixelComponent::SetCharPixelSize(int size)
 {
 	m_CharSize = size;
 	m_NeedsUpdate = true;
+}
+
+void TextPixelComponent::RenderImGui()
+{
+	// Change text
+	char buffer[128];
+	strcpy(buffer, m_Text.c_str());
+	ImGui::InputText("Text", buffer, 64);
+	
+	if (m_Text != std::string(buffer))
+	{
+		SetText(std::string(buffer));
+	}
+
+	// Show texture
+	float ratio = float(m_TextTexture->GetWidth()) / float(m_TextTexture->GetHeight());
+#pragma warning(disable : 4312)
+	ImGui::Image((ImTextureID)(m_TextTexture->GetId()), { 16 * ratio,16 });
+#pragma warning(default : 4312)
+
+	// Change Color
+	float colors[4]{ m_Color.r / 255.f, m_Color.g / 255.f, m_Color.b / 255.f, m_Color.a / 255.f };
+	ImGui::ColorEdit4("Text color", colors);
+
+	if (colors[0] != m_Color.r / 255.f || colors[1] != m_Color.g / 255.f || colors[2] != m_Color.b / 255.f || colors[3] != m_Color.a / 255.f)
+	{
+		SetColor({ Uint8(colors[0] * 255.f),Uint8(colors[1] * 255.f) ,Uint8(colors[2] * 255.f) ,Uint8(colors[3] * 255.f) });
+	}
+
+	// Change Char Size
+	int charSize = m_CharSize;
+	ImGui::InputInt("Character Size", &charSize);
+
+	if (charSize != m_CharSize)
+	{
+		m_CharSize = charSize;
+		m_NeedsUpdate = true;
+	}
 }

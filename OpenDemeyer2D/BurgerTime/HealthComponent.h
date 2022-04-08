@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "../ComponentBase.h"
-#include "../Delegate.h"
+#include "ComponentBase.h"
+#include "Delegate.h"
 
 class HealthComponent : public ComponentBase
 {

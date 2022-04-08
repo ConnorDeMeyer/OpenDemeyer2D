@@ -80,9 +80,6 @@
     <ClCompile Include="Components\InputComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Components\HealthComponent.cpp">
-      <Filter>EngineFiles\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Components\PhysicsComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
@@ -195,9 +192,6 @@
       <Filter>EngineFiles\Components</Filter>
     </ClInclude>
     <ClInclude Include="Components\InputComponent.h">
-      <Filter>EngineFiles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\HealthComponent.h">
       <Filter>EngineFiles\Components</Filter>
     </ClInclude>
     <ClInclude Include="Components\PhysicsComponent.h">

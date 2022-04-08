@@ -8,11 +8,6 @@
 
 #include "../RenderManager.h"
 
-//static Dictionary TextureDefaults
-//{
-//	Dictionary::EntryStruct<std::string>{"file", ""}
-//};
-
 void TextureComponent::BeginPlay()
 {
 	m_pRenderComponent = GetParent()->GetComponent<RenderComponent>();
@@ -38,6 +33,19 @@ void TextureComponent::RenderImGui()
 #pragma warning(disable : 4312)
 	ImGui::Image((ImTextureID)(m_Texture->GetId()), { 100,100 });
 #pragma warning(default : 4312)
+
+	//Change source rect
+	ImGui::Text("Source Rectangle");
+	float x{ m_SourceRect.x }, y{ m_SourceRect.y }, w{ m_SourceRect.w }, h{ m_SourceRect.h };
+	ImGui::InputFloat("X Coordinate", &x);
+	ImGui::InputFloat("Y Coordinate", &y);
+	ImGui::InputFloat("Width", &w);
+	ImGui::InputFloat("Height", &h);
+
+	if (m_SourceRect.x != x || m_SourceRect.y != y || m_SourceRect.w != w || m_SourceRect.h != h)
+	{
+		SetSourceRect({ x,y,w,h });
+	}
 }
 
 void TextureComponent::SetSourceRect(const SDL_FRect& sourceRect)
@@ -54,18 +62,3 @@ void TextureComponent::UpdateRenderComponent()
 		m_pRenderComponent->SetSourceRect(m_SourceRect);
 	}
 }
-
-//void TextureComponent::InitializeComponent(const Dictionary& dictionary)
-//{
-//	std::string path;
-//	dictionary.GetData("file", path);
-//
-//	if (!path.empty())
-//		SetTexture(path);
-//}
-
-//Dictionary& TextureComponent::GetClassDefault()
-//{
-//	return TextureDefaults;
-//}
-

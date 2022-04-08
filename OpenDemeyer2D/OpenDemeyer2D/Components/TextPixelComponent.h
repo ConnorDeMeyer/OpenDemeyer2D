@@ -37,6 +37,8 @@ public:
 
 	const std::string GetComponentName() override { return "TextPixelComponent"; }
 
+	void RenderImGui() override;
+
 private:
 
 	bool m_NeedsUpdate{};
@@ -48,4 +50,5 @@ private:
 	int m_CharSize{ 8 };
 
 	RenderComponent* m_pRenderComp{};
+	
 };

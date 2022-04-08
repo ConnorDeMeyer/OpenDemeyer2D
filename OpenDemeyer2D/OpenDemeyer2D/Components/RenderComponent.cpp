@@ -5,10 +5,6 @@
 #include "../GameObject.h"
 #include "../RenderManager.h"
 
-//static Dictionary RenderDefaults
-//{
-//	Dictionary::EntryStruct<Uint8>{"align", Uint8(eRenderAlignMode::centered)},
-//};
 
 void RenderComponent::Render() const
 {
@@ -70,15 +66,48 @@ void RenderComponent::SetSourceRect(const SDL_FRect& srcRect)
 	m_SourceRect = srcRect;
 }
 
-//void RenderComponent::InitializeComponent(const Dictionary& dictionary)
-//{
-//	Uint8 alignMode;
-//	dictionary.GetData("align", alignMode);
-//
-//	m_RenderAlignMode = eRenderAlignMode(alignMode);
-//}
+void RenderComponent::RenderImGui()
+{
+	// Show texture
+	float ratio = float(m_Texture->GetWidth()) / float(m_Texture->GetHeight());
+#pragma warning(disable : 4312)
+	ImGui::Image((ImTextureID)(m_Texture->GetId()), { 16 * ratio,16 });
+#pragma warning(default : 4312)
 
-//Dictionary& RenderComponent::GetClassDefault()
-//{
-//	return RenderDefaults;
-//}
+	//Change source rect
+	ImGui::Text("Source Rectangle");
+	float x{ m_SourceRect.x }, y{ m_SourceRect.y }, w{ m_SourceRect.w }, h{ m_SourceRect.h };
+	ImGui::InputFloat("X Coordinate", &x);
+	ImGui::InputFloat("Y Coordinate", &y);
+	ImGui::InputFloat("Width", &w);
+	ImGui::InputFloat("Height", &h);
+
+	if (m_SourceRect.x != x || m_SourceRect.y != y || m_SourceRect.w != w || m_SourceRect.h != h)
+	{
+		SetSourceRect({ x,y,w,h });
+	}
+
+	// Pivot
+	float dims[2]{ m_Pivot.x, m_Pivot.y };
+	ImGui::InputFloat2("Pivot", dims);
+
+	m_Pivot.x = dims[0];
+	m_Pivot.y = dims[1];
+
+	// Render Layer
+	ImGui::SliderInt("Render Layer", &m_RenderLayer, 0, int(RENDER.GetRenderLayersAmount()) - 1);
+
+	// Render Align modes
+	const char* items[] = { "Top Left", "Top Right", "Bottom Left", "Bottom Right", "Top", "Bottom", "Right", "Left", "Centered" };
+	if (ImGui::BeginCombo("Render Align Modes", "Render Align Modes")) {
+
+		for (int i{}; i < 9; ++i)
+		{
+			if (ImGui::Selectable(items[i]))
+			{
+				SetRenderAlignMode(eRenderAlignMode(i));
+			}
+		}
+		ImGui::EndCombo();
+	}
+}

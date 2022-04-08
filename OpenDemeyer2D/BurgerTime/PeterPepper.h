@@ -24,6 +24,7 @@ public:
 
 	void GainScore(int amount);
 
+	const std::string GetComponentName() override { return "PeterPepper"; }
 
 protected:
 

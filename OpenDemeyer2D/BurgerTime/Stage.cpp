@@ -7,6 +7,7 @@
 #include "BurgerPiece.h"
 #include "Components/TextureComponent.h"
 #include "GameplayPrefabs.h"
+#include "imgui.h"
 #include "PeterPepper.h"
 #include "StageMovement.h"
 
@@ -305,4 +306,13 @@ void Stage::BeginPlay()
 		renderComp->SetTexture(m_StageTexture);
 		renderComp->SetRenderAlignMode(eRenderAlignMode::bottomLeft);
 	}
+}
+
+void Stage::RenderImGui()
+{
+	// Show texture
+	float ratio = float(m_StageTexture->GetWidth()) / float(m_StageTexture->GetHeight());
+#pragma warning(disable : 4312)
+	ImGui::Image((ImTextureID)(m_StageTexture->GetId()), { 16 * ratio,16 });
+#pragma warning(default : 4312)
 }

@@ -67,9 +67,38 @@ void SpriteComponent::SetTexture(const std::string& filePath)
 
 void SpriteComponent::RenderImGui()
 {
+	// image
 #pragma warning(disable : 4312)
 	ImGui::Image((ImTextureID)(m_Texture->GetId()), { 100,100 });
 #pragma warning(default : 4312)
+
+	// Time per frame
+	float tpf{ m_TimePerFrame };
+	ImGui::InputFloat("Seconds Per Frame", &tpf);
+
+	if (tpf != m_TimePerFrame)
+	{
+		m_TimePerFrame = tpf;
+	}
+
+	// frame dimensions
+	float dims[2]{ m_FrameDimension.x, m_FrameDimension.y };
+	ImGui::InputFloat2("Frame Dimensions", dims);
+
+	m_FrameDimension.x = dims[0];
+	m_FrameDimension.y = dims[1];
+
+	// frame offset
+	ImGui::InputInt("Frame Offset", &m_FrameOffset);
+	ImGui::InputInt("Current Frame", &m_CurrentFrame);
+	ImGui::Checkbox("Pause", &m_bPauseTime);
+	ImGui::Checkbox("Loop", &m_bLoop);
+
+	// Reset button
+	if (ImGui::Button("Reset"))
+	{
+		Reset();
+	}
 }
 
 void SpriteComponent::SetFrameOffset(int offset)

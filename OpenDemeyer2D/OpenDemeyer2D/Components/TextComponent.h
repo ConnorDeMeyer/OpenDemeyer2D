@@ -33,6 +33,8 @@ public:
 
 	const std::string GetComponentName() override { return "TextComponent"; }
 
+	void RenderImGui() override;
+
 private:
 
 	bool m_NeedsUpdate{};

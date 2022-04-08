@@ -5,13 +5,6 @@
 #include "imgui.h"
 #include "../Dictionary.h"
 
-//static Dictionary TransformDefaults
-//{
-//	Dictionary::EntryStruct<glm::vec2>{"pos", {0,0}},
-//	Dictionary::EntryStruct<glm::vec2>{"scale", {1,1}},
-//	Dictionary::EntryStruct<float>{"rot", 0.f}
-//};
-
 void Transform::BeginPlay()
 {
 	UpdateLocalChanges();
@@ -43,19 +36,12 @@ void Transform::RenderImGui()
 	// Change rotation
 	if (rotation != m_LocalRotation)
 		SetRotation(rotation);
+
+	// Display world transforms
+	ImGui::Text("World Position: [%.1f,%.1f]", m_Position.x, m_Position.y);
+	ImGui::Text("World Scale:    [%.1f,%.1f]", m_Scale.x, m_Scale.y);
+	ImGui::Text("World Rotation: [%.1f]", m_Rotation);
 }
-
-//Dictionary& Transform::GetClassDefault()
-//{
-//	return TransformDefaults;
-//}
-
-//void Transform::InitializeComponent(const Dictionary& dictionary)
-//{
-//	dictionary.GetData("pos", m_LocalPosition);
-//	dictionary.GetData("scale", m_LocalScale);
-//	dictionary.GetData("rot", m_LocalRotation);
-//}
 
 void Transform::SetPosition(const glm::vec2& pos)
 {

@@ -16,11 +16,11 @@ enum class eRenderAlignMode : Uint8
 	topRight = 0b01,
 	bottomLeft = 0b10,
 	bottomRight = 0b11,
-	top,
-	bottom,
-	right,
-	left,
-	centered
+	top = 4,
+	bottom = 5,
+	right = 6,
+	left = 7,
+	centered = 8
 };
 
 class RenderManager final : public Singleton<RenderManager>
@@ -48,6 +48,8 @@ public:
 	void SetRenderTarget(const std::shared_ptr<RenderTarget>& renderTarget) const;
 
 	void SetRenderTargetScreen() const;
+
+	size_t GetRenderLayersAmount() const { return m_RenderLayers.size(); }
 
 private:
 

@@ -42,6 +42,10 @@ public:
 
 	float GetNextPlatformDown(const glm::vec2& pos);
 
+	const std::string GetComponentName() override { return "Stage"; }
+
+	void RenderImGui() override;
+
 private:
 
 	void LoadStageTexture();

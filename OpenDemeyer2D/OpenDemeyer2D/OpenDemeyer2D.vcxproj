@@ -201,7 +201,6 @@
     <ClCompile Include="..\3rdParty\DearImGui\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\DearImGui\imgui_widgets.cpp" />
     <ClCompile Include="Components\PhysicsComponent.cpp" />
-    <ClCompile Include="Components\HealthComponent.cpp" />
     <ClCompile Include="Components\InputComponent.cpp" />
     <ClCompile Include="Components\RenderComponent.cpp" />
     <ClCompile Include="Components\SpriteComponent.cpp" />
@@ -232,7 +231,6 @@
     <ClInclude Include="..\3rdParty\DearImGui\imstb_truetype.h" />
     <ClInclude Include="ComponentBase.h" />
     <ClInclude Include="Components\PhysicsComponent.h" />
-    <ClInclude Include="Components\HealthComponent.h" />
     <ClInclude Include="Components\InputComponent.h" />
     <ClInclude Include="Components\RenderComponent.h" />
     <ClInclude Include="Components\SpriteComponent.h" />

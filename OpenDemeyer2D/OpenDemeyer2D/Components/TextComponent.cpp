@@ -7,12 +7,6 @@
 #include "../ResourceManager.h"
 #include "../RenderManager.h"
 
-//static Dictionary TextDefaults
-//{
-//	Dictionary::EntryStruct<std::string>{"text", ""},
-//	Dictionary::EntryStruct<std::string>{"font", ""},
-//	Dictionary::EntryStruct<float>{"size", 11.f}
-//};
 
 void TextComponent::Update(float)
 {
@@ -71,12 +65,39 @@ void TextComponent::SetSize(unsigned size)
 	}
 }
 
-//void TextComponent::InitializeComponent(const Dictionary& dictionary)
-//{
-//	dictionary.GetData("text", m_Text); // TODO complete initialize component for text
-//}
-//
-//Dictionary& TextComponent::GetClassDefault()
-//{
-//	return TextDefaults;
-//}
+void TextComponent::RenderImGui()
+{
+	// Change text
+	char buffer[128];
+	strcpy(buffer, m_Text.c_str());
+	ImGui::InputText("Text", buffer, 64);
+
+	if (m_Text != std::string(buffer))
+	{
+		SetText(std::string(buffer));
+	}
+
+	// Show texture
+	float ratio = float(m_TextTexture->GetWidth()) / float(m_TextTexture->GetHeight());
+#pragma warning(disable : 4312)
+	ImGui::Image((ImTextureID)(m_TextTexture->GetId()), { 16 * ratio,16 });
+#pragma warning(default : 4312)
+
+	// Change Color
+	float colors[4]{ m_Color.r / 255.f, m_Color.g / 255.f, m_Color.b / 255.f, m_Color.a / 255.f };
+	ImGui::ColorEdit4("Text color", colors);
+
+	if (colors[0] != m_Color.r / 255.f || colors[1] != m_Color.g / 255.f || colors[2] != m_Color.b / 255.f || colors[3] != m_Color.a / 255.f)
+	{
+		SetColor({ Uint8(colors[0] * 255.f),Uint8(colors[1] * 255.f) ,Uint8(colors[2] * 255.f) ,Uint8(colors[3] * 255.f) });
+	}
+
+	// Change Char Size
+	int fontSize = m_Font->GetSize();
+	ImGui::InputInt("Character Size", &fontSize);
+
+	if (fontSize != int(m_Font->GetSize()))
+	{
+		SetSize(fontSize);
+	}
+}

@@ -1,6 +1,7 @@
 ﻿#include "InputComponent.h"
 #include "../InputManager.h"
 
+#include "imgui.h"
 
 
 InputComponent::~InputComponent()
@@ -79,4 +80,10 @@ void InputComponent::BindControllerAxis(SDL_GameControllerAxis SDL_CONTROLLER_AX
 int InputComponent::BindToController()
 {
 	return INPUT.RegisterInputComponent(this);
+}
+
+void InputComponent::RenderImGui()
+{
+	ImGui::Checkbox("Is Active", &m_bIsActive);
+	ImGui::Text("Controller Id: %.d", m_ControllerId);
 }

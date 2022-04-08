@@ -32,6 +32,8 @@ public:
 
 	const std::string GetComponentName() override { return "InputComponent"; }
 
+	void RenderImGui() override;
+
 private:
 
 	bool m_bIsActive{ true };

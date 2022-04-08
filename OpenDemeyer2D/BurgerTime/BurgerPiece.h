@@ -26,6 +26,8 @@ public:
 
 	void Update(float) override;
 
+	const std::string GetComponentName() override { return "BurgerPiece"; }
+
 private:
 
 	void FallDown();

@@ -209,6 +209,7 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
   <ItemGroup>
     <ClCompile Include="BurgerPiece.cpp" />
     <ClCompile Include="BurgerTimeGI.cpp" />
+    <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PeterPepper.cpp" />
     <ClCompile Include="GameplayPrefabs.cpp" />
@@ -222,6 +223,7 @@ xcopy $(SolutionDir)BurgerTime\steam_appid.txt $(OutputPath) /R /Y</Command>
   <ItemGroup>
     <ClInclude Include="BurgerPiece.h" />
     <ClInclude Include="BurgerTimeGI.h" />
+    <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="PeterPepper.h" />
     <ClInclude Include="GameplayPrefabs.h" />
     <ClInclude Include="PlayerResources.h" />

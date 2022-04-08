@@ -51,15 +51,6 @@ void StageMovement::Update(float deltaTime)
 
 void StageMovement::RenderImGui()
 {
-	float horSpeed{ m_HorizontalMovementSpeed };
-	ImGui::InputFloat("Horizontal Speed", &horSpeed);
-
-	if (horSpeed != m_HorizontalMovementSpeed)
-		m_HorizontalMovementSpeed = horSpeed;
-
-	float verSpeed{ m_VerticalMovementSpeed };
-	ImGui::InputFloat("Vertical Speed", &verSpeed);
-
-	if (verSpeed != m_VerticalMovementSpeed)
-		m_VerticalMovementSpeed = verSpeed;
+	ImGui::InputFloat("Horizontal Speed", &m_HorizontalMovementSpeed);
+	ImGui::InputFloat("Vertical Speed", &m_VerticalMovementSpeed);
 }

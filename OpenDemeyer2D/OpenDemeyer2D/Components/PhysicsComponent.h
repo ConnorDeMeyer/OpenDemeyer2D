@@ -49,6 +49,8 @@ public:
 	 */
 	Delegate<PhysicsComponent*, const glm::vec2&, const glm::vec2&> OnHit;
 
+	const std::string GetComponentName() override { return "PhysicsComponent"; }
+
 private:
 
 	void CreateBody();

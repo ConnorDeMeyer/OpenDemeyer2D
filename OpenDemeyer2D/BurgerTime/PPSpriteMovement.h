@@ -16,6 +16,8 @@ public:
 
 	void ResetAnimation();
 
+	const std::string GetComponentName() override { return "PPSpriteMovement"; };
+
 protected:
 
 	PeterPepper* m_pPeterPepper{};

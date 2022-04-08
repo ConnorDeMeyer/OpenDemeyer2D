@@ -5,7 +5,7 @@
 #include "Scene.h"
 #include "Components/RenderComponent.h"
 #include "Components/SpriteComponent.h"
-#include "Components/HealthComponent.h"
+#include "HealthComponent.h"
 #include "ResourceManager.h"
 #include "Components/PhysicsComponent.h"
 #include "Components/TextPixelComponent.h"
