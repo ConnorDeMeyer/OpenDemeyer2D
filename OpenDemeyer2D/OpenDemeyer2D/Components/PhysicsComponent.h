@@ -26,10 +26,10 @@ public:
 	float GetAngularVelocity() const { return m_pBody->GetAngularVelocity(); }
 
 	/** Adds a box fixture to the body.*/
-	void SetAsBox(float halfWidth, float halfHeight);
+	void AddBox(float halfWidth, float halfHeight, bool isSenor = false, const glm::vec2& center = {0,0}, float rotation = 0);
 
 	/** Adds a given fixture to the body.*/
-	void AddFixture(const b2FixtureDef& fixture);
+	void AddFixture(b2FixtureDef& fixture);
 
 	/**
 	 * Fires when the collision component overlaps with another

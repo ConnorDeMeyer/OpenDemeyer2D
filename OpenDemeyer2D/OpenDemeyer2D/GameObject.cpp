@@ -127,9 +127,6 @@ void GameObject::SetParent(GameObject* pObject)
 		m_Parent->m_Children.SwapRemove(this);
 	}
 
-	// Set transform relative to parent
-	// TODO
-
 	// Set as parent
 	m_Parent = pObject;
 
@@ -144,6 +141,9 @@ void GameObject::SetParent(GameObject* pObject)
 		// initialize game object
 		if (pObject->m_HasBeenInitialized) BeginPlay();
 	}
+
+	// Set transform relative to parent
+	m_pTransform->Move({});
 }
 
 //void GameObject::AttachGameObject(GameObject* object)

@@ -46,6 +46,10 @@ public:
 	/** Render the settings in an ImGui window*/
 	void RenderSettings();
 
+	inline static float m_PhysicsTimeStep = 1.f / 60.f;
+	inline static int m_PhysicsVelocityIter = 10;
+	inline static int m_PhysicsPositionIterations = 8;
+
 private:
 
 	// Time and frame rate data members
@@ -53,9 +57,6 @@ private:
 	float m_TargetFps = 1.f / 60.f;
 	float m_DeltaTime = 0.0f;
 
-	float m_PhysicsTimeStep = 1.f / 60.f;
-	int m_PhysicsVelocityIter = 10;
-	int m_PhysicsPositionIterations = 8;
 	float m_TimeLag{};
 
 	bool m_Quit{};

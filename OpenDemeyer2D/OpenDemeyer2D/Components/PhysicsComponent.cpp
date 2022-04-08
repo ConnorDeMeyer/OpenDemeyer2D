@@ -1,9 +1,11 @@
 ﻿#include "PhysicsComponent.h"
 
 #include <b2_body.h>
+#include <b2_fixture.h>
 #include <b2_polygon_shape.h>
 
 #include "../Scene.h"
+#include "../OpenDemeyer2D.h"
 
 
 PhysicsComponent::~PhysicsComponent()
@@ -31,18 +33,24 @@ const glm::vec2& PhysicsComponent::GetLinearVelocity() const
 	return reinterpret_cast<const glm::vec2&>(m_pBody->GetLinearVelocity());
 }
 
-void PhysicsComponent::SetAsBox(float halfWidth, float halfHeight)
+void PhysicsComponent::AddBox(float halfWidth, float halfHeight, bool isSensor, const glm::vec2& center, float rotation)
 {
 	if (!m_pBody) CreateBody();
 
 	b2PolygonShape boxShape{};
-	boxShape.SetAsBox(halfWidth, halfHeight);
-	
-	m_pBody->CreateFixture(&boxShape, 0.f);
+	boxShape.SetAsBox(halfWidth, halfHeight, { center.x, center.y }, rotation);
+
+	b2FixtureDef def{};
+	def.userData.pointer = uintptr_t(this);
+	def.isSensor = isSensor;
+	def.shape = &boxShape;
+
+	m_pBody->CreateFixture(&def);
 }
 
-void PhysicsComponent::AddFixture(const b2FixtureDef& fixture)
+void PhysicsComponent::AddFixture(b2FixtureDef& fixture)
 {
+	fixture.userData.pointer = uintptr_t(this);
 	m_pBody->CreateFixture(&fixture);
 }
 
@@ -53,6 +61,8 @@ void PhysicsComponent::CreateBody()
 	b2BodyDef bodyDef{};
 	bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
 	bodyDef.position.Set(position.x, position.y);
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.allowSleep = false;
 
 	m_pBody = GetParent()->GetScene()->GetPhysicsWorld()->CreateBody(&bodyDef);
 }

@@ -88,8 +88,10 @@ void Scene::BeginContact(b2Contact* contact)
 	PhysicsComponent* compA = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureA()->GetUserData().pointer);
 	PhysicsComponent* compB = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureB()->GetUserData().pointer);
 
-	compA->OnOverlap.BroadCast(compB);
-	compB->OnOverlap.BroadCast(compA);
+	if (compA && compB) {
+		compA->OnOverlap.BroadCast(compB);
+		compB->OnOverlap.BroadCast(compA);
+	}
 }
 
 void Scene::EndContact(b2Contact* contact)
@@ -97,8 +99,10 @@ void Scene::EndContact(b2Contact* contact)
 	PhysicsComponent* compA = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureA()->GetUserData().pointer);
 	PhysicsComponent* compB = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureB()->GetUserData().pointer);
 
-	compA->OnEndOverlap.BroadCast(compB);
-	compB->OnEndOverlap.BroadCast(compA);
+	if (compA && compB) {
+		compA->OnEndOverlap.BroadCast(compB);
+		compB->OnEndOverlap.BroadCast(compA);
+	}
 }
 
 void Scene::PreSolve(b2Contact*, const b2Manifold*)
@@ -111,9 +115,11 @@ void Scene::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
 	PhysicsComponent* compA = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureA()->GetUserData().pointer);
 	PhysicsComponent* compB = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureB()->GetUserData().pointer);
 
-	compA->OnHit.BroadCast(compB, 
-		reinterpret_cast<const glm::vec2&>(impulse->normalImpulses), 
-		reinterpret_cast<const glm::vec2&>(impulse->tangentImpulses));
+	if (compA && compB) {
+		compA->OnHit.BroadCast(compB,
+			reinterpret_cast<const glm::vec2&>(impulse->normalImpulses),
+			reinterpret_cast<const glm::vec2&>(impulse->tangentImpulses));
+	}
 }
 
 void Scene::RemoveObject(GameObject* object)
