@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <ComponentBase.h>
 
+class PhysicsComponent;
+class BurgerPieceSegment;
 class TextureComponent;
 class RenderComponent;
 
@@ -22,19 +24,20 @@ public:
 
 	void SetType(BurgerPieceType type);
 
-	BurgerPieceType GetBurgerPieceType() const { return m_Type; }
 
 private:
 
-	void UpdateTexture();
+	void SegmentOverlap(GameObject* pSegment, PhysicsComponent* other);
 
 private:
 
-	TextureComponent* m_pTextureComp{};
-	RenderComponent* m_pRenderComp{};
+	GameObject* m_pSegments[4]{};
 
-	BurgerPieceType m_Type{ };
+	bool m_HitSegments[4]{};
+
+	BurgerPieceType m_Type{};
 
 };
+
 
 

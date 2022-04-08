@@ -10,7 +10,7 @@
 void PeterPepper::BeginPlay()
 {
 	auto input = GetParent()->GetComponent<InputComponent>();
-	auto sprite = GetParent()->GetComponent<SpriteComponent>();
+	//auto sprite = GetParent()->GetComponent<SpriteComponent>();
 	auto collision = GetParent()->GetComponent<PhysicsComponent>();
 	auto movement = GetParent()->GetComponent<StageMovement>();
 	auto render = GetParent()->GetRenderComponent();
@@ -20,11 +20,12 @@ void PeterPepper::BeginPlay()
 	input->BindKeyPressed(SDLK_w, [movement] {movement->Move(movementDirection::up); });
 	input->BindKeyPressed(SDLK_s, [movement] {movement->Move(movementDirection::down); });
 
-	collision->OnOverlap.BindFunction(this, [this](PhysicsComponent*) {OnLifeLost.BroadCast(); });
-	collision->OnOverlap.BindFunction(input, [input](PhysicsComponent*) {input->SetActive(false); });
-	sprite->OnAnimationEnd.BindFunction(input, [input] {input->SetActive(true); });
+	//collision->OnOverlap.BindFunction(this, [this](PhysicsComponent*) {OnLifeLost.BroadCast(); });
+	//collision->OnOverlap.BindFunction(input, [input](PhysicsComponent*) {input->SetActive(false); });
+	//sprite->OnAnimationEnd.BindFunction(input, [input] {input->SetActive(true); });
 
-	collision->SetAsBox(8, 8);
+	collision->AddBox(6, 6, true, { 0,6 });
+	collision->GetBody()->SetType(b2_kinematicBody);
 
 	render->SetRenderLayer(2);
 }

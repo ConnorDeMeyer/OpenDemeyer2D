@@ -142,8 +142,6 @@ void Stage::LoadStageItems()
 		auto& info = burgerPiecesLayout[i];
 
 		auto piece = new GameObject();
-		piece->AddComponent<RenderComponent>();
-		piece->AddComponent<TextureComponent>();
 		auto burgerPiece = piece->AddComponent<BurgerPiece>();
 
 		burgerPiece->SetType(info.type);

@@ -3,37 +3,63 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Components/TextureComponent.h"
+#include "Components/PhysicsComponent.h"
+#include "PeterPepper.h"
+
+#include <functional>
 
 void BurgerPiece::BeginPlay()
 {
-	m_pRenderComp = GetParent()->GetComponent<RenderComponent>();
-	m_pTextureComp = GetParent()->GetComponent<TextureComponent>();
+	auto sheetTexture = RESOURCES.LoadTexture("Bitmaps/FullSheet.png");
 
-	if (m_pRenderComp)
-		m_pRenderComp->SetRenderLayer(1);
+	for (int i{}; i < 4; ++i)
+	{
+		auto pSegment{ new GameObject() };
+		auto render = pSegment->AddComponent<RenderComponent>();
+		auto texture = pSegment->AddComponent<TextureComponent>();
+		auto collision = pSegment->AddComponent<PhysicsComponent>();
 
-	UpdateTexture();
+		pSegment->GetTransform()->SetPosition({ -12.f + 8.f * float(i), 0 });
+
+		pSegment->SetParent(GetParent());
+		render->SetRenderLayer(1);
+		render->SetPivot({ 0.5f,0.5f });
+		texture->SetTexture(sheetTexture);
+
+		collision->AddBox(3, 3, true);
+		collision->OnOverlap.BindFunction(this, 
+			std::bind(&BurgerPiece::SegmentOverlap, this, pSegment, std::placeholders::_1));
+
+		m_pSegments[i] = pSegment;
+	}
+
+	SetType(m_Type);
 }
 
 void BurgerPiece::SetType(BurgerPieceType type)
 {
 	m_Type = type;
+	if (!m_pSegments[0]) return;
 
-	UpdateTexture();
+	for (int i{}; i < 4; ++i)
+	{
+		auto texture = m_pSegments[i]->GetComponent<TextureComponent>();
+		texture->SetSourceRect({ 112.f + float(i) * 8.f, 48.f + int(type) * 8.f, 8.f, 8.f });
+	}
 }
 
-void BurgerPiece::UpdateTexture()
+
+void BurgerPiece::SegmentOverlap(GameObject* pSegment, PhysicsComponent* other)
 {
-	if (m_pTextureComp)
+	if (!other->GetParent()->GetComponent<PeterPepper>()) return;
+
+	for (int i{}; i < 4; ++i)
 	{
-		if (!m_pTextureComp->GetTexture())
+		if (pSegment == m_pSegments[i] && !m_HitSegments[i])
 		{
-			m_pTextureComp->SetTexture(RESOURCES.LoadTexture("Bitmaps/FullSheet.png"));
+			m_HitSegments[i] = true;
+			m_pSegments[i]->GetTransform()->Move({ 0,-2.f });
+			break;
 		}
-
-		m_pTextureComp->SetSourceRect(SDL_FRect{ 112.f,48.f + 8.f * float(m_Type),32.f,8.f });
 	}
-
-	if (m_pRenderComp)
-		m_pRenderComp->SetRenderAlignMode(eRenderAlignMode::centered);
 }
