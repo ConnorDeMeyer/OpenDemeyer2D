@@ -3,7 +3,7 @@
 #include "ComponentBase.h"
 #include "Delegate.h"
 
-class HealthComponent : public ComponentBase
+class HealthComponent : public Component<HealthComponent>
 {
 public:
 

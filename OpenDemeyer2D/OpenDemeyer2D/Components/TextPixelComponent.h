@@ -9,7 +9,7 @@ class Texture2D;
 class RenderComponent;
 class TextureComponent;
 
-class TextPixelComponent final : public ComponentBase
+class TextPixelComponent final : public Component<TextPixelComponent>
 {
 public:
 	TextPixelComponent() = default;
@@ -35,7 +35,7 @@ public:
 
 	const std::string& GetText() const { return m_Text; }
 
-	const std::string GetComponentName() override { return "TextPixelComponent"; }
+	//const std::string GetComponentName() override { return "TextPixelComponent"; }
 
 	void RenderImGui() override;
 

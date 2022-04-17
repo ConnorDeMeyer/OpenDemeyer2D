@@ -4,13 +4,11 @@
 #include "Delegate.h"
 
 
-class PeterPepper final : public ComponentBase
+class PeterPepper final : public Component<PeterPepper>
 {
 public:
 
 	void BeginPlay() override;
-
-	const glm::vec2& GetDirection() const { return m_Direction; }
 
 	int GetLives() const { return m_Lives; }
 
@@ -24,13 +22,9 @@ public:
 
 	void GainScore(int amount);
 
-	const std::string GetComponentName() override { return "PeterPepper"; }
+	//const std::string GetComponentName() override { return "PeterPepper"; }
 
 protected:
-
-	glm::vec2 m_Direction{};
-
-	float m_MovementSpeed{ 1.f };
 
 	int m_Lives{ 5 };
 

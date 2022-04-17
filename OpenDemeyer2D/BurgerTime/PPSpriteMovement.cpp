@@ -5,11 +5,13 @@
 #include "Components/SpriteComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/PhysicsComponent.h"
+#include "StageMovement.h"
 
 void PPSpriteMovement::BeginPlay()
 {
-	m_pPeterPepper = GetParent()->GetComponent<PeterPepper>();
+	m_pStageMovement = GetParent()->GetComponent<StageMovement>();
 
+	m_pPeterPepper = GetParent()->GetComponent<PeterPepper>();
 	if (m_pPeterPepper)
 	{
 		m_pPeterPepper->OnLifeLost.BindFunction(this, [this] {this->StartDieAnimation(); });
@@ -21,6 +23,7 @@ void PPSpriteMovement::BeginPlay()
 		m_pSpriteComponent->SetTexture("Bitmaps/FullSheet.png");
 		m_pSpriteComponent->SetFrameDimension({ 16,16 });
 		m_pSpriteComponent->SetTotalFrames(3);
+		m_pSpriteComponent->SetTimePerFrame(1.f/8.f);
 		m_pSpriteComponent->OnAnimationEnd.BindFunction(this, [this] { this->ResetAnimation(); });
 	}
 	
@@ -30,18 +33,39 @@ void PPSpriteMovement::BeginPlay()
 
 void PPSpriteMovement::Update(float)
 {
-	if (m_pPeterPepper && m_pSpriteComponent)
+	if (m_pPeterPepper && m_pSpriteComponent && m_pStageMovement)
 	{
-		auto& direction = m_pPeterPepper->GetDirection();
+		auto& direction = m_pStageMovement->GetMovementInput();
 
-		if (direction.x >= 0.2f)
+		if (GetParent()->GetTransform()->GetLocalScale().x != 1.f)
+			GetParent()->GetTransform()->SetScale({ 1,1 });
+
+		if (abs(direction.x) <= 0.05f)
 		{
+			m_pSpriteComponent->SetFrameOffset(1);
+			m_pSpriteComponent->SetTotalFrames(1);
+		}
+		else if (direction.x >= 0.05f)
+		{
+			m_pSpriteComponent->SetFrameOffset(3);
+			m_pSpriteComponent->SetTotalFrames(3);
+			GetParent()->GetTransform()->SetScale({ -1,1 });
+		}
+		else if (direction.x <= -0.05f)
+		{
+			m_pSpriteComponent->SetTotalFrames(3);
 			m_pSpriteComponent->SetFrameOffset(3);
 		}
-		else if (direction.x <= -0.2f)
+
+		if (direction.y >= 0.05f)
 		{
-			m_pSpriteComponent->SetFrameOffset(3);
-			GetParent()->GetTransform()->SetScale({ -1,1 });
+			m_pSpriteComponent->SetTotalFrames(3);
+			m_pSpriteComponent->SetFrameOffset(6);
+		}
+		else if (direction.y <= -0.05f)
+		{
+			m_pSpriteComponent->SetTotalFrames(3);
+			m_pSpriteComponent->SetFrameOffset(0);
 		}
 	}
 }

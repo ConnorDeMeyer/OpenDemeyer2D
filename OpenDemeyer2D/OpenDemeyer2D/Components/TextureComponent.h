@@ -5,7 +5,7 @@
 
 class RenderComponent;
 
-class TextureComponent final : public ComponentBase
+class TextureComponent final : public Component<TextureComponent>
 {
 public:
 
@@ -22,7 +22,7 @@ public:
 
 	void RenderImGui() override;
 
-	const std::string GetComponentName() override { return "TextureComponent"; }
+	//const std::string GetComponentName() override { return "TextureComponent"; }
 
 	void SetSourceRect(const SDL_FRect& sourceRect);
 

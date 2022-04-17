@@ -53,11 +53,19 @@ void Scene::Update(float deltaTime)
 	}
 	m_UninitializedObject.clear();
 
+	// Update every object
 	for (GameObject* child : m_SceneTree)
 	{
 		child->Update(deltaTime);
 	}
 
+	// Do a late update call for every object
+	for (GameObject* child : m_SceneTree)
+	{
+		child->LateUpdate();
+	}
+
+	// Delete the destroyed Objects
 	for (GameObject* object : m_DestroyableObjects)
 	{
 		object->SetParent(nullptr);

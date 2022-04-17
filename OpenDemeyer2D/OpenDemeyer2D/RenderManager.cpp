@@ -300,37 +300,42 @@ void RenderManager::RenderTexture(GLuint glId, int w, int h, const glm::vec2& po
 
 	glPushMatrix();
 	{
-		glTranslatef(pos.x, pos.y, 0);
+		//glTranslatef(pos.x, pos.y, 0);
 		glRotatef(static_cast<GLfloat>(rotation), 0, 0, 1);
-		glScalef(scale.x, scale.y, 1);
+		//glScalef(scale.x, scale.y, scale.x);
 
 		{
-			float width = (srcRect) ? srcRect->w : static_cast<float>(w);
-			float height = (srcRect) ? srcRect->h : static_cast<float>(h);
+			float width =	(srcRect) ? srcRect->w : static_cast<float>(w);
+			float height =	(srcRect) ? srcRect->h : static_cast<float>(h);
 
 			// Vertex coordinates for centered orientation
-			float vertexLeft{ pivot.x - 1.f };
-			float vertexBottom{ pivot.y - 1.f };
-			float vertexRight{ pivot.x };
-			float vertexTop{ pivot.y };
+			float vertexLeft	{ pivot.x - 1.f };
+			float vertexBottom	{ pivot.y - 1.f };
+			float vertexRight	{ pivot.x };
+			float vertexTop		{ pivot.y };
 
-			vertexLeft *= width;
-			vertexRight *= width;
-			vertexTop *= height;
-			vertexBottom *= height;
+			vertexLeft		*= width * scale.x;
+			vertexRight		*= width * scale.x;
+			vertexTop		*= height * scale.y;
+			vertexBottom	*= height * scale.y;
+
+			vertexLeft		+= pos.x;
+			vertexRight		+= pos.x;
+			vertexTop		+= pos.y;
+			vertexBottom	+= pos.y;
 
 			// Texture coordinates
-			float textLeft{ 0 };
-			float textRight{ 1 };
-			float textBottom{ 1 };
-			float textTop{ 0 };
+			float textLeft		{ 0 };
+			float textRight		{ 1 };
+			float textBottom	{ 1 };
+			float textTop		{ 0 };
 
 			if (srcRect)
 			{
-				textLeft = srcRect->x / w;
-				textRight = (srcRect->x + srcRect->w) / w;
-				textTop = (srcRect->y) / h;
-				textBottom = (srcRect->y + srcRect->h) / h;
+				textLeft	= srcRect->x / w;
+				textRight	= (srcRect->x + srcRect->w) / w;
+				textTop		= (srcRect->y) / h;
+				textBottom	= (srcRect->y + srcRect->h) / h;
 			}
 
 			// Tell opengl which texture we will use

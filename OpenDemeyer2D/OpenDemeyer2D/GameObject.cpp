@@ -40,6 +40,19 @@ void GameObject::Update(float deltaTime)
 	}
 }
 
+void GameObject::LateUpdate()
+{
+	for (auto comp : m_Components)
+	{
+		comp.second->LateUpdate();
+	}
+
+	for (auto obj : m_Children)
+	{
+		obj->LateUpdate();
+	}
+}
+
 void GameObject::Render() const
 {
 	if (m_pRenderComponent) m_pRenderComponent->Render();

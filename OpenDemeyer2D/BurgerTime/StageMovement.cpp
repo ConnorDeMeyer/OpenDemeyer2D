@@ -3,28 +3,35 @@
 #include "imgui.h"
 #include "GameObject.h"
 
-void StageMovement::Move(movementDirection direction)
+bool StageMovement::Move(movementDirection direction)
 {
 	if (m_pStage && m_pStage->CanMoveInDirection(GetParent()->GetTransform()->GetLocalPosition(), direction))
 	{
-		switch (direction)
-		{
-		case movementDirection::right:
-			m_MovementInput.x = 1.f;
-			break;
-		case movementDirection::left:
-			m_MovementInput.x = -1.f;
-			break;
-		case movementDirection::up:
-			m_MovementInput.y = 1.f;
-			break;
-		case movementDirection::down:
-			m_MovementInput.y = -1.f;
-			break;
-		default:
-			assert(false);
-			break;
-		}
+		MoveUnsafe(direction);
+		return true;
+	}
+	return false;
+}
+
+void StageMovement::MoveUnsafe(movementDirection direction)
+{
+	switch (direction)
+	{
+	case movementDirection::right:
+		m_MovementInput.x = 1.f;
+		break;
+	case movementDirection::left:
+		m_MovementInput.x = -1.f;
+		break;
+	case movementDirection::up:
+		m_MovementInput.y = 1.f;
+		break;
+	case movementDirection::down:
+		m_MovementInput.y = -1.f;
+		break;
+	default:
+		assert(false);
+		break;
 	}
 }
 
@@ -45,7 +52,10 @@ void StageMovement::Update(float deltaTime)
 
 	if (m_MovementInput.y != 0.f)
 		m_pStage->SnapToGridX(GetParent()->GetTransform());
+}
 
+void StageMovement::LateUpdate()
+{
 	m_MovementInput = {};
 }
 

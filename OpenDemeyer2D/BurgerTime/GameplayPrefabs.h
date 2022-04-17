@@ -7,4 +7,6 @@ GameObject* PeterPepperFactory();
 
 GameObject* PlayerUiFactory(GameObject* peterPepper);
 
+GameObject* EnemyFactory();
+
 void AddGameUI(Scene* pScene);

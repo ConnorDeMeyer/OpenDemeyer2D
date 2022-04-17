@@ -2,7 +2,7 @@
 #include "ComponentBase.h"
 #include "Delegate.h"
 
-class PlayerResources final : public ComponentBase
+class PlayerResources final : public Component<PlayerResources>
 {
 public:
 
@@ -22,7 +22,7 @@ public:
 
 	Delegate<> OnLostAllResources;
 
-	const std::string GetComponentName() override { return "PlayerResource"; }
+	//const std::string GetComponentName() override { return "PlayerResource"; }
 
 private:
 

@@ -6,7 +6,7 @@
 #endif
 
 #include "BurgerTimeGI.h"
-
+#include "ComponentBase.h"
 
 int main(int, char* []) {
 

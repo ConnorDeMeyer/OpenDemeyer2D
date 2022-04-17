@@ -20,7 +20,7 @@ enum class ScoreEvent
 
 typedef EventQueue<ScoreEvent, glm::vec2> ScoreEventQueue;
 
-class Score final : public ComponentBase
+class Score final : public Component<Score>
 {
 public:
 

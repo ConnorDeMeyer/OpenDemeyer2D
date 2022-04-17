@@ -3,7 +3,7 @@
 #include "../ComponentBase.h"
 #include "../InputManager.h"
 
-class InputComponent : public ComponentBase
+class InputComponent : public Component<InputComponent>
 {
 	friend class InputManager;
 
@@ -30,7 +30,7 @@ public:
 	int BindToController();
 	int GetControllerId() const { return m_ControllerId; }
 
-	const std::string GetComponentName() override { return "InputComponent"; }
+	//const std::string GetComponentName() override { return "InputComponent"; }
 
 	void RenderImGui() override;
 

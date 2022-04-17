@@ -39,6 +39,9 @@ private:
 	/** Updates the components attached to this component.*/
 	void Update(float deltaTime);
 
+	/** Update the components after the normal update*/
+	void LateUpdate();
+
 	/** Renders the components attached to this component.*/
 	void Render() const;
 

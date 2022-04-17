@@ -16,7 +16,7 @@ enum class BurgerPieceType : uint8_t
 	lettuce		= 5
 };
 
-class BurgerPiece final : public ComponentBase
+class BurgerPiece final : public Component<BurgerPiece>
 {
 public:
 
@@ -26,7 +26,7 @@ public:
 
 	void Update(float) override;
 
-	const std::string GetComponentName() override { return "BurgerPiece"; }
+	//const std::string GetComponentName() override { return "BurgerPiece"; }
 
 private:
 

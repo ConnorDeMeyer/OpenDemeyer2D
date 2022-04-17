@@ -28,7 +28,7 @@ constexpr int stageSize = stageWidth * stageHeight;
 
 class Transform;
 
-class Stage final : public ComponentBase
+class Stage final : public Component<Stage>
 {
 public:
 	
@@ -42,7 +42,7 @@ public:
 
 	float GetNextPlatformDown(const glm::vec2& pos);
 
-	const std::string GetComponentName() override { return "Stage"; }
+	//const std::string GetComponentName() override { return "Stage"; }
 
 	void RenderImGui() override;
 

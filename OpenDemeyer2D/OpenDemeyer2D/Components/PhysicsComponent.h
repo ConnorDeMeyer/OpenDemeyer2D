@@ -6,7 +6,7 @@
 #include "../Delegate.h"
 
 
-class PhysicsComponent : public ComponentBase
+class PhysicsComponent : public Component<PhysicsComponent>
 {
 public:
 
@@ -49,7 +49,7 @@ public:
 	 */
 	Delegate<PhysicsComponent*, const glm::vec2&, const glm::vec2&> OnHit;
 
-	const std::string GetComponentName() override { return "PhysicsComponent"; }
+	//const std::string GetComponentName() override { return "PhysicsComponent"; }
 
 private:
 

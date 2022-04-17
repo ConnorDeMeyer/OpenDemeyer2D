@@ -6,7 +6,7 @@
 
 class RenderComponent;
 
-class SpriteComponent : public ComponentBase
+class SpriteComponent : public Component<SpriteComponent>
 {
 public:
 
@@ -20,7 +20,7 @@ public:
 
 	void RenderImGui() override;
 
-	void SetFrameDimension(const glm::vec2& dimension) { m_FrameDimension = dimension; }
+	void SetFrameDimension(const glm::vec2& dimension);
 
 	/**
 	* Sets the position of the first frame in the bitmap
@@ -28,9 +28,9 @@ public:
 	*/
 	void SetFrameOffset(int offset);
 
-	void SetTotalFrames(int amount) { m_TotalFrames = amount; }
+	void SetTotalFrames(int amount);
 
-	void SetTimePerFrame(float value) { m_TimePerFrame = value; }
+	void SetTimePerFrame(float value);
 
 	void SetCurrentFrame(int frame);
 
@@ -42,7 +42,7 @@ public:
 
 	Delegate<> OnAnimationEnd;
 
-	const std::string GetComponentName() override { return "SpriteComponent"; }
+	//const std::string GetComponentName() override { return "SpriteComponent"; }
 
 private:
 
@@ -64,5 +64,7 @@ private:
 
 	bool m_bPauseTime{};
 	bool m_bLoop{ true };
+
+	bool m_NeedsUpdate{};
 
 };

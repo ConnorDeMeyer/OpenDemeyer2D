@@ -3,7 +3,7 @@
 #include <glm/vec2.hpp>
 #include <glm/matrix.hpp>
 
-class Transform final : public ComponentBase
+class Transform final : public Component<Transform>
 {
 public:
 
@@ -16,7 +16,7 @@ public:
 
 	void RenderImGui() override;
 
-	const std::string GetComponentName() override { return "Transform"; }
+	//const std::string GetComponentName() override { return "Transform"; }
 
 	//Dictionary& GetClassDefault() override;
 

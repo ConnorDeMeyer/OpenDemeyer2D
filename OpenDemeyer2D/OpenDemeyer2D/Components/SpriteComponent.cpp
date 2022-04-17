@@ -28,29 +28,36 @@ void SpriteComponent::Update(float deltaTime)
 	if (m_AccumulatedTime > m_TimePerFrame)
 	{
 		m_AccumulatedTime -= m_TimePerFrame;
-		if (++m_CurrentFrame >= m_TotalFrames + m_FrameOffset)
+		++m_CurrentFrame;
+		m_NeedsUpdate = true;
+	}
+
+	if (m_NeedsUpdate)
+	{
+		if (m_CurrentFrame >= m_TotalFrames)
 		{
 			if (m_bLoop)
-				m_CurrentFrame = m_FrameOffset;
+				m_CurrentFrame = 0;
 			else
 				m_bPauseTime = true;
 
 			OnAnimationEnd.BroadCast();
 		}
 
-		const int horizontalFrames{ int(m_Texture->GetWidth() / m_FrameDimension.x) };
-		m_CurrentFrameY = m_CurrentFrame / horizontalFrames;
-		m_CurrentFrameX = m_CurrentFrame % horizontalFrames;
+		int actualFrame = m_CurrentFrame + m_FrameOffset;
+		int horizontalFrames{ int(m_Texture->GetWidth() / m_FrameDimension.x) };
+		m_CurrentFrameY = actualFrame / horizontalFrames;
+		m_CurrentFrameX = actualFrame % horizontalFrames;
 
+
+		if (m_pRenderComponent)
+			m_pRenderComponent->SetSourceRect(SDL_FRect{
+				m_CurrentFrameX * m_FrameDimension.x,
+				m_CurrentFrameY * m_FrameDimension.y,
+				m_FrameDimension.x,
+				m_FrameDimension.y
+				});
 	}
-	if (m_pRenderComponent)
-		m_pRenderComponent->SetSourceRect(SDL_FRect{
-			m_CurrentFrameX * m_FrameDimension.x,
-			m_CurrentFrameY * m_FrameDimension.y,
-			m_FrameDimension.x,
-			m_FrameDimension.y
-			});
-	
 }
 
 void SpriteComponent::SetTexture(const std::shared_ptr<Texture2D>& texture)
@@ -101,23 +108,52 @@ void SpriteComponent::RenderImGui()
 	}
 }
 
+void SpriteComponent::SetFrameDimension(const glm::vec2& dimension)
+{
+	if (dimension != m_FrameDimension) {
+		m_FrameDimension = dimension;
+		m_NeedsUpdate = true;
+	}
+}
+
 void SpriteComponent::SetFrameOffset(int offset)
 {
-	m_FrameOffset = offset;
-	SetCurrentFrame(m_CurrentFrame - m_FrameOffset);
+	if (offset != m_FrameOffset) {
+		m_FrameOffset = offset;
+		m_NeedsUpdate = true;
+	}
+}
+
+void SpriteComponent::SetTotalFrames(int amount)
+{
+	if (m_TotalFrames != amount)
+	{
+		m_TotalFrames = amount;
+		m_NeedsUpdate = true;
+	}
+}
+
+void SpriteComponent::SetTimePerFrame(float value)
+{
+	if (m_TimePerFrame != value)
+	{
+		m_TimePerFrame = value;
+		m_NeedsUpdate = true;
+	}
 }
 
 void SpriteComponent::SetCurrentFrame(int frame)
 {
-	m_CurrentFrame = frame + m_FrameOffset;
+	m_CurrentFrame = frame;
+	int actualFrame = m_CurrentFrame + m_FrameOffset;
 	int horizontalFrames{ int(m_Texture->GetWidth() / m_FrameDimension.x) };
-	m_CurrentFrameY = m_CurrentFrame / horizontalFrames;
-	m_CurrentFrameX = m_CurrentFrame % horizontalFrames;
+	m_CurrentFrameY = actualFrame / horizontalFrames;
+	m_CurrentFrameX = actualFrame % horizontalFrames;
 }
 
 void SpriteComponent::Reset()
 {
-	m_CurrentFrame = m_FrameOffset;
+	m_CurrentFrame = 0;
 	m_AccumulatedTime = 0;
 	m_bPauseTime = false;
 }

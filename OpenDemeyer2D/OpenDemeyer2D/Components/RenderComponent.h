@@ -5,7 +5,7 @@
 
 class Transform;
 
-class RenderComponent final : public ComponentBase
+class RenderComponent final : public Component<RenderComponent>
 {
 public:
 
@@ -24,7 +24,7 @@ public:
 
 	void SetSourceRect(const SDL_FRect& srcRect);
 
-	const std::string GetComponentName() override { return "RenderComponent"; }
+	//const std::string GetComponentName() override { return "RenderComponent"; }
 
 	void RenderImGui() override;
 

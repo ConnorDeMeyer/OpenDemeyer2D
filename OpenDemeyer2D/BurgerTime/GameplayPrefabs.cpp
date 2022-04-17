@@ -14,6 +14,8 @@
 #include "Components/SpriteComponent.h"
 #include "Components/TextPixelComponent.h"
 #include "StageMovement.h"
+#include "GameplayPrefabs.h"
+#include "Enemy.h"
 
 GameObject* PeterPepperFactory()
 {
@@ -38,6 +40,17 @@ GameObject* PlayerUiFactory(GameObject* peterPepper)
 	playerUIComp->LinkPlayer(PeterPepperComp);
 	playerUI->GetTransform()->SetPosition({ 30,30 });
 	return playerUI;
+}
+
+GameObject* EnemyFactory()
+{
+	auto enemyObj = new GameObject();
+	enemyObj->AddComponent<RenderComponent>();
+	enemyObj->AddComponent<SpriteComponent>();
+	enemyObj->AddComponent<Enemy>();
+	enemyObj->AddComponent<StageMovement>();
+	enemyObj->AddComponent<PhysicsComponent>();
+	return enemyObj;
 }
 
 void AddGameUI(Scene* pScene)

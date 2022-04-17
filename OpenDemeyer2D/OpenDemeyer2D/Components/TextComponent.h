@@ -8,7 +8,7 @@ class Texture2D;
 class RenderComponent;
 class TextureComponent;
 
-class TextComponent final : public ComponentBase
+class TextComponent final : public Component<TextComponent>
 {
 public:
 
@@ -31,7 +31,7 @@ public:
 
 	const std::shared_ptr<Font>& getFont() const { return m_Font; }
 
-	const std::string GetComponentName() override { return "TextComponent"; }
+	//const std::string GetComponentName() override { return "TextComponent"; }
 
 	void RenderImGui() override;
 

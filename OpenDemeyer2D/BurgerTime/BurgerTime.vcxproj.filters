@@ -9,7 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="BurgerTimeGI.cpp" />
     <ClCompile Include="PPSpriteMovement.cpp">
       <Filter>Components</Filter>
@@ -39,6 +38,10 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="HealthComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Enemy.cpp">
       <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
@@ -72,6 +75,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="HealthComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

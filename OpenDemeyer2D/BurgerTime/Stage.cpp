@@ -197,8 +197,15 @@ bool Stage::CanMoveInDirection(const glm::vec2& position, movementDirection dire
 	int yPos = stageHeight - 1 - int((position.y) / 16.f);
 	int arrayPos{ xPos + yPos * stageWidth };
 
+	// If outside of the level
 	if (xPos < 0 || xPos >= stageWidth || yPos < 0 || yPos > stageHeight)
-		return false;
+	{
+		return (
+			(direction == movementDirection::up		&& yPos > stageHeight)	||
+			(direction == movementDirection::down	&& yPos < 0)			||
+			(direction == movementDirection::left	&& xPos > stageWidth)	||
+			(direction == movementDirection::right	&& xPos < 0));
+	}
 
 	float xTilePos = fmod(position.x, 16.f);
 	float yTilePos = fmod(position.y, 16.f);
