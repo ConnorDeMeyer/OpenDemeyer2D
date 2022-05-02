@@ -6,6 +6,13 @@
 #include "../RenderManager.h"
 
 
+void RenderComponent::DefineUserFields(UserFieldBinder& binder) const
+{
+	binder.Add<SDL_FRect>("sourceRect", offsetof(RenderComponent, m_SourceRect));
+	binder.Add<glm::vec2>("pivot", offsetof(RenderComponent, m_Pivot));
+	binder.Add<int>("renderLayer", offsetof(RenderComponent, m_RenderLayer));
+}
+
 void RenderComponent::Render() const
 {
 	if (m_Texture && m_pTransform)

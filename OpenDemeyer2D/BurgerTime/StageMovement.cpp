@@ -2,6 +2,7 @@
 
 #include "imgui.h"
 #include "GameObject.h"
+#include "Components/Transform.h"
 
 bool StageMovement::Move(movementDirection direction)
 {

@@ -4,6 +4,8 @@
 #include "ResourceManager.h"
 #include "Components/TextureComponent.h"
 #include "Components/PhysicsComponent.h"
+#include "Components/Transform.h"
+#include "Components/RenderComponent.h"
 #include "PeterPepper.h"
 #include "Score.h"
 

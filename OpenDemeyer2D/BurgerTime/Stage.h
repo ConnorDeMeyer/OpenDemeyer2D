@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "ComponentBase.h"
+#include "Component.h"
 #include <array>
 #include <Texture2D.h>
 #include "memory"

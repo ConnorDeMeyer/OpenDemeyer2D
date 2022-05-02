@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../ComponentBase.h"
+#include "Component.h"
 #include "../Texture2D.h"
 #include <glm/glm.hpp>
 #include "../Delegate.h"
@@ -9,6 +9,8 @@ class RenderComponent;
 class SpriteComponent : public Component<SpriteComponent>
 {
 public:
+
+	virtual void DefineUserFields(UserFieldBinder& binder) const;
 
 	void BeginPlay() override;
 

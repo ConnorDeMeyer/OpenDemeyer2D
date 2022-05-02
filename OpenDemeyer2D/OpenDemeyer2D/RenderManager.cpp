@@ -118,6 +118,8 @@ void RenderManager::Init(SDL_Window* window)
 
 void RenderManager::Render()
 {
+	std::scoped_lock<std::mutex> lock(m_OpenGlLock);
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 

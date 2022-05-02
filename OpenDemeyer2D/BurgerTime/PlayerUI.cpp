@@ -5,6 +5,8 @@
 #include "PlayerResources.h"
 #include "ResourceManager.h"
 #include "Components/TextComponent.h"
+#include "Components/Transform.h"
+#include "Components/RenderComponent.h"
 
 void PlayerUI::LinkPlayer(PeterPepper* pPeterPepper)
 {

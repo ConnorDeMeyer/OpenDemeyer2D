@@ -6,6 +6,8 @@
 #include "BurgerPiece.h"
 #include "BurgerPiece.h"
 #include "Components/TextureComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/Transform.h"
 #include "GameplayPrefabs.h"
 #include "imgui.h"
 #include "PeterPepper.h"

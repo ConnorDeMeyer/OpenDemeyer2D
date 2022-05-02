@@ -5,6 +5,14 @@
 #include "imgui.h"
 #include "../Dictionary.h"
 
+
+void Transform::DefineUserFields(UserFieldBinder& binder) const
+{
+	binder.Add<glm::vec2>("position", offsetof(Transform, m_Position));
+	binder.Add<glm::vec2>("scale", offsetof(Transform, m_Scale));
+	binder.Add<float>("rotation", offsetof(Transform, m_Rotation));
+}
+
 void Transform::BeginPlay()
 {
 	UpdateLocalChanges();
@@ -42,6 +50,7 @@ void Transform::RenderImGui()
 	ImGui::Text("World Scale:    [%.1f,%.1f]", m_Scale.x, m_Scale.y);
 	ImGui::Text("World Rotation: [%.1f]", m_Rotation);
 }
+
 
 void Transform::SetPosition(const glm::vec2& pos)
 {

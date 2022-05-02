@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "ComponentBase.h"
+#include "Component.h"
 #include "Stage.h"
 
 class StageMovement : public Component<StageMovement>

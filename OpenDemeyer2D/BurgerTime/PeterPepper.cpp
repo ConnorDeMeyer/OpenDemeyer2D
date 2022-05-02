@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Components/PhysicsComponent.h"
 #include "Components/SpriteComponent.h"
+#include "Components/RenderComponent.h"
 #include "PPSpriteMovement.h"
 #include "StageMovement.h"
 

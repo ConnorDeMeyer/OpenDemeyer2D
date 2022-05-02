@@ -1,0 +1,1902 @@
+{
+Test_Scene
+{
+7
+class Transform
+{
+position 32 248
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 0 0 24 8
+renderLayer 0
+pivot 1 0
+},
+class TextPixelComponent
+{
+FontSurface Bitmaps/Text.png
+CharSize 8
+},
+{
+}
+8
+class Transform
+{
+position 72 248
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 0 0 64 8
+renderLayer 0
+pivot 1 0
+},
+class TextPixelComponent
+{
+FontSurface Bitmaps/Text.png
+CharSize 8
+},
+{
+}
+9
+class Transform
+{
+position 184 248
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 0 0 48 8
+renderLayer 0
+pivot 1 0
+},
+class TextPixelComponent
+{
+FontSurface Bitmaps/Text.png
+CharSize 8
+},
+{
+}
+10
+class Transform
+{
+position 128 240
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 0 0 8 8
+renderLayer 0
+pivot 0 0
+},
+class TextPixelComponent
+{
+FontSurface Bitmaps/Text.png
+CharSize 8
+},
+class Score
+{
+},
+{
+}
+11
+class Transform
+{
+position 24 64
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 0 0 208 160
+renderLayer 0
+pivot 1 1
+},
+class Stage
+{
+},
+{
+12
+class TextureComponent
+{
+SourceRect 112 104 48 16
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 32 32
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 104 48 16
+renderLayer 0
+pivot 1 0
+},
+{
+}
+13
+class TextureComponent
+{
+SourceRect 112 104 48 16
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 80 32
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 104 48 16
+renderLayer 0
+pivot 1 0
+},
+{
+}
+14
+class TextureComponent
+{
+SourceRect 112 104 48 16
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 128 32
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 104 48 16
+renderLayer 0
+pivot 1 0
+},
+{
+}
+15
+class TextureComponent
+{
+SourceRect 112 104 48 16
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 176 32
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 104 48 16
+renderLayer 0
+pivot 1 0
+},
+{
+}
+16
+class Transform
+{
+position 56 180
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+33
+class TextureComponent
+{
+SourceRect 112 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 44 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+34
+class TextureComponent
+{
+SourceRect 120 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 52 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+35
+class TextureComponent
+{
+SourceRect 128 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 60 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+36
+class TextureComponent
+{
+SourceRect 136 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 68 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+17
+class Transform
+{
+position 104 212
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+37
+class TextureComponent
+{
+SourceRect 112 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 92 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+38
+class TextureComponent
+{
+SourceRect 120 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 100 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+39
+class TextureComponent
+{
+SourceRect 128 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 108 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+40
+class TextureComponent
+{
+SourceRect 136 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 116 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+18
+class Transform
+{
+position 152 212
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+41
+class TextureComponent
+{
+SourceRect 112 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 140 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+42
+class TextureComponent
+{
+SourceRect 120 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 148 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+43
+class TextureComponent
+{
+SourceRect 128 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 156 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+44
+class TextureComponent
+{
+SourceRect 136 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 164 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+19
+class Transform
+{
+position 200 212
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+45
+class TextureComponent
+{
+SourceRect 112 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 188 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+46
+class TextureComponent
+{
+SourceRect 120 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 196 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+47
+class TextureComponent
+{
+SourceRect 128 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 204 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+48
+class TextureComponent
+{
+SourceRect 136 48 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 212 212
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 48 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+20
+class Transform
+{
+position 56 148
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+49
+class TextureComponent
+{
+SourceRect 112 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 44 148
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+50
+class TextureComponent
+{
+SourceRect 120 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 52 148
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+51
+class TextureComponent
+{
+SourceRect 128 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 60 148
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+52
+class TextureComponent
+{
+SourceRect 136 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 68 148
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+21
+class Transform
+{
+position 104 132
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+53
+class TextureComponent
+{
+SourceRect 112 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 92 132
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+54
+class TextureComponent
+{
+SourceRect 120 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 100 132
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+55
+class TextureComponent
+{
+SourceRect 128 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 108 132
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+56
+class TextureComponent
+{
+SourceRect 136 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 116 132
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+22
+class Transform
+{
+position 152 180
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+57
+class TextureComponent
+{
+SourceRect 112 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 140 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+58
+class TextureComponent
+{
+SourceRect 120 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 148 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+59
+class TextureComponent
+{
+SourceRect 128 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 156 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+60
+class TextureComponent
+{
+SourceRect 136 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 164 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+23
+class Transform
+{
+position 200 180
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+61
+class TextureComponent
+{
+SourceRect 112 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 188 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+62
+class TextureComponent
+{
+SourceRect 120 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 196 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+63
+class TextureComponent
+{
+SourceRect 128 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 204 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+64
+class TextureComponent
+{
+SourceRect 136 88 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 212 180
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 88 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+24
+class Transform
+{
+position 56 100
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+65
+class TextureComponent
+{
+SourceRect 112 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 44 100
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+66
+class TextureComponent
+{
+SourceRect 120 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 52 100
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+67
+class TextureComponent
+{
+SourceRect 128 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 60 100
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+68
+class TextureComponent
+{
+SourceRect 136 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 68 100
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+25
+class Transform
+{
+position 104 100
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+69
+class TextureComponent
+{
+SourceRect 112 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 92 100
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+70
+class TextureComponent
+{
+SourceRect 120 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 100 100
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+71
+class TextureComponent
+{
+SourceRect 128 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 108 100
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+72
+class TextureComponent
+{
+SourceRect 136 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 116 100
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+26
+class Transform
+{
+position 152 132
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+73
+class TextureComponent
+{
+SourceRect 112 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 140 132
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+74
+class TextureComponent
+{
+SourceRect 120 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 148 132
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+75
+class TextureComponent
+{
+SourceRect 128 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 156 132
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+76
+class TextureComponent
+{
+SourceRect 136 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 164 132
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+27
+class Transform
+{
+position 200 148
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+77
+class TextureComponent
+{
+SourceRect 112 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 188 148
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+78
+class TextureComponent
+{
+SourceRect 120 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 196 148
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+79
+class TextureComponent
+{
+SourceRect 128 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 204 148
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+80
+class TextureComponent
+{
+SourceRect 136 72 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 212 148
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 72 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+28
+class Transform
+{
+position 56 68
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+81
+class TextureComponent
+{
+SourceRect 112 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 44 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+82
+class TextureComponent
+{
+SourceRect 120 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 52 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+83
+class TextureComponent
+{
+SourceRect 128 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 60 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+84
+class TextureComponent
+{
+SourceRect 136 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 68 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+29
+class Transform
+{
+position 104 68
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+85
+class TextureComponent
+{
+SourceRect 112 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 92 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+86
+class TextureComponent
+{
+SourceRect 120 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 100 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+87
+class TextureComponent
+{
+SourceRect 128 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 108 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+88
+class TextureComponent
+{
+SourceRect 136 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 116 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+30
+class Transform
+{
+position 152 68
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+89
+class TextureComponent
+{
+SourceRect 112 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 140 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+90
+class TextureComponent
+{
+SourceRect 120 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 148 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+91
+class TextureComponent
+{
+SourceRect 128 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 156 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+92
+class TextureComponent
+{
+SourceRect 136 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 164 68
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+31
+class Transform
+{
+position 200 116
+scale 1 1
+rotation 0
+},
+class BurgerPiece
+{
+},
+{
+93
+class TextureComponent
+{
+SourceRect 112 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 188 116
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 112 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+94
+class TextureComponent
+{
+SourceRect 120 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 196 116
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 120 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+95
+class TextureComponent
+{
+SourceRect 128 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 204 116
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 128 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+96
+class TextureComponent
+{
+SourceRect 136 56 8 8
+Texture2D Bitmaps/FullSheet.png
+},
+class Transform
+{
+position 212 116
+scale 1 1
+rotation 0
+},
+class RenderComponent
+{
+sourceRect 136 56 8 8
+renderLayer 1
+pivot 0.5 0.5
+},
+class PhysicsComponent
+{
+},
+{
+}
+}
+32
+class SpriteComponent
+{
+Texture Bitmaps/FullSheet.png
+frameDimension 16 16
+frameOffset 1
+frameTime 0.125
+totalFrames 1
+paused 0
+loop 1
+},
+class Transform
+{
+position 128 67
+scale 1 1
+rotation 0
+},
+class PPSpriteMovement
+{
+},
+class PhysicsComponent
+{
+},
+class StageMovement
+{
+},
+class RenderComponent
+{
+sourceRect 16 0 16 16
+renderLayer 2
+pivot 0.5 1
+},
+class InputComponent
+{
+},
+class PeterPepper
+{
+},
+{
+}
+}
+97
+class SoundLoaderTest
+{
+},
+class Transform
+{
+position 0 0
+scale 1 1
+rotation 0
+},
+{
+}
+}
+}

@@ -1,5 +1,7 @@
 #include "PlayerResources.h"
 #include "Components/TextureComponent.h"
+#include "Components/Transform.h"
+#include "Components/RenderComponent.h"
 
 void PlayerResources::SetResources(size_t amount)
 {

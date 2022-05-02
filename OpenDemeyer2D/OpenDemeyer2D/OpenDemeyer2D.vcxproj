@@ -100,9 +100,10 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>OD2.pch</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,9 +126,10 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>OD2.pch</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,9 +152,10 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>OD2.pch</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -164,6 +167,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -175,9 +181,10 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>OD2.pch</PrecompiledHeaderFile>
+      <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -191,6 +198,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3.cpp" />
@@ -208,8 +218,9 @@
     <ClCompile Include="Components\TextPixelComponent.cpp" />
     <ClCompile Include="Components\TextureComponent.cpp" />
     <ClCompile Include="Components\Transform.cpp" />
-    <ClCompile Include="FileIO.cpp" />
+    <ClCompile Include="EngineIO\CustomSerializers.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectTemplates.h" />
     <ClCompile Include="OpenDemeyer2D.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -217,6 +228,7 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="EngineIO\Deserializer.cpp" />
     <ClCompile Include="SteamAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -240,9 +252,10 @@
     <ClInclude Include="Components\Transform.h" />
     <ClInclude Include="Delegate.h" />
     <ClInclude Include="Dictionary.h" />
-    <ClInclude Include="EditorFunctions.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="EngineIO\TypeInformation.h" />
     <ClInclude Include="EventQueue.h" />
-    <ClInclude Include="FileIO.h" />
+    <ClInclude Include="EngineIO\CustomSerializers.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameInstance.h" />
     <ClInclude Include="GameObject.h" />
@@ -255,7 +268,9 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="EngineIO\Deserializer.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="SteamAPI.h" />
     <ClInclude Include="Surface2D.h" />
     <ClInclude Include="Texture2D.h" />

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "ComponentBase.h"
+#include "Component.h"
 #include "Delegate.h"
 
 class HealthComponent : public Component<HealthComponent>

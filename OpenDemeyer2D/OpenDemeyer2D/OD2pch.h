@@ -17,6 +17,5 @@
 #include "ODArray.h"
 #include "Texture2D.h"
 #include "Font.h"
-#include "EditorFunctions.h"
 
 #include "imgui.h"

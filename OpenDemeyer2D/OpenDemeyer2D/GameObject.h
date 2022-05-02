@@ -4,17 +4,20 @@
 #include <typeindex>
 #include "ODArray.h"
 #include <memory>
+#include <cassert>
 
 #include "ComponentBase.h"
-#include "Components/Transform.h"
-#include "Components/RenderComponent.h"
+//#include "Components/Transform.h"
+//#include "Components/RenderComponent.h"
 
 class Scene;
 class Transform;
+class RenderComponent;
 
-/** This class is a container for components and is responsible for updating, rendering and managing them.
- * It is part of the scene tree and is capable of having child Game objects who will maintain relative location to its parent.
- */
+/** 
+* This class is a container for components and is responsible for updating, rendering and managing them.
+* It is part of the scene tree and is capable of having child Game objects who will maintain relative location to its parent.
+*/
 class GameObject final
 {
 
@@ -24,9 +27,10 @@ public:
 
 	GameObject();
 
-	/** Will destroy the game object immediately.
-	 * Use the destroy method to destroy it at the end of the frame
-	 */
+	/** 
+	* Will destroy the game object immediately.
+	* Use the destroy method to destroy it at the end of the frame
+	*/
 	~GameObject();
 
 	GameObject(const GameObject& other)				= delete;
@@ -62,21 +66,34 @@ public:
 	/** Get the parent game object or nullptr if not attached to anything*/
 	GameObject* GetParent() const { return m_Parent; }
 
-	/** Returns the first component that is of type T.
-		* This method is slow, you should not use it in time critical situations.*/
+	/** 
+	* Returns the component that is of type T.
+	* Uses the type Id to find the component.
+	*/
 	template <typename T>
 	T* GetComponent() const;
 
+	/**
+	* Returns the component that is of type T.
+	* Uses dynamic_casts to find the right object.
+	* May also return an inhereted subclass.
+	*/
 	template <typename T>
 	T* GetComponentByCast() const;
+
+	/**
+	* Returns the component whose typeid matches that of the given type id
+	* Returns a ComponentBase* of the right type, You may have to cast it into the type of the component
+	* Return nullptr if none was found
+	*/
+	ComponentBase* GetComponentById(std::type_index typeId);
 
 	/**
 	* Adds a component to the object
 	* Gives the engine the ability to manage the component and makes sure the component gets automatically deleted
 	*/
 	template<typename  T>
-	std::enable_if_t<std::is_base_of_v<ComponentBase, T>, T*>
-	AddComponent();
+	T* AddComponent();
 
 	/** Removes the component from the object.
 	* The component will be removed at the end of the frame.*/
@@ -102,13 +119,36 @@ public:
 	 */
 	void SetParent(GameObject* pObject);
 
+	/**
+	* Get the scene it is currently in.
+	* Returns nullptr if it is not in a scene.
+	*/
 	Scene* GetScene() const { return m_pScene; }
 
-	/** Attach a Game Object to this Game Object*/
-	//void AttachGameObject(GameObject* pObject);
+	/** Get the underlying unordered map that containts the components. */
+	inline const std::unordered_map<std::type_index, ComponentBase*>& GetComponents() { return m_Components; };
 
-	/** Removes the object from the child list*/
-	//void RemoveChild(GameObject* pObject);
+	/** Serialize this game object into a stream*/
+	void Serialize(std::ostream& os);
+
+	/** 
+	* Set the tag of this object.
+	* The tag may be gotten by using the GetTag method
+	*/
+	void SetTag(const std::string& tag) { m_Tag = tag; }
+
+	/**
+	* Returns the tag of this object.
+	* Can be used to compare objects at runtime without having to check for components
+	*/
+	const std::string& GetTag() const { return m_Tag; }
+
+	/** Returns the scene id of the object*/
+	unsigned int GetId() const { return m_ObjectId; }
+
+private:
+
+	void SetScene(Scene* pScene);
 
 private:
 
@@ -134,6 +174,10 @@ private:
 
 	RenderComponent* m_pRenderComponent{};
 
+	unsigned int m_ObjectId{};
+
+	std::string m_Tag{};
+
 	bool m_HasBeenInitialized{};
 };
 
@@ -146,7 +190,7 @@ template<typename T>
 T* GameObject::GetComponent() const
 {
 	if constexpr (std::is_same_v<T, Transform>) {return reinterpret_cast<T*>(m_pTransform);}
-	else if constexpr (std::is_same_v<T, Transform>) {return reinterpret_cast<T*>(m_pRenderComponent);}
+	else if constexpr (std::is_same_v<T, RenderComponent>) {return reinterpret_cast<T*>(m_pRenderComponent);}
 	else {
 		auto it = m_Components.find(typeid(T));
 		return (it != m_Components.end()) ? reinterpret_cast<T*>(it->second) : nullptr;
@@ -162,32 +206,22 @@ T* GameObject::GetComponentByCast() const
 }
 
 template <typename T>
-std::enable_if_t<std::is_base_of_v<ComponentBase, T>, T*>
-GameObject::AddComponent()
+T* GameObject::AddComponent()
 {
+	assert(!GetComponent<T>()); // Make sure the component is not already added
+	T* comp = new T();
+	m_Components.insert({ typeid(T), comp });
+
+	comp->m_pParent = this;
+
+	if (m_HasBeenInitialized) comp->BeginPlay();
+
 	if constexpr (std::is_same_v<T, RenderComponent>)
 	{
-		if (m_pRenderComponent) throw std::runtime_error("Component already in gameobject");
-
-		m_pRenderComponent = new RenderComponent();
-		m_Components.insert({ typeid(T), m_pRenderComponent });
-		m_pRenderComponent->m_pParent = this;
-
-		if (m_HasBeenInitialized) m_pRenderComponent->BeginPlay();
-
-		return m_pRenderComponent;
+		m_pRenderComponent = reinterpret_cast<RenderComponent*>(comp);
 	}
-	else
-	{
-		assert(!GetComponent<T>()); // Make sure the component is not already added
-		T* comp = new T();
-		m_Components.insert({ typeid(T), comp });
 
-		comp->m_pParent = this;
-
-		if (m_HasBeenInitialized) comp->BeginPlay();
-		return comp;
-	}
+	return comp;
 }
 
 template<typename T>
@@ -201,14 +235,4 @@ void GameObject::RemoveComponent()
 		delete it->second;
 		m_Components.erase(it);
 	}
-	//size_t counter{};
-	//for (ComponentBase* component : m_Components)
-	//{
-	//	if (dynamic_cast<T*>(component))
-	//	{
-	//		delete component;
-	//		m_Components.SwapRemove(counter);
-	//		break;
-	//	} else ++counter;
-	//}
 }

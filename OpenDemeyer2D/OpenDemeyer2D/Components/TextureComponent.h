@@ -1,5 +1,5 @@
 #pragma once
-#include "../ComponentBase.h"
+#include "Component.h"
 #include "../Texture2D.h"
 #include <string>
 
@@ -13,6 +13,8 @@ public:
 	virtual ~TextureComponent() = default;
 
 public:
+
+	virtual void DefineUserFields(UserFieldBinder&) const;
 
 	void BeginPlay() override;
 

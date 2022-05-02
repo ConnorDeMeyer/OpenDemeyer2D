@@ -5,6 +5,17 @@
 #include "imgui.h"
 
 
+void SpriteComponent::DefineUserFields(UserFieldBinder& binder) const
+{
+	binder.Add<std::shared_ptr<Texture2D>>("Texture", offsetof(SpriteComponent, m_Texture));
+	binder.Add<glm::vec2>("frameDimension", offsetof(SpriteComponent, m_FrameDimension));
+	binder.Add<int>("frameOffset", offsetof(SpriteComponent, m_FrameOffset));
+	binder.Add<float>("frameTime", offsetof(SpriteComponent, m_TimePerFrame));
+	binder.Add<int>("totalFrames", offsetof(SpriteComponent, m_TotalFrames));
+	binder.Add<bool>("paused", offsetof(SpriteComponent, m_bPauseTime));
+	binder.Add<bool>("loop", offsetof(SpriteComponent, m_bLoop));
+}
+
 void SpriteComponent::BeginPlay()
 {
 	m_pRenderComponent = GetParent()->GetRenderComponent();

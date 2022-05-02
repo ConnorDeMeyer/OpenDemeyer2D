@@ -2,13 +2,15 @@
 #include <b2_body.h>
 #include <glm/glm.hpp>
 
-#include "../ComponentBase.h"
+#include "Component.h"
 #include "../Delegate.h"
 
 
 class PhysicsComponent : public Component<PhysicsComponent>
 {
 public:
+
+	virtual void DefineUserFields(UserFieldBinder& binder) const;
 
 	virtual ~PhysicsComponent();
 	

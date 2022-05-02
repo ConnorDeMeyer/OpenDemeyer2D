@@ -13,6 +13,7 @@
 #include "Score.h"
 #include "Components/SpriteComponent.h"
 #include "Components/TextPixelComponent.h"
+#include "Components/Transform.h"
 #include "StageMovement.h"
 #include "GameplayPrefabs.h"
 #include "Enemy.h"

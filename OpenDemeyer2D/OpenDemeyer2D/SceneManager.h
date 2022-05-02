@@ -19,11 +19,16 @@ public:
 	/** Renders all the scenes*/
 	void Render() const;
 
-	/** Creates a scene and add it to the scenes list*/
+	/** 
+	* Creates a scene and add it to the scenes list.
+	* No white space allowed for the name.
+	*/
 	Scene& CreateScene(const std::string& name);
 
 	/** Returns the scene corresponding to the given name (or nullptr if no scene found).*/
 	Scene* GetScene(const std::string& name) const;
+
+	const std::vector<Scene*>& GetScenes() const { return m_Scenes; }
 
 	void SetActiveScene(const std::string& name);
 
@@ -36,6 +41,8 @@ public:
 	Scene* GetActiveScene() const { return m_pActiveScene; }
 
 	void PhysicsStep(float timeStep, int velocityIterations, int positionIterations);
+
+	void Serialize(std::ostream& os);
 
 private:
 

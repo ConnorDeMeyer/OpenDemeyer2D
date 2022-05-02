@@ -8,6 +8,12 @@
 
 #include "../RenderManager.h"
 
+void TextureComponent::DefineUserFields(UserFieldBinder& binder) const
+{
+	binder.Add<SDL_FRect>("SourceRect", offsetof(TextureComponent, m_SourceRect));
+	binder.Add<std::shared_ptr<Texture2D>>("Texture2D", offsetof(TextureComponent, m_Texture));
+}
+
 void TextureComponent::BeginPlay()
 {
 	m_pRenderComponent = GetParent()->GetComponent<RenderComponent>();

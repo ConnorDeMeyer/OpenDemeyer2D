@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "../ComponentBase.h"
+#include "Component.h"
 #include "../InputManager.h"
 
 class InputComponent : public Component<InputComponent>

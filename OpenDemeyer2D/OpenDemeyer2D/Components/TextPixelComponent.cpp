@@ -7,6 +7,13 @@
 
 #include "imgui.h"
 
+void TextPixelComponent::DefineUserFields(UserFieldBinder& binder) const
+{
+	binder.Add<std::shared_ptr<Surface2D>>("FontSurface", offsetof(TextPixelComponent, m_FontSurface));
+	binder.Add<SDL_Color>("FontSurface", offsetof(TextPixelComponent, m_Color));
+	binder.Add<int>("CharSize", offsetof(TextPixelComponent, m_CharSize));
+}
+
 void TextPixelComponent::Update(float)
 {
 	if (m_NeedsUpdate)
@@ -14,7 +21,7 @@ void TextPixelComponent::Update(float)
 		size_t textSize = m_Text.size();
 
 		// create an empty surface
-		auto pSurface = SDL_CreateRGBSurfaceWithFormat(0, textSize * m_CharSize, m_CharSize, 32, SDL_PIXELFORMAT_RGBA32);
+		auto pSurface = SDL_CreateRGBSurfaceWithFormat(0, int(textSize) * m_CharSize, m_CharSize, 32, SDL_PIXELFORMAT_RGBA32);
 		if (!pSurface)
 		{
 			throw std::runtime_error(std::string("Failed to create surface: ") + SDL_GetError());

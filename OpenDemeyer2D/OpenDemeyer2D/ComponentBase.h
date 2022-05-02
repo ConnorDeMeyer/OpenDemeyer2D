@@ -2,10 +2,10 @@
 #include <memory>
 #include <string>
 #include "Dictionary.h"
-#include <unordered_map>
-#include <typeindex>
-#include <functional>
 #include "Singleton.h"
+#include <unordered_map>
+#include <functional>
+#include <typeindex>
 
 class GameObject;
 
@@ -43,22 +43,16 @@ private:
 	/** Gets called after all components are initialized.*/
 	virtual void BeginPlay() {}
 
-	//TODO there might be a better way to do this with typeIds
-	/** Gets the name of the component for debugging purposes*/
-	virtual const std::string GetComponentName() { return "Component???"; }
-
 public:
 
-	/**
-	 * Returns a dictionary of the class defaults so it may be used for file initialization
-	 * key -> value
-	 */
-	//virtual Dictionary& GetClassDefault() = 0;
+	/** Gets the name of the component for debugging purposes*/
+	virtual const std::string GetComponentName() const = 0;
 
-	/**
-	 * Initialize the components given the dictionary that contains the value for each parameter given in the GetClassDefault() method
-	 */
-	//virtual void InitializeComponent(const Dictionary& dictionary) = 0;
+	virtual std::type_index GetComponentId() const = 0;
+
+	virtual void Serialize(std::ostream& stream) const = 0;
+
+	//virtual std::function<ComponentBase* (GameObject*)> _Gameobject_Add() = 0;
 
 public:
 
@@ -80,38 +74,4 @@ private:
 	/** Shared pointer with empty destructor for which you can ask a weak reference to*/
 	std::shared_ptr<ComponentBase> m_Reference;
 
-};
-
-//static std::unordered_map<std::type_index, std::function<ComponentBase* ()>> ClassGenerator{};
-//static std::unordered_map<std::string, std::type_index> ClassNameIds{};
-
-class TypeInformation : public Singleton<TypeInformation>
-{
-public:
-	std::unordered_map<std::type_index, std::function<ComponentBase* ()>> ClassGenerator;
-	std::unordered_map<std::string, std::type_index> ClassNameIds;
-};
-
-template <typename T>
-class TypeIdentifier final
-{
-public:
-
-	TypeIdentifier()
-	{
-		TypeInformation::GetInstance().ClassNameIds.insert({ std::string(typeid(T).name()), std::type_index(typeid(T)) });
-		TypeInformation::GetInstance().ClassGenerator.insert({ std::type_index(typeid(T)), [] {return new T(); } });
-	}
-
-};
-
-
-template <typename T>
-class Component : public ComponentBase
-{
-	const std::string GetComponentName() override { return typeid(T).name(); }
-
-private:
-
-	inline static TypeIdentifier<T> TypeIdentifier{};
 };

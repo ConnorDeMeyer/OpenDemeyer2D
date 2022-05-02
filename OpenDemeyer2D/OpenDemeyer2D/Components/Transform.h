@@ -1,5 +1,5 @@
 #pragma once
-#include "../ComponentBase.h"
+#include "Component.h"
 #include <glm/vec2.hpp>
 #include <glm/matrix.hpp>
 
@@ -16,11 +16,7 @@ public:
 
 	void RenderImGui() override;
 
-	//const std::string GetComponentName() override { return "Transform"; }
-
-	//Dictionary& GetClassDefault() override;
-
-	//void InitializeComponent(const Dictionary& dictionary) override;
+	virtual void DefineUserFields(UserFieldBinder&) const;
 
 	const glm::vec2& GetWorldPosition() const { return m_Position; }
 

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "ComponentBase.h"
+#include "Component.h"
 
 class PeterPepper;
 

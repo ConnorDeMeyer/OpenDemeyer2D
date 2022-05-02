@@ -44,6 +44,9 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="SoundLoaderTest.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimeGI.h" />
@@ -78,6 +81,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundLoaderTest.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

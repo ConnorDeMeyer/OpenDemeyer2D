@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include "Delegate.h"
 #include <SDL_gamecontroller.h>
+#include "Components/InputComponent.h"
 #include "ODArray.h"
 
 #define INPUT InputManager::GetInstance()

@@ -5,6 +5,7 @@
 #include <vector>
 #include "ODArray.h"
 #include <memory>
+#include <functional>
 
 class GameObject;
 class b2World;
@@ -54,7 +55,17 @@ public:
 	/** Returns the Box2D physics world.*/
 	b2World* GetPhysicsWorld() const { return m_pb2World; }
 
+	void ChangeName(const std::string& name);
+
+	const std::vector<GameObject*>& GetSceneTree() const { return m_SceneTree; }
+
+	void Serialize(std::ostream& os);
+
 private:
+
+	void RegisterObject(GameObject* pObject);
+
+	void UnregisterObject(GameObject* pObject);
 
 	void BeginContact(b2Contact* contact) override;
 
@@ -64,13 +75,15 @@ private:
 
 	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
 
+	void ImGuiScenePopup();
+
 private:
 
 	/** Remove the object from the scene tree list*/
 	void RemoveObject(GameObject* object);
 
-	/** Sets a reference to the scene inside the object and its children*/
-	void SetScene(GameObject* object);
+	///** Sets a reference to the scene inside the object and its children*/
+	//void SetScene(GameObject* object);
 
 private:
 
@@ -83,6 +96,9 @@ private:
 	std::vector<GameObject*> m_UninitializedObject;
 
 	b2World* m_pb2World{};
+
+	std::unordered_map<uint32, GameObject*> m_RegisteredObjects;
+
 };
 
 struct ObjectAlreadyInASceneException : public std::exception

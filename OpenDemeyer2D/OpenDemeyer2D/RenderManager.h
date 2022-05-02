@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <memory>
 #include <functional>
+#include <mutex>
 
 #include "Texture2D.h"
 #include "RenderTarget.h"
@@ -51,14 +52,14 @@ public:
 
 	size_t GetRenderLayersAmount() const { return m_RenderLayers.size(); }
 
+	std::mutex& GetOpenGlMutex() { return m_OpenGlLock; }
+
 private:
 
 	void RenderTexture(GLuint glId, int width, int height, const glm::vec2& pos = { 0.f,0.f }, const glm::vec2& scale = { 1.f,1.f }, float rotation = 0, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr, int renderLayer = -1) const;
-
+	
 	void RenderImGuiGameWindow() const;
-
 	void RenderImGuiRenderInfo();
-
 	void RenderHitboxes() const;
 
 	virtual ~RenderManager() = default;
@@ -75,6 +76,8 @@ private:
 	std::vector<std::shared_ptr<RenderTarget>> m_RenderLayers;
 
 	std::shared_ptr<RenderTarget> m_ImGuiRenderTarget;
+
+	std::mutex m_OpenGlLock;
 
 	bool m_bKeepAspectRatio{ true };
 	bool m_bShowHitboxes{ false };

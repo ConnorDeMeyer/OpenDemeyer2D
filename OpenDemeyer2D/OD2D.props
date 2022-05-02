@@ -9,7 +9,7 @@
 			<AdditionalDependencies>xinput.lib;glew32.lib;glew32s.lib;opengl32.lib;glu32.lib;OpenDemeyer2D.lib;box2d.lib;steam_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
 		</Link>
 		<ClCompile>
-			<AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\OpenDemeyer2D;$(SolutionDir)\3rdParty\steamworks\public\steam;
+			<AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\OpenDemeyer2D;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;
 			</AdditionalIncludeDirectories>
 		</ClCompile>
 		<PostBuildEvent>

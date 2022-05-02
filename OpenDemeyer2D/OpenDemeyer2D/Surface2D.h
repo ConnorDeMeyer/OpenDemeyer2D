@@ -6,6 +6,7 @@
 class Surface2D final
 {
 	friend class RenderManager;
+	friend class ResourceManager;
 
 public:
 	//SDL_Texture* GetSDLTexture() const { return m_Texture; }
@@ -21,6 +22,11 @@ public:
 
 	SDL_Surface* GetSurface() const { return m_pSurface; }
 
+	const std::string& GetFilePath() const { return m_sourceFile; }
+
+
 private:
 	SDL_Surface* m_pSurface{};
+
+	std::string m_sourceFile{};
 };

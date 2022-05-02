@@ -1,5 +1,5 @@
 #pragma once
-#include "../ComponentBase.h"
+#include "Component.h"
 #include "../Texture2D.h"
 #include "../RenderManager.h"
 
@@ -13,6 +13,8 @@ public:
 	virtual ~RenderComponent() = default;
 
 public:
+
+	virtual void DefineUserFields(UserFieldBinder& binder) const;
 
 	void Render() const;
 
@@ -47,6 +49,3 @@ private:
 	int m_RenderLayer{};
 
 };
-
-
-

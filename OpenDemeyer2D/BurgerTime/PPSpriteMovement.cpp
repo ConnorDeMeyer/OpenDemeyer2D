@@ -5,6 +5,8 @@
 #include "Components/SpriteComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/PhysicsComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/Transform.h"
 #include "StageMovement.h"
 
 void PPSpriteMovement::BeginPlay()

@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "StageMovement.h"
 #include "Components/SpriteComponent.h"
+#include "Components/Transform.h"
 #include "ResourceManager.h"
 
 void Enemy::BeginPlay()

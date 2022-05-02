@@ -3,17 +3,25 @@
 #include <b2_body.h>
 #include <b2_fixture.h>
 #include <b2_polygon_shape.h>
+#include "Components/Transform.h"
 
 #include "../Scene.h"
 #include "../OpenDemeyer2D.h"
 
 
+void PhysicsComponent::DefineUserFields(UserFieldBinder&) const
+{
+
+}
+
 PhysicsComponent::~PhysicsComponent()
 {
-	auto scene = GetParent()->GetScene();
-	if (scene && m_pBody)
-	{
-		scene->GetPhysicsWorld()->DestroyBody(m_pBody);
+	if (GetParent()) {
+		auto scene = GetParent()->GetScene();
+		if (scene && m_pBody)
+		{
+			scene->GetPhysicsWorld()->DestroyBody(m_pBody);
+		}
 	}
 }
 

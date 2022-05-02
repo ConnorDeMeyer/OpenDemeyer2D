@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "ComponentBase.h"
 #include "Components/Transform.h"
+#include "Components/RenderComponent.h"
 #include "imgui.h"
 
 GameObject::GameObject()
@@ -95,7 +96,7 @@ void GameObject::RenderImGui()
 	if (ImGui::TreeNodeEx("Children", ImGuiTreeNodeFlags_Leaf * m_Children.empty())) {
 		for (size_t i{}; i < m_Children.size(); ++i)
 		{
-			if (ImGui::TreeNode(std::string("GameObject" + std::to_string(i)).c_str())) {
+			if (ImGui::TreeNode(std::string("GameObject" + std::to_string(m_Children[i]->GetId())).c_str())) {
 				m_Children[i]->RenderImGui();
 				ImGui::TreePop();
 			}
@@ -112,6 +113,16 @@ void GameObject::Destroy()
 std::weak_ptr<GameObject> GameObject::GetWeakReference() const
 {
 	return m_Reference;
+}
+
+ComponentBase* GameObject::GetComponentById(std::type_index typeId)
+{
+	auto it = m_Components.find(typeId);
+	if (it != m_Components.end())
+	{
+		return it->second;
+	}
+	return nullptr;
 }
 
 void GameObject::RemoveComponent(ComponentBase* pComponent)
@@ -157,42 +168,56 @@ void GameObject::SetParent(GameObject* pObject)
 		pObject->m_Children.emplace_back(this);
 
 		// Set the scene
-		m_pScene = pObject->m_pScene;
+		if (m_pScene != pObject->m_pScene)
+		SetScene(pObject->m_pScene);
 
 		// initialize game object
 		if (pObject->m_HasBeenInitialized) BeginPlay();
+	}
+	else if (m_pScene)
+	{
+		m_pScene->UnregisterObject(this);
 	}
 
 	// Set transform relative to parent
 	m_pTransform->Move({});
 }
 
-//void GameObject::AttachGameObject(GameObject* object)
-//{
-//	if (!object) return;
-//
-//	// Check the parents of object for a reference to this object.
-//	// will not attach if it encounter it to avoid an infinite loop 
-//
-//	GameObject* parent = object;
-//	while (parent)
-//	{
-//		if (parent == this) return;
-//		parent = parent->m_Parent;
-//	}
-//
-//	if (object->m_Parent) object->m_Parent->RemoveChild(object);
-//	m_Children.emplace_back(object);
-//	object->m_Parent = this;
-//	object->m_pScene = m_pScene;
-//
-//	if (m_HasBeenInitialized) object->BeginPlay();
-//}
-//
-//void GameObject::RemoveChild(GameObject* pObject)
-//{
-//	if (!pObject) return;
-//
-//	m_Children.SwapRemove(pObject);
-//	pObject->m_Parent = nullptr;
-//}
+void GameObject::Serialize(std::ostream& os)
+{
+	os << m_ObjectId << "\n"; //TODO set object id
+
+	for (auto& component : m_Components)
+	{
+		os << component.second->GetComponentName() << '\n' << "{\n";
+		component.second->Serialize(os);
+		os << "},\n";
+	}
+
+	os << "{\n";
+
+	for (auto child : m_Children)
+	{
+		child->Serialize(os);
+	}
+
+	os << "}\n";
+}
+
+void GameObject::SetScene(Scene* pScene)
+{
+	if (pScene != m_pScene)
+	{
+		if (m_pScene)
+			m_pScene->UnregisterObject(this);
+		if (pScene)
+			pScene->RegisterObject(this);
+	}
+
+	m_pScene = pScene;
+
+	for (auto child : m_Children)
+	{
+		child->SetScene(pScene);
+	}
+}

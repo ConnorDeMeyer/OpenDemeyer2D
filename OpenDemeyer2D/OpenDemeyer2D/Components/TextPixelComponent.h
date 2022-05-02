@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../ComponentBase.h"
+#include "Component.h"
 #include <string>
 #include <SDL.h>
 
@@ -16,6 +16,8 @@ public:
 	virtual ~TextPixelComponent() = default;
 
 public:
+
+	virtual void DefineUserFields(UserFieldBinder& binder) const;
 
 	void Update(float) override;
 

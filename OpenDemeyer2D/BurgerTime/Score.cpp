@@ -4,6 +4,8 @@
 #include "Scene.h"
 #include "Components/TextPixelComponent.h"
 #include "Components/TextureComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/Transform.h"
 
 std::unordered_map<int, float> Score::ScoreTextureMap{
 	{50,0.f},

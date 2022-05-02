@@ -16,6 +16,9 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{d9f98363-5549-43fd-8ac5-5dfbfd688306}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EngineFiles\FileIO">
+      <UniqueIdentifier>{6cb97c88-df1e-4af4-9bcb-46cffaaaaf0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -71,9 +74,6 @@
     <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="FileIO.cpp">
-      <Filter>EngineFiles</Filter>
-    </ClCompile>
     <ClCompile Include="Components\SpriteComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
@@ -88,6 +88,15 @@
     </ClCompile>
     <ClCompile Include="Components\TextPixelComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectTemplates.h">
+      <Filter>EngineFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineIO\CustomSerializers.cpp">
+      <Filter>EngineFiles\FileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineIO\Deserializer.cpp">
+      <Filter>EngineFiles\FileIO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,9 +149,6 @@
     <ClInclude Include="Delegate.h">
       <Filter>UtilityFiles</Filter>
     </ClInclude>
-    <ClInclude Include="EditorFunctions.h">
-      <Filter>EngineFiles</Filter>
-    </ClInclude>
     <ClInclude Include="RenderTarget.h">
       <Filter>UtilityFiles</Filter>
     </ClInclude>
@@ -176,9 +182,6 @@
     <ClInclude Include="Dictionary.h">
       <Filter>UtilityFiles</Filter>
     </ClInclude>
-    <ClInclude Include="FileIO.h">
-      <Filter>EngineFiles</Filter>
-    </ClInclude>
     <ClInclude Include="ICommand.h">
       <Filter>UtilityFiles</Filter>
     </ClInclude>
@@ -205,6 +208,21 @@
     </ClInclude>
     <ClInclude Include="Surface2D.h">
       <Filter>UtilityFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>UtilityFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>EngineFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineIO\CustomSerializers.h">
+      <Filter>EngineFiles\FileIO</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineIO\TypeInformation.h">
+      <Filter>EngineFiles\FileIO</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineIO\Deserializer.h">
+      <Filter>EngineFiles\FileIO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

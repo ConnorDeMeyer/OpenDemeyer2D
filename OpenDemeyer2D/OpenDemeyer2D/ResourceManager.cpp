@@ -7,6 +7,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL.h>
+#include <SDL_mixer.h>
 #include <gl/glew.h>
 
 #include "Surface2D.h"
@@ -14,6 +15,7 @@
 #include "Texture2D.h"
 #include "Font.h"
 #include "RenderTarget.h"
+#include "Sound.h"
 
 void ResourceManager::Init(const std::string& dataPath)
 {
@@ -36,32 +38,82 @@ void ResourceManager::Init(const std::string& dataPath)
 	{
 		throw std::runtime_error(std::string("Failed to load support for fonts: ") + SDL_GetError());
 	}
+
+	PopulateResourceLocks<Texture2D>();
+	PopulateResourceLocks<Font>();
+	PopulateResourceLocks<RenderTarget>();
+	PopulateResourceLocks<Surface2D>();
+	PopulateResourceLocks<Sound>();
+	PopulateResourceLocks<Music>();
+
+	// Initialized the file loaders
+
+	// TEXTURE2D
+	{
+		ResourceFileLoaderFunction TextureLoader = [this](const std::string& fullPath) -> std::shared_ptr<void>
+		{
+			SDL_Surface* pLoadedSurface = IMG_Load(fullPath.c_str());
+			if (!pLoadedSurface)
+			{
+				throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+			}
+			auto texture2d = this->LoadTexture(pLoadedSurface);
+
+			return std::static_pointer_cast<void>(texture2d);
+		};
+		m_ResourceLoaders.insert({ typeid(Texture2D),TextureLoader });
+	}
+	// SURFACE2D
+	{
+		ResourceFileLoaderFunction SurfaceLoader = [this](const std::string& fullPath) -> std::shared_ptr<void>
+		{
+			SDL_Surface* pLoadedSurface = IMG_Load(fullPath.c_str());
+			if (!pLoadedSurface)
+			{
+				throw std::runtime_error(std::string("Failed to load surface: ") + SDL_GetError());
+			}
+
+			return  std::static_pointer_cast<void>(std::make_shared<Surface2D>(pLoadedSurface));
+		};
+		m_ResourceLoaders.insert({ typeid(Surface2D),SurfaceLoader });
+	}
+	// SOUND
+	{
+		ResourceFileLoaderFunction SoundLoader = [this](const std::string& fullPath) -> std::shared_ptr<void>
+		{
+			// load sample.wav in to sample
+			Mix_Chunk* sample;
+			sample = Mix_LoadWAV(fullPath.c_str());
+			if (!sample) {
+				throw std::runtime_error(Mix_GetError());
+			}
+
+			return std::static_pointer_cast<void>(std::make_shared<Sound>(sample));
+		};
+		m_ResourceLoaders.insert({ typeid(Sound),SoundLoader });
+	}
+	// MUSIC
+	{
+		ResourceFileLoaderFunction MusicLoader = [this](const std::string& fullPath) -> std::shared_ptr<void>
+		{
+			// load the MP3 file "music.mp3" to play as music
+			Mix_Music* music;
+			music = Mix_LoadMUS(fullPath.c_str());
+			if (!music) {
+				throw std::runtime_error(Mix_GetError());
+			}
+
+			return  std::static_pointer_cast<void>(std::make_shared<Music>(music));
+		};
+		m_ResourceLoaders.insert({ typeid(Music),MusicLoader });
+	}
 }
 
 std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file)
 {
-	// Don't load the same image if it is already loaded
-	auto it = m_LoadedImages.find(file);
-	if (it != m_LoadedImages.end())
-	{
-		if (!it->second.expired())
-			return it->second.lock();
-	}
-
-	// Load the image if it isn't loaded already
-	const auto fullPath = m_DataPath + file;
-	SDL_Surface* pLoadedSurface = IMG_Load(fullPath.c_str());
-	if (!pLoadedSurface)
-	{
-		throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
-	}
-	
-	auto sharedTexture = LoadTexture(pLoadedSurface);
-
-	// Add it to the list
-	m_LoadedImages.insert(std::make_pair(file, sharedTexture));
-
-	return sharedTexture;
+	auto pTexture = std::static_pointer_cast<Texture2D>(LoadResource<Texture2D>(file));
+	pTexture->m_sourceFile = file;
+	return pTexture;
 }
 
 std::shared_ptr<Texture2D> ResourceManager::LoadTexture(SDL_Surface* pSurface)
@@ -90,6 +142,8 @@ std::shared_ptr<Texture2D> ResourceManager::LoadTexture(SDL_Surface* pSurface)
 	default:
 		throw std::runtime_error("Texture::CreateFromSurface, unknown pixel format");
 	}
+
+	std::scoped_lock<std::mutex> lock(RENDER.GetOpenGlMutex());
 
 	//Generate an array of textures.  We only want one texture (one element array), so trick
 	//it by treating "texture" as array of length one.
@@ -143,7 +197,14 @@ std::shared_ptr<Texture2D> ResourceManager::LoadTexture(SDL_Surface* pSurface)
 
 std::shared_ptr<Texture2D> ResourceManager::LoadTexture(int width, int height)
 {
-	auto pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+
+	SDL_Surface* pSurface{};
+	{
+		// Load the resource and lock the resource loading mechanism
+		std::scoped_lock<std::mutex> lock(*m_ResourceLoaderLocks[typeid(Surface2D)]);
+
+		pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+	}
 
 	auto texture = LoadTexture(pSurface);
 
@@ -154,6 +215,9 @@ std::shared_ptr<Texture2D> ResourceManager::LoadTexture(int width, int height)
 
 std::shared_ptr<Font> ResourceManager::LoadFont(const std::string& file, unsigned size)
 {
+	// Load the resource and lock the resource loading mechanism
+	std::scoped_lock<std::mutex> lock(*m_ResourceLoaderLocks[typeid(Font)]);
+
 	auto it = m_LoadedFonts.find(std::make_pair(file, size));
 	if (it != m_LoadedFonts.end())
 	{
@@ -172,6 +236,8 @@ std::shared_ptr<Font> ResourceManager::LoadFont(const std::string& file, unsigne
 std::shared_ptr<RenderTarget> ResourceManager::CreateRenderTexture(int width, int height)
 {
 	//http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
+
+	std::scoped_lock<std::mutex> lock(RENDER.GetOpenGlMutex());
 
 	GLuint frameBuffer{};
 	GLuint renderedTexture{};
@@ -216,32 +282,27 @@ std::shared_ptr<RenderTarget> ResourceManager::CreateRenderTexture(int width, in
 
 std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file)
 {
-	// Don't load the same image if it is already loaded
-	auto it = m_LoadedSurfaces.find(file);
-	if (it != m_LoadedSurfaces.end())
-	{
-		if (!it->second.expired())
-			return it->second.lock();
-	}
-
-	// Load the image if it isn't loaded already
-	const auto fullPath = m_DataPath + file;
-	SDL_Surface* pLoadedSurface = IMG_Load(fullPath.c_str());
-	if (!pLoadedSurface)
-	{
-		throw std::runtime_error(std::string("Failed to load surface: ") + SDL_GetError());
-	}
-	
-	std::shared_ptr<Surface2D> sharedSurface = std::make_shared<Surface2D>(pLoadedSurface);
-
-	// Add it to the list
-	m_LoadedSurfaces.insert(std::make_pair(file, sharedSurface));
-
-	return sharedSurface;
+	auto pSurface = std::static_pointer_cast<Surface2D>(LoadResource<Surface2D>(file));
+	pSurface->m_sourceFile = file;
+	return pSurface;
 }
 
 std::shared_ptr<Surface2D> ResourceManager::LoadSurface(int width, int height)
 {
 	SDL_Surface* pSurface = SDL_CreateRGBSurfaceWithFormat(0,width,height,32,SDL_PIXELFORMAT_RGBA32);
 	return std::make_shared<Surface2D>(pSurface);
+}
+
+std::shared_ptr<Sound> ResourceManager::LoadSound(const std::string& file)
+{
+	auto pSound = std::static_pointer_cast<Sound>(LoadResource<Sound>(file));
+	pSound->m_sourceFile = file;
+	return pSound;
+}
+
+std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file)
+{
+	auto pMusic = std::static_pointer_cast<Music>(LoadResource<Music>(file));
+	pMusic->m_sourceFile = file;
+	return pMusic;
 }

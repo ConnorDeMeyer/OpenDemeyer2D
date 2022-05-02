@@ -18,6 +18,8 @@ void SceneManager::Render() const
 
 Scene& SceneManager::CreateScene(const std::string& name)
 {
+	assert(std::find_if(name.begin(), name.end(), [](char c) {return isspace(c); }) == name.end());
+
 	Scene* pScene = new Scene(name);
 	m_Scenes.emplace_back(pScene);
 	if (!m_pActiveScene) m_pActiveScene = pScene;
@@ -70,6 +72,16 @@ void SceneManager::PhysicsStep(float timeStep, int velocityIterations, int posit
 	b2World* physicsWorld = m_pActiveScene->GetPhysicsWorld();
 	physicsWorld->Step(timeStep, velocityIterations, positionIterations);
 	physicsWorld->ClearForces();
+}
+
+void SceneManager::Serialize(std::ostream& os)
+{
+	for (auto& scene : m_Scenes)
+	{
+		os << "{\n";
+		scene->Serialize(os);
+		os << "}\n";
+	}
 }
 
 SceneManager::~SceneManager()

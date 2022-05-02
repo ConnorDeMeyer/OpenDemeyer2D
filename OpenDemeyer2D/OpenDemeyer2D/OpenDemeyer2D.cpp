@@ -7,6 +7,8 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "GameInstance.h"
+#include "Sound.h"
+#include "EngineIO/CustomSerializers.h"
 
 #include <chrono>
 #include <thread>
@@ -17,6 +19,7 @@
 #include <gl/glew.h>
 #include <gl/wglew.h>
 
+#include <SDL_mixer.h>
 
 #include <steam_api.h>
 
@@ -62,7 +65,7 @@ void Engine::Initialize()
 
 	PrintSDLVersion();
 
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO) != 0)
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
@@ -73,6 +76,17 @@ void Engine::Initialize()
 
 	SDL_DisplayMode DM;
 	SDL_GetCurrentDisplayMode(0, &DM);
+
+	// start SDL with audio support
+	if (SDL_Init(SDL_INIT_AUDIO) == -1) {
+		throw std::runtime_error(SDL_GetError());
+	}
+	// open 44.1KHz, signed 16bit, system byte order,
+	//      stereo audio, using 1024 byte chunks
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
+		throw std::runtime_error(Mix_GetError());
+	}
+	Mix_ChannelFinished(&Sound::ChannelFinishedCallback);
 
 	std::string windowTitle;
 	m_EngineSettings.GetData(OD_GAME_TITLE, windowTitle);
@@ -111,6 +125,10 @@ void Engine::Initialize()
 
 void Engine::Cleanup()
 {
+	auto& sceneManager = SceneManager::GetInstance();
+	auto of = std::ofstream("TEST.txt");
+	sceneManager.Serialize(of);
+
 	RENDER.Destroy();
 
 	// Close steam
@@ -121,6 +139,8 @@ void Engine::Cleanup()
 		delete[] buffer.second;
 
 	delete m_pGameinstance;
+
+	Mix_CloseAudio();
 
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;

@@ -9,8 +9,10 @@
 #include "ResourceManager.h"
 #include "Components/PhysicsComponent.h"
 #include "Components/TextPixelComponent.h"
+#include "Components/Transform.h"
 #include "GameplayPrefabs.h"
 #include "Stage.h"
+#include "SoundLoaderTest.h"
 
 #include <steam_api.h>
 
@@ -23,7 +25,7 @@ void BurgerTimeGI::LoadGame()
 		std::cout << pair.first << ": " << std::to_string(pair.second.hash_code()) <<'\n';
 	}
 
-	auto& scene = SCENES.CreateScene("Test Scene");
+	auto& scene = SCENES.CreateScene("Test_Scene");
 
 	AddGameUI(&scene);
 
@@ -32,4 +34,8 @@ void BurgerTimeGI::LoadGame()
 	level->AddComponent<Stage>();
 	level->GetTransform()->SetPosition({ 24.f,64.f });
 	scene.Add(level);
+
+	auto audioLoaderTest = new GameObject();
+	audioLoaderTest->AddComponent<SoundLoaderTest>();
+	scene.Add(audioLoaderTest);
 }
