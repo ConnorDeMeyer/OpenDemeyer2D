@@ -20,8 +20,6 @@ public:
 	void Cleanup();
 	void Run(GameInstance* pGameInstance);
 
-	void Quit() { m_Quit = true; }
-
 	float GetDeltaTime() const { return m_DeltaTime; }
 
 	void SetResolution(int width, int height);
@@ -46,6 +44,15 @@ public:
 	/** Render the settings in an ImGui window*/
 	void RenderSettings();
 
+	void PlayGame();
+
+	void PauseGame(bool isPaused) { m_Paused = isPaused; }
+
+	void StopGame();
+
+	void Quit() { m_Quit = true; }
+
+	void SaveGame();
 
 private:
 
@@ -60,6 +67,8 @@ private:
 	float m_TimeLag{};
 
 	bool m_Quit{};
+	bool m_Paused{};
+	bool m_Playing{};
 
 	// Window data members
 	SDL_Window* m_Window{};

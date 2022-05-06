@@ -22,7 +22,7 @@ void RenderComponent::Render() const
 	}
 }
 
-void RenderComponent::BeginPlay()
+void RenderComponent::Initialize()
 {
 	m_pTransform = GetParent()->GetTransform();
 }
@@ -76,10 +76,21 @@ void RenderComponent::SetSourceRect(const SDL_FRect& srcRect)
 void RenderComponent::RenderImGui()
 {
 	// Show texture
-	float ratio = float(m_Texture->GetWidth()) / float(m_Texture->GetHeight());
+	if (m_Texture)
+	{
+		float ratio = float(m_Texture->GetWidth()) / float(m_Texture->GetHeight());
+
+		ImVec2 uv0 = { m_SourceRect.x / m_Texture->GetWidth(), m_SourceRect.y / m_Texture->GetHeight() };
+		ImVec2 uv1 = { m_SourceRect.w / m_Texture->GetWidth(), m_SourceRect.h / m_Texture->GetHeight() };
+		uv1.x += uv0.x;
+		uv1.y += uv0.y;
+
+		float width = ImGui::GetWindowWidth();
+
 #pragma warning(disable : 4312)
-	ImGui::Image((ImTextureID)(m_Texture->GetId()), { 16 * ratio,16 });
+		ImGui::Image((ImTextureID)(m_Texture->GetId()), { width,width/ratio }, uv0, uv1);
 #pragma warning(default : 4312)
+	}
 
 	//Change source rect
 	ImGui::Text("Source Rectangle");
@@ -117,4 +128,40 @@ void RenderComponent::RenderImGui()
 		}
 		ImGui::EndCombo();
 	}
+}
+
+glm::vec2* RenderComponent::GetWorldRect(glm::vec2* vertices) const
+{
+	Transform* pTransform = GetParent()->GetTransform();
+
+	auto& pos = pTransform->GetWorldPosition();
+	auto& scale = pTransform->GetWorldScale();
+	auto rot = pTransform->GetWorldRotation();
+
+	float vertexLeft	{ m_Pivot.x - 1.f };
+	float vertexBottom	{ m_Pivot.y - 1.f };
+	float vertexRight	{ m_Pivot.x };
+	float vertexTop		{ m_Pivot.y };
+
+	vertexLeft		*= m_SourceRect.w * scale.x;
+	vertexRight		*= m_SourceRect.w * scale.x;
+	vertexTop		*= m_SourceRect.h * scale.y;
+	vertexBottom	*= m_SourceRect.h * scale.y;
+
+	constexpr float inverse180{ 1.f / 180.f * float(M_PI) };
+
+	float cosAngle = cos(rot * inverse180);
+	float sinAngle = sin(rot * inverse180);
+
+	vertices[0] = { vertexLeft  * cosAngle - vertexTop * sinAngle, vertexTop * cosAngle + vertexLeft  * sinAngle };
+	vertices[1] = { vertexRight * cosAngle - vertexTop * sinAngle, vertexTop * cosAngle + vertexRight * sinAngle };
+	vertices[2] = { vertexRight * cosAngle - vertexBottom * sinAngle, vertexBottom * cosAngle + vertexRight * sinAngle };
+	vertices[3] = { vertexLeft  * cosAngle - vertexBottom * sinAngle, vertexBottom * cosAngle + vertexLeft  * sinAngle };
+
+	vertices[0] += pos;
+	vertices[1] += pos;
+	vertices[2] += pos;
+	vertices[3] += pos;
+
+	return vertices;
 }

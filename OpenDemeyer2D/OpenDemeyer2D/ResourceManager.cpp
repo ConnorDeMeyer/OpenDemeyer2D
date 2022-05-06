@@ -143,8 +143,6 @@ std::shared_ptr<Texture2D> ResourceManager::LoadTexture(SDL_Surface* pSurface)
 		throw std::runtime_error("Texture::CreateFromSurface, unknown pixel format");
 	}
 
-	std::scoped_lock<std::mutex> lock(RENDER.GetOpenGlMutex());
-
 	//Generate an array of textures.  We only want one texture (one element array), so trick
 	//it by treating "texture" as array of length one.
 	glGenTextures(1, &id);
@@ -237,8 +235,6 @@ std::shared_ptr<RenderTarget> ResourceManager::CreateRenderTexture(int width, in
 {
 	//http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 
-	std::scoped_lock<std::mutex> lock(RENDER.GetOpenGlMutex());
-
 	GLuint frameBuffer{};
 	GLuint renderedTexture{};
 
@@ -268,6 +264,7 @@ std::shared_ptr<RenderTarget> ResourceManager::CreateRenderTexture(int width, in
 	GLuint status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 	if (status != GL_FRAMEBUFFER_COMPLETE)
 	{
+		std::cout << glewGetErrorString(status);
 		throw std::runtime_error("Was unable to create the render texture");
 	}
 

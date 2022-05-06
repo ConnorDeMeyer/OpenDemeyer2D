@@ -16,6 +16,10 @@ public:
 	/** Updates all the scenes*/
 	void Update(float deltaTime);
 
+	void PreUpdate(bool isPlaying);
+
+	void AfterUpdate();
+
 	/** Renders all the scenes*/
 	void Render() const;
 
@@ -42,6 +46,12 @@ public:
 
 	void PhysicsStep(float timeStep, int velocityIterations, int positionIterations);
 
+	void RemoveScene(Scene* pScene);
+
+	void RemoveAllScenes();
+
+	void RemoveActiveScene();
+
 	void Serialize(std::ostream& os);
 
 private:
@@ -49,6 +59,8 @@ private:
 	SceneManager() = default;
 
 	virtual ~SceneManager();
+
+private:
 
 	std::vector<Scene*> m_Scenes;
 

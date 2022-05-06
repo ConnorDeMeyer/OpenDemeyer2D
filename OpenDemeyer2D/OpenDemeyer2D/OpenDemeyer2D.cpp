@@ -4,6 +4,7 @@
 #include "SceneManager.h"
 #include "RenderManager.h"
 #include "ResourceManager.h"
+#include "GUIManager.h"
 #include "GameObject.h"
 #include "Scene.h"
 #include "GameInstance.h"
@@ -24,6 +25,7 @@
 #include <steam_api.h>
 
 #include "SteamAPI.h"
+
 
 using namespace std::chrono;
 
@@ -63,6 +65,9 @@ void Engine::Initialize()
 	m_EngineSettings.GetData(OD_GAME_WINDOW_MAXIMIZED, maximizeWindow);
 #endif
 
+	/**
+	* SDL
+	*/
 	PrintSDLVersion();
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO) != 0)
@@ -77,16 +82,20 @@ void Engine::Initialize()
 	SDL_DisplayMode DM;
 	SDL_GetCurrentDisplayMode(0, &DM);
 
-	// start SDL with audio support
-	if (SDL_Init(SDL_INIT_AUDIO) == -1) {
-		throw std::runtime_error(SDL_GetError());
-	}
+	/**
+	* SDL_MIXER
+	*/
+
 	// open 44.1KHz, signed 16bit, system byte order,
 	//      stereo audio, using 1024 byte chunks
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
 		throw std::runtime_error(Mix_GetError());
 	}
 	Mix_ChannelFinished(&Sound::ChannelFinishedCallback);
+
+	/**
+	* WINDOW
+	*/
 
 	std::string windowTitle;
 	m_EngineSettings.GetData(OD_GAME_TITLE, windowTitle);
@@ -109,30 +118,32 @@ void Engine::Initialize()
 		SDL_MaximizeWindow(m_Window);
 	}
 
+	/**
+	* STEAM
+	*/
+
 	/** Initialize steam*/
-	if (!SteamAPI_Init())
-	{
-		std::cout << "Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed)." << std::endl;
-	}
-	else
-	{
-		ACHIEVEMENTS.Init();
-		std::cout << "Successfully initialized steam." << std::endl;
-	}
+	//if (!SteamAPI_Init())
+	//{
+	//	std::cout << "Fatal Error - Steam must be running to play this game (SteamAPI_Init() failed)." << std::endl;
+	//}
+	//else
+	//{
+	//	ACHIEVEMENTS.Init();
+	//	std::cout << "Successfully initialized steam." << std::endl;
+	//}
 
 	RENDER.Init(m_Window);
+	GUI.Init(m_Window);
 }
 
 void Engine::Cleanup()
 {
-	auto& sceneManager = SceneManager::GetInstance();
-	auto of = std::ofstream("TEST.txt");
-	sceneManager.Serialize(of);
-
+	GUI.Destroy();
 	RENDER.Destroy();
 
 	// Close steam
-	SteamAPI_Shutdown();
+	//SteamAPI_Shutdown();
 
 	// cleanup ImGui variables
 	for (auto& buffer : m_SettingsInputBuffer)
@@ -161,8 +172,8 @@ void Engine::Run(GameInstance* pGameInstance)
 
 	{
 		auto& renderer = RENDER;
-		auto& sceneManager = SceneManager::GetInstance();
-		auto& input = InputManager::GetInstance();
+		auto& sceneManager = SCENES;
+		auto& input = INPUT;
 		
 		auto lastTime = high_resolution_clock::now();
 		while (!m_Quit)
@@ -175,10 +186,20 @@ void Engine::Run(GameInstance* pGameInstance)
 			m_TimeLag += m_DeltaTime;
 
 			input.ProcessInput();
-			for (; m_TimeLag >= 0.f; m_TimeLag -= m_PhysicsTimeStep)
-				sceneManager.PhysicsStep(m_PhysicsTimeStep, m_PhysicsVelocityIter, m_PhysicsPositionIterations);
-			sceneManager.Update(m_DeltaTime);
+
+			sceneManager.PreUpdate(m_Playing && !m_Paused);
+
+			if (m_Playing && !m_Paused)
+			{
+				for (; m_TimeLag >= 0.f; m_TimeLag -= m_PhysicsTimeStep)
+					sceneManager.PhysicsStep(m_PhysicsTimeStep, m_PhysicsVelocityIter, m_PhysicsPositionIterations);
+				sceneManager.Update(m_DeltaTime);
+			}
+
+			sceneManager.AfterUpdate();
+
 			renderer.Render();
+
 
 			const auto waitTime = currentTime + milliseconds(long long(m_TargetFps * 1000.f)) - high_resolution_clock::now();
 
@@ -330,4 +351,28 @@ void Engine::RenderSettings()
 	}
 
 	ImGui::End();
+}
+
+void Engine::PlayGame()
+{
+	m_Playing = true;
+	m_Paused = false;
+}
+
+void Engine::StopGame()
+{
+	SCENES.RemoveAllScenes();
+	Deserializer gameLoader{};
+	auto stream = std::ifstream("BurgerTime");
+	gameLoader.DeserializeGame(stream);
+}
+
+void Engine::SaveGame()
+{
+	std::string title;
+	m_EngineSettings.GetData(OD_GAME_TITLE, title);
+
+	auto& sceneManager = SceneManager::GetInstance();
+	auto of = std::ofstream(title.c_str());
+	sceneManager.Serialize(of);
 }

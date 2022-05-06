@@ -16,7 +16,7 @@ public:
 
 	virtual void DefineUserFields(UserFieldBinder&) const;
 
-	void BeginPlay() override;
+	void Initialize() override;
 
 	void SetTexture(const std::shared_ptr<Texture2D>& texture);
 

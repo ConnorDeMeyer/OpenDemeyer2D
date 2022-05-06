@@ -6,6 +6,7 @@
 #include "Components/PhysicsComponent.h"
 
 #include <box2d.h>
+#include "GUIManager.h"
 
 Scene::Scene(const std::string& name)
 	: m_Name{ name }
@@ -25,13 +26,13 @@ Scene::~Scene()
 	delete m_pb2World;
 }
 
-void Scene::Add(GameObject* pObject)
+GameObject* Scene::Add(GameObject* pObject)
 {
 	if (pObject->m_pScene) throw ObjectAlreadyInASceneException();
 
-	RegisterObject(pObject);
-
 	m_UninitializedObject.emplace_back(pObject);
+
+	return pObject;
 }
 
 void Scene::DestroyObject(GameObject* pObject)
@@ -47,16 +48,6 @@ void Scene::DestroyObjectImmediately(GameObject* pObject)
 
 void Scene::Update(float deltaTime)
 {
-
-	// initialized objects
-	for (GameObject* pObject : m_UninitializedObject)
-	{
-		m_SceneTree.emplace_back(pObject);
-		pObject->SetScene(this);
-		pObject->BeginPlay();
-	}
-	m_UninitializedObject.clear();
-
 	// Update every object
 	for (GameObject* child : m_SceneTree)
 	{
@@ -68,6 +59,32 @@ void Scene::Update(float deltaTime)
 	{
 		child->LateUpdate();
 	}
+}
+
+void Scene::PreUpdate(bool IsPlaying)
+{
+	// initialized objects
+	for (GameObject* pObject : m_UninitializedObject)
+	{
+		m_SceneTree.emplace_back(pObject);
+		pObject->SetScene(this);
+		m_NotBegunObjects.emplace_back(pObject);
+		pObject->InitializeComponents();
+	}
+	m_UninitializedObject.clear();
+
+	if (IsPlaying)
+	{
+		for (GameObject* pObject : m_NotBegunObjects)
+		{
+			pObject->BeginPlay();
+		}
+		m_NotBegunObjects.clear();
+	}
+}
+
+void Scene::AfterUpdate()
+{
 
 	// Delete the destroyed Objects
 	for (GameObject* object : m_DestroyableObjects)
@@ -88,61 +105,77 @@ void Scene::Render() const
 
 void Scene::ImGuiScenePopup()
 {
+	bool changeName{};
+	static char buffer[32]{};
+
 	if (ImGui::BeginPopupContextItem("Scene settings"))
 	{
 		if (ImGui::MenuItem("Delete Scene"))
 		{
-
+			SCENES.RemoveScene(this);
+			ImGui::CloseCurrentPopup();
 		}
 
-		if (ImGui::Button("Change Name"))
+		if (ImGui::MenuItem("Change Name"))
 		{
-			ImGui::OpenPopup("Change Scene Name");
-		}
-
-		if (ImGui::BeginPopupModal("Change Scene Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-		{
-			char buffer[32]{};
-			ImGui::InputText("new name", buffer, 32);
-			if (ImGui::Button("Change Name"))
-			{
-				Scene::ChangeName(std::string(buffer));
-				ImGui::CloseCurrentPopup();
-			}
-			if (ImGui::Button("Cancel"))
-			{
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::EndPopup();
+			changeName = true;
+			std::memcpy(buffer, m_Name.c_str(), m_Name.size());
+			ImGui::CloseCurrentPopup();
 		}
 
 		if (ImGui::MenuItem("Set as active"))
 		{
 			SCENES.SetActiveScene(this);
+			ImGui::CloseCurrentPopup();
 		}
 
+		if (ImGui::MenuItem("Add GameObject"))
+		{
+			Add(new GameObject());
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+
+	if (changeName)
+		ImGui::OpenPopup("Change Scene Name");
+
+	if (ImGui::BeginPopupModal("Change Scene Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::InputText("new name", buffer, 32);
+		if (ImGui::Button("Change Name"))
+		{
+			ChangeName(std::string(buffer));
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
 		ImGui::EndPopup();
 	}
 }
 
 void Scene::RenderImGui()
 {
-	if (ImGui::TreeNode(m_Name.c_str())) {
+	ImGui::PushID(this);
+
+	if (ImGui::BeginTabItem(m_Name.c_str())) {
 
 		ImGuiScenePopup();
 
 		for (size_t i{}; i < m_SceneTree.size(); ++i)
 		{
-			if (ImGui::TreeNode(std::string("GameObject" + std::to_string(m_SceneTree[i]->GetId())).c_str())) {
-				m_SceneTree[i]->RenderImGui();
-				ImGui::TreePop();
-			}
+			auto pObject{ m_SceneTree[i] };
+			pObject->RenderImGui();
 		}
 
-		ImGui::TreePop();
+		ImGui::EndTabItem();
 	}
-
 	else ImGuiScenePopup();
+
+	ImGui::PopID();
 }
 
 void Scene::ChangeName(const std::string& name)
@@ -159,7 +192,7 @@ void Scene::ChangeName(const std::string& name)
 
 }
 
-void Scene::Serialize(std::ostream& os)
+void Scene::Serialize(std::ostream& os) const
 {
 	os << m_Name << "\n";
 	{
@@ -169,6 +202,18 @@ void Scene::Serialize(std::ostream& os)
 			pObject->Serialize(os);
 		}
 		os << "}\n";
+	}
+}
+
+void Scene::Deserialize(Deserializer& is)
+{
+	if (CanContinue(*is.GetStream()))
+	{
+		while (!IsEnd(*is.GetStream()))
+		{
+			auto go = Add(new GameObject());
+			go->Deserialize(is);
+		}
 	}
 }
 

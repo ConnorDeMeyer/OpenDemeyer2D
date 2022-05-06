@@ -184,7 +184,8 @@ std::ostream& operator<<(std::ostream& stream, const SDL_Rect& rect)
 
 std::ostream& operator<<(std::ostream& stream, const SDL_Color& color)
 {
-	return stream << color.r << ' ' << color.g << ' ' << color.g << ' ' << color.a;
+	int r{ color.r }, g{ color.g }, b{ color.b }, a{ color.a };
+	return stream << r << ' ' << g << ' ' << b << ' ' << a;
 }
 
 std::istream& operator>>(std::istream& stream, SDL_FRect& rect)
@@ -199,7 +200,10 @@ std::istream& operator>>(std::istream& stream, SDL_Rect& rect)
 
 std::istream& operator>>(std::istream& stream, SDL_Color& color)
 {
-	return stream >> color.r >> color.g >> color.g >> color.a;
+	int r, g, b, a;
+	stream >> r >> g >> b >> a;
+	color = { uint8(r),uint8(g),uint8(b),uint8(a) };
+	return stream;
 }
 
 std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Sound>& sound)
@@ -254,19 +258,20 @@ std::istream& operator>>(std::istream& stream, std::shared_ptr<Surface2D>& surfa
 	return stream;
 }
 
-std::ostream& operator<<(std::ostream& stream, const ComponentBase* component)
-{
-	return stream << component->GetParent()->GetId();
-}
-
-std::istream& operator>>(FileDeserializer& stream, ComponentBase* component)
-{
-	unsigned int id{};
-	stream >> id;
-
-	stream.GetComponentFromObject(component->GetComponentId(), id, &component);
-	return stream;
-}
+//std::ostream& operator<<(std::ostream& stream, const std::weak_ptr<ComponentBase>& component)
+//{
+//	if (component.expired()) return stream << 0;
+//	return stream << component.lock()->GetParent()->GetId();
+//}
+//
+//Deserializer& operator>>(Deserializer& stream, std::weak_ptr<ComponentBase>* component)
+//{
+//	unsigned int id{};
+//	(*stream.GetStream()) >> id;
+//
+//	stream.GetComponentFromObject(lock()->GetComponentId(), id, &component);
+//	return stream;
+//}
 
 
 

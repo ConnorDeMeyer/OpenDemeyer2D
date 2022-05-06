@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <functional>
 #include <typeindex>
+#include "EngineIO/Deserializer.h"
 
 class GameObject;
 
@@ -37,13 +38,22 @@ private:
 	/** Gets called after all object get updated*/
 	virtual void LateUpdate() {}
 
-	/** Renders the ImGui in debug mode*/
-	virtual void RenderImGui() {}
+	/**
+	* Gets called right after the constructor fires and after the user fields are initialized
+	* Used to initialize and ling components that can not be done in the constructor.
+	* Do not create more components or objects in this method, as those created will be saved to the game file
+	*/
+	virtual void Initialize() {}
 
-	/** Gets called after all components are initialized.*/
+	/** 
+	* Gets called when the game is started or when this component was created during gameplay.
+	*/
 	virtual void BeginPlay() {}
 
 public:
+
+	/** Renders the ImGui in debug mode*/
+	virtual void RenderImGui() {}
 
 	/** Gets the name of the component for debugging purposes*/
 	virtual const std::string GetComponentName() const = 0;
@@ -52,7 +62,7 @@ public:
 
 	virtual void Serialize(std::ostream& stream) const = 0;
 
-	//virtual std::function<ComponentBase* (GameObject*)> _Gameobject_Add() = 0;
+	virtual void Deserialize(Deserializer& is) = 0;
 
 public:
 
@@ -70,6 +80,8 @@ private:
 private:
 
 	GameObject* m_pParent{};
+
+protected:
 
 	/** Shared pointer with empty destructor for which you can ask a weak reference to*/
 	std::shared_ptr<ComponentBase> m_Reference;

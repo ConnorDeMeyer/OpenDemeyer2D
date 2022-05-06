@@ -7,7 +7,7 @@ class StageMovement : public Component<StageMovement>
 public:
 
 
-	void SetStage(Stage* pStage) { m_pStage = pStage; }
+	void SetStage(Stage* pStage) { m_pStage = pStage->GetWeakReferenceType(); }
 
 	bool Move(movementDirection direction);
 
@@ -20,13 +20,13 @@ public:
 
 	void RenderImGui() override;
 
-	//const std::string GetComponentName() override { return "StageMovement"; }
-
 	const glm::vec2& GetMovementInput() const { return m_MovementInput; }
+
+	virtual void DefineUserFields(UserFieldBinder&) const;
 
 protected:
 
-	Stage* m_pStage{};
+	std::weak_ptr<Stage> m_pStage;
 
 	float m_HorizontalMovementSpeed{32.f};
 

@@ -6,6 +6,7 @@
 #include "ODArray.h"
 #include <memory>
 #include <functional>
+#include "EngineIO/Deserializer.h"
 
 class GameObject;
 class b2World;
@@ -17,11 +18,9 @@ class Scene final : public b2ContactListener
 
 	friend class GameObject;
 
-private:
+public:
 
 	explicit Scene(const std::string& name);
-
-public:
 
 	/** Deletes every object in the scene tree.*/
 	virtual ~Scene();
@@ -32,7 +31,7 @@ public:
 	Scene& operator=(Scene&& other)			= delete;
 
 	/** Adds a Scene object to the top of the scene tree.*/
-	void Add(GameObject* pObject);
+	GameObject* Add(GameObject* pObject);
 
 	/** Flag the object for deletion at the end of the frame.*/
 	void DestroyObject(GameObject* pObject);
@@ -42,6 +41,10 @@ public:
 
 	/** Updates the scene objects in the scene tree.*/
 	void Update(float deltaTime);
+
+	void PreUpdate(bool IsPlaying);
+
+	void AfterUpdate();
 
 	/** Renders the scene objects in the scene tree.*/
 	void Render() const;
@@ -59,7 +62,11 @@ public:
 
 	const std::vector<GameObject*>& GetSceneTree() const { return m_SceneTree; }
 
-	void Serialize(std::ostream& os);
+	void Serialize(std::ostream& os) const;
+
+	void Deserialize(Deserializer& is);
+
+	const std::unordered_map<uint32, GameObject*>& GetAllObjects() const { return m_RegisteredObjects; }
 
 private:
 
@@ -82,9 +89,6 @@ private:
 	/** Remove the object from the scene tree list*/
 	void RemoveObject(GameObject* object);
 
-	///** Sets a reference to the scene inside the object and its children*/
-	//void SetScene(GameObject* object);
-
 private:
 
 	std::string m_Name;
@@ -94,6 +98,8 @@ private:
 	ODArray<GameObject*> m_DestroyableObjects;
 	
 	std::vector<GameObject*> m_UninitializedObject;
+
+	std::vector<GameObject*> m_NotBegunObjects;
 
 	b2World* m_pb2World{};
 

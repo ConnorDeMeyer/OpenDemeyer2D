@@ -14,7 +14,7 @@ void TextureComponent::DefineUserFields(UserFieldBinder& binder) const
 	binder.Add<std::shared_ptr<Texture2D>>("Texture2D", offsetof(TextureComponent, m_Texture));
 }
 
-void TextureComponent::BeginPlay()
+void TextureComponent::Initialize()
 {
 	m_pRenderComponent = GetParent()->GetComponent<RenderComponent>();
 

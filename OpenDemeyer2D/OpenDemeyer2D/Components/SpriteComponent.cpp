@@ -16,19 +16,11 @@ void SpriteComponent::DefineUserFields(UserFieldBinder& binder) const
 	binder.Add<bool>("loop", offsetof(SpriteComponent, m_bLoop));
 }
 
-void SpriteComponent::BeginPlay()
+void SpriteComponent::Initialize()
 {
 	m_pRenderComponent = GetParent()->GetRenderComponent();
 
-	if (m_pRenderComponent && m_Texture) {
-		m_pRenderComponent->SetTexture(m_Texture);
-		m_pRenderComponent->SetSourceRect(SDL_FRect{
-				m_CurrentFrameX * m_FrameDimension.x,
-				m_CurrentFrameY * m_FrameDimension.y,
-				m_FrameDimension.x,
-				m_FrameDimension.y
-			});
-	}
+	UpdateSourceRect();
 }
 
 void SpriteComponent::Update(float deltaTime)
@@ -45,29 +37,7 @@ void SpriteComponent::Update(float deltaTime)
 
 	if (m_NeedsUpdate)
 	{
-		if (m_CurrentFrame >= m_TotalFrames)
-		{
-			if (m_bLoop)
-				m_CurrentFrame = 0;
-			else
-				m_bPauseTime = true;
-
-			OnAnimationEnd.BroadCast();
-		}
-
-		int actualFrame = m_CurrentFrame + m_FrameOffset;
-		int horizontalFrames{ int(m_Texture->GetWidth() / m_FrameDimension.x) };
-		m_CurrentFrameY = actualFrame / horizontalFrames;
-		m_CurrentFrameX = actualFrame % horizontalFrames;
-
-
-		if (m_pRenderComponent)
-			m_pRenderComponent->SetSourceRect(SDL_FRect{
-				m_CurrentFrameX * m_FrameDimension.x,
-				m_CurrentFrameY * m_FrameDimension.y,
-				m_FrameDimension.x,
-				m_FrameDimension.y
-				});
+		UpdateSourceRect();
 	}
 }
 
@@ -167,4 +137,31 @@ void SpriteComponent::Reset()
 	m_CurrentFrame = 0;
 	m_AccumulatedTime = 0;
 	m_bPauseTime = false;
+}
+
+void SpriteComponent::UpdateSourceRect()
+{
+	if (m_CurrentFrame >= m_TotalFrames)
+	{
+		if (m_bLoop)
+			m_CurrentFrame = 0;
+		else
+			m_bPauseTime = true;
+
+		OnAnimationEnd.BroadCast();
+	}
+
+	int actualFrame = m_CurrentFrame + m_FrameOffset;
+	int horizontalFrames{ int(m_Texture->GetWidth() / m_FrameDimension.x) };
+	m_CurrentFrameY = actualFrame / horizontalFrames;
+	m_CurrentFrameX = actualFrame % horizontalFrames;
+
+
+	if (m_pRenderComponent)
+		m_pRenderComponent->SetSourceRect(SDL_FRect{
+			m_CurrentFrameX * m_FrameDimension.x,
+			m_CurrentFrameY * m_FrameDimension.y,
+			m_FrameDimension.x,
+			m_FrameDimension.y
+			});
 }

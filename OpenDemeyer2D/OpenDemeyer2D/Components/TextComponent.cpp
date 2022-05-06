@@ -31,7 +31,7 @@ void TextComponent::Update(float)
 	}
 }
 
-void TextComponent::BeginPlay()
+void TextComponent::Initialize()
 {
 	m_pRenderComp = GetParent()->GetComponent<RenderComponent>();
 

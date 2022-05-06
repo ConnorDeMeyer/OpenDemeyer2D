@@ -13,23 +13,48 @@
 #include "PeterPepper.h"
 #include "StageMovement.h"
 
-constexpr char level1[stageSize]
-{
-	1,1,1,1,1,1,1,1,1,
-	2,0,2,2,2,0,2,0,2,
-	3,1,3,2,3,1,3,1,3,
-	0,2,3,3,3,2,2,0,2,
-	1,3,3,0,2,2,3,1,3,
-	2,2,3,1,3,3,3,2,0,
-	2,2,2,0,2,0,3,3,1,
-	3,3,3,1,3,1,3,2,2,
-	2,0,2,0,2,0,2,2,2,
-	3,1,3,1,3,1,3,3,3
-};
+//constexpr char level1[stageSize]
+//{
+//	1,1,1,1,1,1,1,1,1,
+//	2,0,2,2,2,0,2,0,2,
+//	3,1,3,2,3,1,3,1,3,
+//	0,2,3,3,3,2,2,0,2,
+//	1,3,3,0,2,2,3,1,3,
+//	2,2,3,1,3,3,3,2,0,
+//	2,2,2,0,2,0,3,3,1,
+//	3,3,3,1,3,1,3,2,2,
+//	2,0,2,0,2,0,2,2,2,
+//	3,1,3,1,3,1,3,3,3
+//};
 
 void Stage::LoadStageTexture()
 {
 
+	auto pLevelLayout = GenerateStageSurface();
+
+	m_StageTexture = RESOURCES.LoadTexture(pLevelLayout);
+
+	SDL_FreeSurface(pLevelLayout);
+
+	auto sheetTexture = RESOURCES.LoadTexture("Bitmaps/FullSheet.png");
+	// burger holders at the bottom
+	for (int i{}; i < 4; ++i)
+	{
+		auto go = new GameObject();
+		auto render = go->AddComponent<RenderComponent>();
+		auto texture = go->AddComponent<TextureComponent>();
+		texture->SetTexture(sheetTexture);
+		texture->SetSourceRect({ 112.f, 104.f, 48.f, 16.f });
+		render->SetRenderAlignMode(eRenderAlignMode::left);
+
+		go->GetTransform()->SetPosition({ 8.f + 48.f * i, -32.f });
+		go->SetParent(GetParent());
+	}
+	
+}
+
+SDL_Surface* Stage::GenerateStageSurface() const
+{
 	SDL_Surface* pLevelLayout = SDL_CreateRGBSurfaceWithFormat(0, 208, 160, 32, SDL_PIXELFORMAT_RGBA32);
 	//SDL_Rect rect{ 0,0,208,160 };
 	//SDL_FillRect(pLevelLayout, &rect, 0xEEEEEEFF);
@@ -67,7 +92,7 @@ void Stage::LoadStageTexture()
 		{
 			bool isOdd{ bool(x & 0b1) };
 
-			if (level1[x + stageWidth * y] & 0b10) // draw the ladders
+			if (m_LevelLayout[x + stageWidth * y] & 0b10) // draw the ladders
 			{
 				if (isOdd)
 				{
@@ -81,7 +106,7 @@ void Stage::LoadStageTexture()
 				}
 			}
 
-			if (level1[x + stageWidth * y] & 0b01) // draw the platforms
+			if (m_LevelLayout[x + stageWidth * y] & 0b01) // draw the platforms
 			{
 				if (isOdd)
 				{
@@ -100,25 +125,7 @@ void Stage::LoadStageTexture()
 		cursorPos.x = 0;
 	}
 
-	m_StageTexture = RESOURCES.LoadTexture(pLevelLayout);
-
-	SDL_FreeSurface(pLevelLayout);
-
-	auto sheetTexture = RESOURCES.LoadTexture("Bitmaps/FullSheet.png");
-	// burger holders at the bottom
-	for (int i{}; i < 4; ++i)
-	{
-		auto go = new GameObject();
-		auto render = go->AddComponent<RenderComponent>();
-		auto texture = go->AddComponent<TextureComponent>();
-		texture->SetTexture(sheetTexture);
-		texture->SetSourceRect({ 112.f, 104.f, 48.f, 16.f });
-		render->SetRenderAlignMode(eRenderAlignMode::left);
-
-		go->GetTransform()->SetPosition({ 8.f + 48.f * i, -32.f });
-		go->SetParent(GetParent());
-	}
-	
+	return pLevelLayout;
 }
 
 void Stage::LoadStageItems()
@@ -298,18 +305,9 @@ float Stage::GetNextPlatformDown(const glm::vec2& pos)
 	return -36.f + float(m_FallenHamburgers[xPos / 2]++) * 8.f;
 }
 
-void Stage::BeginPlay()
+void Stage::Initialize()
 {
-	for (int y{}; y < stageHeight; ++y)
-		for (int x{}; x < stageWidth; ++x)
-		{
-			m_Tiles[x + y * stageWidth] = tiles(level1[x + y * stageWidth]);
-		}
-
 	LoadStageTexture();
-	LoadStageItems();
-
-	SpawnPlayer();
 
 	if (auto renderComp{ GetParent()->GetRenderComponent() }) {
 		renderComp->SetTexture(m_StageTexture);
@@ -317,11 +315,79 @@ void Stage::BeginPlay()
 	}
 }
 
+void Stage::BeginPlay()
+{
+	for (int y{}; y < stageHeight; ++y)
+		for (int x{}; x < stageWidth; ++x)
+		{
+			m_Tiles[x + y * stageWidth] = tiles(m_LevelLayout[x + y * stageWidth]);
+		}
+
+	LoadStageItems();
+
+	SpawnPlayer();
+
+}
+
+constexpr const char* tileNames[4]
+{
+	"none",
+	"platform",
+	"ladder",
+	"both"
+};
+
 void Stage::RenderImGui()
 {
-	// Show texture
-	float ratio = float(m_StageTexture->GetWidth()) / float(m_StageTexture->GetHeight());
-#pragma warning(disable : 4312)
-	ImGui::Image((ImTextureID)(m_StageTexture->GetId()), { 16 * ratio,16 });
-#pragma warning(default : 4312)
+	float windowWidth = ImGui::GetWindowWidth();
+	float cellSize{ windowWidth / stageWidth / 2 };
+
+	ImGuiTableFlags flags{};
+	flags |= ImGuiTableFlags_RowBg;
+	flags |= ImGuiTableFlags_BordersH;
+	flags |= ImGuiTableFlags_BordersV;
+	flags |= ImGuiTableFlags_BordersOuter;
+	flags |= ImGuiTableFlags_BordersInner;
+
+	ImGui::BeginTable("Level Layout", stageWidth, flags);
+
+	for (int y{}; y < stageHeight; ++y)
+	{
+		ImGui::TableNextRow();
+		for (int x{}; x < stageWidth; ++x)
+		{
+			ImGui::TableSetColumnIndex(x);
+
+			auto& tile = m_LevelLayout[y * stageWidth + x];
+
+			ImGui::PushID(y * stageWidth + x);
+			if (ImGui::Button(std::to_string(tile).c_str(), {cellSize, cellSize}))
+			{
+				++tile;
+				tile %= 4;
+				
+				auto pLevelLayout = GenerateStageSurface();
+				
+				auto LoadTexture = [pLevelLayout, this]()
+				{
+					this->UpdateStageTexture(RESOURCES.LoadTexture(pLevelLayout));
+					SDL_FreeSurface(pLevelLayout);
+				};
+				
+				RENDER.AddGLCallAfterDrawing(LoadTexture);
+			}
+			ImGui::PopID();
+		}
+	}
+	ImGui::EndTable();
+}
+
+void Stage::UpdateStageTexture(const std::shared_ptr<Texture2D>& texture)
+{
+	m_StageTexture = texture;
+
+	if (auto renderComp{ GetParent()->GetRenderComponent() }) {
+		renderComp->SetTexture(m_StageTexture);
+		renderComp->SetRenderAlignMode(eRenderAlignMode::bottomLeft);
+	}
 }

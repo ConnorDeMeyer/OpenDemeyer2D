@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include <iostream>
+#include <memory>
 
 #include <glm/glm.hpp>
 
@@ -60,10 +61,6 @@ std::istream& operator>>(std::istream& stream, std::shared_ptr<Music>& music);
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Texture2D>& texture2d);
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Surface2D>& surface2d);
 
-// Components
-std::ostream& operator<<(std::ostream& stream, const ComponentBase* component);
-
-std::istream& operator>>(FileDeserializer& stream, ComponentBase* component);
 
 
 

@@ -10,6 +10,7 @@
 #include "ComponentBase.h"
 #include "EngineIO/TypeInformation.h"
 #include "EngineIO/Deserializer.h"
+#include "GameObject.h"
 
 
 template <typename T>
@@ -37,15 +38,15 @@ public:
 		}
 	}
 
-	void Deserialize(FileDeserializer& is)
+	void Deserialize(Deserializer& is) override
 	{
 		auto& fields = TypeInformation::GetInstance().Fields[typeid(T)].GetFields();
-		if (CanContinue(is))
+		if (CanContinue(*is.GetStream()))
 		{
-			while (!IsEnd(is))
+			while (!IsEnd(*is.GetStream()))
 			{
 				std::string fieldName;
-				is >> fieldName;
+				*is.GetStream() >> fieldName;
 				auto it = fields.find(fieldName);
 				if (it != fields.end())
 				{
@@ -55,8 +56,33 @@ public:
 		}
 	}
 
+	std::weak_ptr<T> GetWeakReferenceType()
+	{
+		return std::reinterpret_pointer_cast<T>(m_Reference);
+	}
+
+	
+
 private:
 
 	// Generate type information
 	inline static TypeIdentifier<T> TypeIdentifier{};
 };
+
+template <typename T>
+std::enable_if<std::is_base_of_v<ComponentBase, T>,
+std::ostream&> operator<<(std::ostream& stream, const std::weak_ptr<T>& component)
+{
+	if (component.expired()) return stream << 0;
+	return stream << component.lock()->GetParent()->GetId();
+}
+
+template <typename T>
+std::enable_if<std::is_base_of_v<ComponentBase, T>,
+Deserializer&> operator>>(Deserializer& stream, std::weak_ptr<T>& component)
+{
+	unsigned int id{};
+	(*stream.GetStream()) >> id;
+
+	stream.GetComponentFromObject(std::type_index(typeid(T)), id, &component);
+}

@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <algorithm>
+#include <string>
 
 #include "Singleton.h"
 #include "ComponentBase.h"
@@ -16,8 +17,6 @@ class ComponentBase;
 class TypeInformation;
 class GameObject;
 
-//template <typename T> std::enable_if_t<std::is_base_of_v<ComponentBase, T>, T*> GameObject::AddComponent<T>();
-
 
 class UserFieldBinder final
 {
@@ -28,7 +27,7 @@ private:
 		virtual ~FieldSerializerBase() = default;
 
 		virtual void Serialize(std::ostream& os, const void* address) const = 0;
-		virtual void DeSerialize(FileDeserializer& is, void* address) const = 0;
+		virtual void DeSerialize(Deserializer& is, void* address) const = 0;
 	};
 
 	template <typename T>
@@ -36,12 +35,20 @@ private:
 	{
 		void Serialize(std::ostream& os, const void* address) const override
 		{
+			if constexpr (std::is_same_v<T, std::string>)
+			{
+				if (static_cast<const std::string*>(address)->empty())
+				{
+					os << "text";
+					return;
+				}
+			}
 			os << *static_cast<const T*>(address);
 		}
 
-		void DeSerialize(FileDeserializer& is, void* address) override
+		void DeSerialize(Deserializer& is, void* address) const override
 		{
-			is >> *static_cast<const T*>(address);
+			(*is.GetStream()) >> *static_cast<T*>(address);
 		}
 	};
 
@@ -57,10 +64,10 @@ private:
 			pSerializer->Serialize(os, reinterpret_cast<const void*>(address));
 		}
 
-		void Deserialize(FileDeserializer& is, ComponentBase* pComponent) const
+		void Deserialize(Deserializer& is, ComponentBase* pComponent) const
 		{
 			size_t address = reinterpret_cast<size_t>(pComponent) + offset;
-			pSerializer->DeSerialize(is, pComponent);
+			pSerializer->DeSerialize(is, reinterpret_cast<void*>(address));
 		}
 	};
 
@@ -93,7 +100,6 @@ public:
 		auto& instance = TypeInformation::GetInstance();
 		instance.ClassNameIds.emplace(std::string(typeid(T).name()), std::type_index(typeid(T)));
 		instance.ClassIdNames.emplace(std::type_index(typeid(T)), std::string(typeid(T).name()));
-		instance.DefaultClass.emplace(std::type_index(typeid(T)), new T());
 
 		instance.ClassGenerator.emplace(std::type_index(typeid(T)), [](GameObject* ob) -> T*
 			{
@@ -115,5 +121,4 @@ public:
 	std::unordered_map<std::string, std::type_index> ClassNameIds;
 	std::unordered_map<std::type_index, std::string> ClassIdNames;
 	std::unordered_map<std::type_index, UserFieldBinder> Fields;
-	std::unordered_map<std::type_index, ComponentBase*> DefaultClass;
 };

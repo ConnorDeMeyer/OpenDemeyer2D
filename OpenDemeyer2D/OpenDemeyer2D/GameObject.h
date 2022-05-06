@@ -7,8 +7,7 @@
 #include <cassert>
 
 #include "ComponentBase.h"
-//#include "Components/Transform.h"
-//#include "Components/RenderComponent.h"
+#include "EngineIO/Deserializer.h"
 
 class Scene;
 class Transform;
@@ -49,13 +48,16 @@ private:
 	/** Renders the components attached to this component.*/
 	void Render() const;
 
-	/** Calls the BeginPlay method of the components after all components are initialized.*/
+	/** Calls the BeginPlay method of the components after all components have begun playing.*/
 	void BeginPlay();
+
+	/** Initialized all the components*/
+	void InitializeComponents();
+
+public:
 
 	/** Calls the RenderImGui() method on the components*/
 	void RenderImGui();
-
-public:
 
 	/** Will flag the Game Object for deletion at the end of the frame*/
 	void Destroy();
@@ -131,6 +133,8 @@ public:
 	/** Serialize this game object into a stream*/
 	void Serialize(std::ostream& os);
 
+	void Deserialize(Deserializer& is);
+
 	/** 
 	* Set the tag of this object.
 	* The tag may be gotten by using the GetTag method
@@ -146,9 +150,21 @@ public:
 	/** Returns the scene id of the object*/
 	unsigned int GetId() const { return m_ObjectId; }
 
-private:
+	void SetName(const std::string& name);
+
+	const std::string& GetName() const { return m_Name; }
+
+	std::string GetDisplayName() const;
+
+	GameObject* Instantiate() const;
 
 	void SetScene(Scene* pScene);
+
+private:
+
+	void ImGuiPopup();
+
+
 
 private:
 
@@ -178,7 +194,10 @@ private:
 
 	std::string m_Tag{};
 
+	std::string m_Name{};
+
 	bool m_HasBeenInitialized{};
+	bool m_HasBegunPlay{};
 };
 
 
@@ -208,7 +227,11 @@ T* GameObject::GetComponentByCast() const
 template <typename T>
 T* GameObject::AddComponent()
 {
-	assert(!GetComponent<T>()); // Make sure the component is not already added
+	// Make sure the component is not already added
+	if (GetComponent<T>())
+	{
+		throw std::runtime_error("Component already in object");
+	}
 	T* comp = new T();
 	m_Components.insert({ typeid(T), comp });
 

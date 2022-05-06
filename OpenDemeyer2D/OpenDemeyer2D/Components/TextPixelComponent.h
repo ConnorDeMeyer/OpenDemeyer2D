@@ -21,7 +21,7 @@ public:
 
 	void Update(float) override;
 
-	void BeginPlay() override;
+	void Initialize() override;
 
 	void setFontTexture(const std::shared_ptr<Surface2D>& surface);
 
@@ -37,9 +37,11 @@ public:
 
 	const std::string& GetText() const { return m_Text; }
 
-	//const std::string GetComponentName() override { return "TextPixelComponent"; }
-
 	void RenderImGui() override;
+
+private:
+
+	void UpdateFontTexture();
 
 private:
 

@@ -8,7 +8,7 @@
 enum class tiles : char
 {
 	none = 0,
-	platform = 0b1,
+	platform = 0b01,
 	ladder = 0b10,
 	ladderPlatform = 0b11
 };
@@ -31,7 +31,9 @@ class Transform;
 class Stage final : public Component<Stage>
 {
 public:
-	
+
+	void Initialize() override;
+
 	void BeginPlay() override;
 
 	bool CanMoveInDirection(const glm::vec2& position, movementDirection direction);
@@ -42,17 +44,20 @@ public:
 
 	float GetNextPlatformDown(const glm::vec2& pos);
 
-	//const std::string GetComponentName() override { return "Stage"; }
-
 	void RenderImGui() override;
+
+	void UpdateStageTexture(const std::shared_ptr<Texture2D>& texture);
 
 private:
 
 	void LoadStageTexture();
 
+	SDL_Surface* GenerateStageSurface() const;
+
 	void LoadStageItems();
 
 	void SpawnPlayer();
+
 
 private:
 
@@ -63,4 +68,18 @@ private:
 	GameObject* m_pPeterPepper{};
 
 	Uint8 m_FallenHamburgers[4]{};
+
+	char m_LevelLayout[stageSize]
+	{
+		1,1,1,1,1,1,1,1,1,
+		2,0,2,2,2,0,2,0,2,
+		3,1,3,2,3,1,3,1,3,
+		0,2,3,3,3,2,2,0,2,
+		1,3,3,0,2,2,3,1,3,
+		2,2,3,1,3,3,3,2,0,
+		2,2,2,0,2,0,3,3,1,
+		3,3,3,1,3,1,3,2,2,
+		2,0,2,0,2,0,2,2,2,
+		3,1,3,1,3,1,3,3,3
+	};
 };

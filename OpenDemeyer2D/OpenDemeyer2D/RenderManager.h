@@ -11,6 +11,8 @@
 
 #define RENDER RenderManager::GetInstance()
 
+class ComponentBase;
+
 enum class eRenderAlignMode : Uint8
 {
 	topLeft = 0b00,
@@ -35,16 +37,9 @@ public:
 	void Render();
 	void Destroy();
 
-	//void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pivot = {0.5f,0.5f}, const SDL_FRect* srcRect = nullptr) const;
-	//void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr) const;
-	//void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos, const glm::vec2& scale, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr) const;
 	void RenderTexture(const std::shared_ptr<Texture2D>& texture, const glm::vec2& pos = {0.f,0.f}, const glm::vec2& scale = { 1.f,1.f }, float rotation = 0, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr, int renderLayer = -1) const;
 
-	//void RenderTexture(const std::shared_ptr<RenderTarget>& texture, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr) const;
-	//void RenderTexture(const std::shared_ptr<RenderTarget>& texture, const glm::vec2& pos, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr) const;
-	//void RenderTexture(const std::shared_ptr<RenderTarget>& texture, const glm::vec2& pos, const glm::vec2& scale, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr) const;
 	void RenderTexture(const std::shared_ptr<RenderTarget>& texture, const glm::vec2& pos = { 0.f,0.f }, const glm::vec2& scale = { 1.f,1.f }, float rotation = 0, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr, int renderLayer = -1) const;
-
 
 	void SetRenderTarget(const std::shared_ptr<RenderTarget>& renderTarget) const;
 
@@ -52,16 +47,16 @@ public:
 
 	size_t GetRenderLayersAmount() const { return m_RenderLayers.size(); }
 
+	const std::vector<std::shared_ptr<RenderTarget>>& GetRenderLayers() const { return m_RenderLayers; }
+
 	std::mutex& GetOpenGlMutex() { return m_OpenGlLock; }
+
+	void AddGLCallAfterDrawing(const std::function<void()>& call);
 
 private:
 
 	void RenderTexture(GLuint glId, int width, int height, const glm::vec2& pos = { 0.f,0.f }, const glm::vec2& scale = { 1.f,1.f }, float rotation = 0, const glm::vec2& pivot = { 0.5f,0.5f }, const SDL_FRect* srcRect = nullptr, int renderLayer = -1) const;
 	
-	void RenderImGuiGameWindow() const;
-	void RenderImGuiRenderInfo();
-	void RenderHitboxes() const;
-
 	virtual ~RenderManager() = default;
 	RenderManager() = default;
 	
@@ -75,12 +70,9 @@ private:
 
 	std::vector<std::shared_ptr<RenderTarget>> m_RenderLayers;
 
-	std::shared_ptr<RenderTarget> m_ImGuiRenderTarget;
-
 	std::mutex m_OpenGlLock;
 
-	bool m_bKeepAspectRatio{ true };
-	bool m_bShowHitboxes{ false };
+	std::vector<std::function<void()>> m_PostDrawGLCalls;
 
 public:
 

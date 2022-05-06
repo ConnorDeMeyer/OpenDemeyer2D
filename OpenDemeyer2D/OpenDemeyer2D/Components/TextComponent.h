@@ -19,7 +19,7 @@ public:
 
 	void Update(float) override;
 
-	void BeginPlay() override;
+	void Initialize() override;
 
 	void SetFont(const std::shared_ptr<Font>& font);
 

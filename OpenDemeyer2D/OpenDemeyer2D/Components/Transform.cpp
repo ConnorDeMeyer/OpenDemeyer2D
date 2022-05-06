@@ -8,12 +8,12 @@
 
 void Transform::DefineUserFields(UserFieldBinder& binder) const
 {
-	binder.Add<glm::vec2>("position", offsetof(Transform, m_Position));
-	binder.Add<glm::vec2>("scale", offsetof(Transform, m_Scale));
-	binder.Add<float>("rotation", offsetof(Transform, m_Rotation));
+	binder.Add<glm::vec2>("position", offsetof(Transform, m_LocalPosition));
+	binder.Add<glm::vec2>("scale", offsetof(Transform, m_LocalScale));
+	binder.Add<float>("rotation", offsetof(Transform, m_LocalRotation));
 }
 
-void Transform::BeginPlay()
+void Transform::Initialize()
 {
 	UpdateLocalChanges();
 }
@@ -141,13 +141,15 @@ glm::vec2 GetScaleFromMat(const glm::mat3x3& matrix)
 	const float SquareSum1 = (matrix[0][1] * matrix[0][1]) + (matrix[1][1] * matrix[1][1]);
 
 	return
-	{ glm::sign(matrix[0][0]) * glm::sqrt(SquareSum0),
+	{	glm::sign(matrix[0][0]) * glm::sqrt(SquareSum0),
 		glm::sign(matrix[1][1]) * glm::sqrt(SquareSum1) };
 }
 
 float GetRotationFromMat(const glm::mat3x3& matrix)
 {
-	return atan2(matrix[1][0], matrix[1][1]);
+	constexpr float toRadian{ 1.f * 180.f / float(M_PI) };
+
+	return atan2(matrix[1][0], matrix[1][1]) * toRadian;
 }
 
 glm::mat3x3 TranslationMatrix(const glm::vec2& translation)
@@ -181,8 +183,10 @@ glm::mat3x3 RotationMatrix(float rotation)
 
 glm::mat3x3 TransformationMatrix(const glm::vec2& pos, const glm::vec2& scale, float rotation)
 {
-	float cosAngle{ cos(rotation) };
-	float sinAngle{ sin(rotation) };
+	constexpr float inverse180{ 1.f / 180.f * float(M_PI) };
+
+	float cosAngle{ cos(rotation * inverse180) };
+	float sinAngle{ sin(rotation * inverse180) };
 	return glm::mat3x3{
 		scale.x * cosAngle, -sinAngle * scale.x, pos.x,
 		scale.y * sinAngle, scale.y * cosAngle, pos.y,

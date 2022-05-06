@@ -1,25 +1,20 @@
 ﻿#include "OD2pch.h"
 #include "RenderManager.h"
 
-
-#include <b2_body.h>
-#include <b2_circle_shape.h>
-#include <b2_fixture.h>
-#include <b2_polygon_shape.h>
-
 #include "SceneManager.h"
 #include "ResourceManager.h"
 
 #include "SDL_image.h"
-#include "imgui.h"
-#include "backends/imgui_impl_sdl.h"
-#include "backends/imgui_impl_opengl3.h"
+
 #include <stdexcept>
 #include <gl/glew.h>
 #include <gl/wglew.h>
 
 #include "OpenDemeyer2D.h"
 #include "Scene.h"
+#include "ComponentBase.h"
+
+#include "GUIManager.h"
 
 int GetOpenGLDriverIndex()
 {
@@ -38,12 +33,15 @@ int GetOpenGLDriverIndex()
 void RenderManager::Init(SDL_Window* window)
 {
 	auto& settings = ENGINE.GetSettings();
-	
+
 	settings.GetData(OD_GAME_RESOLUTION_WIDTH, m_GameResWidth);
 	settings.GetData(OD_GAME_RESOLUTION_HEIGHT, m_GameResHeight);
-	settings.GetData(OD_KEEP_ASPECT_RATIO_EDITOR, m_bKeepAspectRatio);
-	
+
 	m_Window = window;
+
+	/**
+	* OPENGL
+	*/
 
 	// Create OpenGL context 
 	m_pContext = SDL_GL_CreateContext(window);
@@ -94,18 +92,6 @@ void RenderManager::Init(SDL_Window* window)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;			// Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;			// Enable Gamepad Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;				// Enable Docking
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;			// Enable Multi-Viewport / Platform Windows
-
-	ImGui_ImplSDL2_InitForOpenGL(window, SDL_GL_GetCurrentContext());
-	ImGui_ImplOpenGL3_Init("#version 130");
-
 	int renderLayers{};
 	settings.GetData(OD_RENDERER_LAYERS, renderLayers);
 	m_RenderLayers.reserve(renderLayers);
@@ -113,12 +99,10 @@ void RenderManager::Init(SDL_Window* window)
 	{
 		m_RenderLayers.emplace_back(RESOURCES.CreateRenderTexture(m_GameResWidth, m_GameResHeight));
 	}
-	m_ImGuiRenderTarget = RESOURCES.CreateRenderTexture(m_GameResWidth, m_GameResHeight);
 }
 
 void RenderManager::Render()
 {
-	std::scoped_lock<std::mutex> lock(m_OpenGlLock);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -130,9 +114,8 @@ void RenderManager::Render()
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(m_Window);
-	ImGui::NewFrame();
+	auto& gui = GUI;
+	gui.BeginGUI();
 
 	SetRenderTarget(m_RenderLayers[0]); {
 	glPushMatrix();
@@ -143,27 +126,23 @@ void RenderManager::Render()
 
 		SCENES.Render();
 
-		if (m_bShowHitboxes) RenderHitboxes();
+		gui.RenderGUIOnGame();
 
 	glPopMatrix();
 	} SetRenderTargetScreen();
 
-	SCENES.RenderImGui();
-	ENGINE.RenderStats();
-	ENGINE.RenderSettings();
-	RenderImGuiGameWindow();
-	RenderImGuiRenderInfo();
-	ImGui::Render();
+	gui.RenderGUI();
+	gui.EndGUI();
 
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	for (auto& call : m_PostDrawGLCalls)
+		call();
+	m_PostDrawGLCalls.clear();
 
 	SDL_GL_SwapWindow(m_Window);
 }
 
 void RenderManager::Destroy()
 {
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
 	SDL_GL_DeleteContext(m_pContext);
@@ -181,104 +160,7 @@ void RenderManager::RenderTexture(const std::shared_ptr<RenderTarget>& texture, 
 	RenderTexture(texture->GetRenderedTexture(), texture->GetWidth(), texture->GetHeight(), pos, scale, rotation, pivot, srcRect, renderTarget);
 }
 
-void RenderManager::RenderImGuiGameWindow() const
-{
-	bool isOpen{};
-	ImGui::Begin("Game", &isOpen, ImGuiWindowFlags_NoScrollbar);
 
-	float aspectRatio = float(m_GameResWidth) / float(m_GameResHeight);
-
-	auto pos = ImGui::GetWindowPos();
-	auto size = ImGui::GetWindowSize();
-	size.y -= 30; // add offset
-
-	if (m_bKeepAspectRatio)
-	{
-		ImVec2 newSize = { size.y * aspectRatio, size.y };
-		if (newSize.x > size.x)
-			newSize = { size.x, size.x / aspectRatio };
-		size = newSize;
-	}
-
-	SetRenderTarget(m_ImGuiRenderTarget);
-	for (auto& renderTarget : m_RenderLayers)
-	{
-		RenderTexture(renderTarget, glm::vec2{ 0,renderTarget->GetHeight() }, { 1,-1 }, 0, { 1,1 });
-	}
-	SetRenderTargetScreen();
-
-#pragma warning(disable : 4312)
-	ImGui::Image((ImTextureID)m_ImGuiRenderTarget->GetRenderedTexture(), size);
-#pragma warning(default : 4312)
-
-	ImGui::End();
-}
-
-void RenderManager::RenderImGuiRenderInfo()
-{
-	ImGui::Begin("Render Information");
-
-	float width = ImGui::GetWindowSize().x;
-
-	//bool renderHitboxes{ m_bShowHitboxes };
-	ImGui::Checkbox("Show hitboxes", &m_bShowHitboxes);
-
-	for (size_t i{}; i < m_RenderLayers.size(); ++i)
-	{
-		std::string text{ "Render Target " };
-		text += std::to_string(i);
-		ImGui::Text(text.c_str());
-
-		float aspectRatio = float(m_RenderLayers[i]->GetWidth()) / float(m_RenderLayers[i]->GetHeight());
-		
-#pragma warning(disable : 4312)
-		ImGui::Image((ImTextureID)m_RenderLayers[i]->GetRenderedTexture(), { width, width / aspectRatio });
-#pragma warning(default : 4312)
-	}
-
-	ImGui::End();
-}
-
-void RenderManager::RenderHitboxes() const
-{
-	static_assert(sizeof(b2Vec2) == sizeof(glm::vec2));
-
-	SetRenderTarget(m_RenderLayers.back());
-
-	auto pWorld = SCENES.GetActiveScene()->GetPhysicsWorld();
-
-	SetColor({ 255,55,255,200 });
-
-	for (auto pBody{ pWorld->GetBodyList() }; pBody; pBody = pBody->GetNext())
-	{
-		auto& position = pBody->GetPosition();
-		for (auto fixture{ pBody->GetFixtureList() }; fixture; fixture = fixture->GetNext())
-		{
-			switch (fixture->GetType())
-			{
-			case b2Shape::Type::e_polygon:
-				{
-					auto polygon = reinterpret_cast<b2PolygonShape*>(fixture->GetShape());
-					b2Vec2 positions[b2_maxPolygonVertices]{};
-					for (int32 i{}; i < polygon->m_count; ++i)
-					{
-						positions[i] = polygon->m_vertices[i] + position;
-					}
-					RenderPolygon(reinterpret_cast<glm::vec2*>(positions), polygon->m_count, true);
-				}
-				break;
-			case b2Shape::Type::e_circle:
-				{
-					auto circle = reinterpret_cast<b2CircleShape*>(fixture->GetShape());
-					glm::vec2 center = { position.x + circle->m_p.x,position.y + circle->m_p.y };
-					RenderEllipse(center, { circle->m_radius, circle->m_radius }, true);
-				}
-				break;
-			}
-		}
-			
-	}
-}
 
 void RenderManager::SetRenderTarget(const std::shared_ptr<RenderTarget>& renderTarget) const
 {
@@ -292,6 +174,11 @@ void RenderManager::SetRenderTargetScreen() const
 	glViewport(0, 0, m_WindowResWidth, m_WindowResHeight);
 }
 
+void RenderManager::AddGLCallAfterDrawing(const std::function<void()>& call)
+{
+	m_PostDrawGLCalls.emplace_back(call);
+}
+
 void RenderManager::RenderTexture(GLuint glId, int w, int h, const glm::vec2& pos, const glm::vec2& scale, float rotation,
 	const glm::vec2& pivot, const SDL_FRect* srcRect, int renderTarget) const
 {
@@ -300,74 +187,79 @@ void RenderManager::RenderTexture(GLuint glId, int w, int h, const glm::vec2& po
 		SetRenderTarget(m_RenderLayers[renderTarget]);
 	}
 
-	glPushMatrix();
 	{
-		//glTranslatef(pos.x, pos.y, 0);
-		glRotatef(static_cast<GLfloat>(rotation), 0, 0, 1);
-		//glScalef(scale.x, scale.y, scale.x);
+		float width = (srcRect) ? srcRect->w : static_cast<float>(w);
+		float height = (srcRect) ? srcRect->h : static_cast<float>(h);
 
+		glm::vec2 vertices[4]{};
+
+		// Vertex coordinates for centered orientation
+		float vertexLeft{ pivot.x - 1.f };
+		float vertexBottom{ pivot.y - 1.f };
+		float vertexRight{ pivot.x };
+		float vertexTop{ pivot.y };
+
+		vertexLeft *= width * scale.x;
+		vertexRight *= width * scale.x;
+		vertexTop *= height * scale.y;
+		vertexBottom *= height * scale.y;
+
+		constexpr float inverse180{ 1.f / 180.f * float(M_PI) };
+
+		float cosAngle = cos(rotation * inverse180);
+		float sinAngle = sin(rotation * inverse180);
+
+		vertices[0] = { vertexLeft * cosAngle - vertexBottom * sinAngle, vertexBottom * cosAngle + vertexLeft * sinAngle };
+		vertices[1] = { vertexLeft * cosAngle - vertexTop * sinAngle, vertexTop * cosAngle + vertexLeft * sinAngle };
+		vertices[2] = { vertexRight * cosAngle - vertexTop * sinAngle, vertexTop * cosAngle + vertexRight * sinAngle };
+		vertices[3] = { vertexRight * cosAngle - vertexBottom * sinAngle, vertexBottom * cosAngle + vertexRight * sinAngle };
+
+		vertices[0] += pos;
+		vertices[1] += pos;
+		vertices[2] += pos;
+		vertices[3] += pos;
+
+		// Texture coordinates
+		float textLeft{ 0 };
+		float textRight{ 1 };
+		float textBottom{ 1 };
+		float textTop{ 0 };
+
+		if (srcRect)
 		{
-			float width =	(srcRect) ? srcRect->w : static_cast<float>(w);
-			float height =	(srcRect) ? srcRect->h : static_cast<float>(h);
-
-			// Vertex coordinates for centered orientation
-			float vertexLeft	{ pivot.x - 1.f };
-			float vertexBottom	{ pivot.y - 1.f };
-			float vertexRight	{ pivot.x };
-			float vertexTop		{ pivot.y };
-
-			vertexLeft		*= width * scale.x;
-			vertexRight		*= width * scale.x;
-			vertexTop		*= height * scale.y;
-			vertexBottom	*= height * scale.y;
-
-			vertexLeft		+= pos.x;
-			vertexRight		+= pos.x;
-			vertexTop		+= pos.y;
-			vertexBottom	+= pos.y;
-
-			// Texture coordinates
-			float textLeft		{ 0 };
-			float textRight		{ 1 };
-			float textBottom	{ 1 };
-			float textTop		{ 0 };
-
-			if (srcRect)
-			{
-				textLeft	= srcRect->x / w;
-				textRight	= (srcRect->x + srcRect->w) / w;
-				textTop		= (srcRect->y) / h;
-				textBottom	= (srcRect->y + srcRect->h) / h;
-			}
-
-			// Tell opengl which texture we will use
-			glBindTexture(GL_TEXTURE_2D, glId);
-			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-			// Draw
-			glEnable(GL_TEXTURE_2D);
-			{
-				glBegin(GL_QUADS);
-				{
-					glTexCoord2f(textLeft, textBottom);
-					glVertex2f(vertexLeft, vertexBottom);
-
-					glTexCoord2f(textLeft, textTop);
-					glVertex2f(vertexLeft, vertexTop);
-
-					glTexCoord2f(textRight, textTop);
-					glVertex2f(vertexRight, vertexTop);
-
-					glTexCoord2f(textRight, textBottom);
-					glVertex2f(vertexRight, vertexBottom);
-				}
-				glEnd();
-			}
-			glDisable(GL_TEXTURE_2D);
+			textLeft = srcRect->x / w;
+			textRight = (srcRect->x + srcRect->w) / w;
+			textTop = (srcRect->y) / h;
+			textBottom = (srcRect->y + srcRect->h) / h;
 		}
 
+
+		// Tell opengl which texture we will use
+		glBindTexture(GL_TEXTURE_2D, glId);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+		// Draw
+		glEnable(GL_TEXTURE_2D);
+		{
+			glBegin(GL_QUADS);
+			{
+				glTexCoord2f(textLeft, textBottom);
+				glVertex2f(vertices[0].x, vertices[0].y);
+
+				glTexCoord2f(textLeft, textTop);
+				glVertex2f(vertices[1].x, vertices[1].y);
+
+				glTexCoord2f(textRight, textTop);
+				glVertex2f(vertices[2].x, vertices[2].y);
+
+				glTexCoord2f(textRight, textBottom);
+				glVertex2f(vertices[3].x, vertices[3].y);
+			}
+			glEnd();
+		}
+		glDisable(GL_TEXTURE_2D);
 	}
-	glPopMatrix();
+
 
 	//SetRenderTargetScreen();
 }

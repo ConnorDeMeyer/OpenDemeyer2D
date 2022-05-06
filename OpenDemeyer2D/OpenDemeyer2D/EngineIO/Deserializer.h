@@ -6,21 +6,15 @@
 #include <unordered_map>
 #include <functional>
 #include <typeindex>
+#include <memory>
 
 class Scene;
 class ComponentBase;
 class GameObject;
 
-class DeserializerBase
+class Deserializer
 {
 public:
-
-	//static void DeserializeGame(const std::string& file);
-	//static void DeserializeGame(std::istream& stream);
-	//static Scene* DeserializeScene(const std::string& file);
-	//static Scene* DeserializeScene(std::istream& stream);
-	//static GameObject* DeserializeObject(const std::string& file);
-	//static GameObject* DeserializeObject(std::istream& stream);
 
 	/** 
 	* Register the object so others may be able to use it at a reference
@@ -28,11 +22,13 @@ public:
 	*/
 	void RegisterGameObject(unsigned int streamId, GameObject* object);
 
-	void GetComponentFromObject(std::type_index typeId, unsigned int objectId, ComponentBase** ComponentAddress);
+	void GetComponentFromObject(std::type_index typeId, unsigned int objectId, std::weak_ptr<ComponentBase>* ComponentAddress);
 
-	virtual void DeserializeGame() = 0;
-	virtual Scene* DeserializeScene() = 0;
-	virtual GameObject* DeserializeObject() = 0;
+	void DeserializeGame(std::istream& iStream);
+	Scene* DeserializeScene(std::istream& iStream);
+	GameObject* DeserializeObject(std::istream& iStream);
+
+	std::istream* GetStream() { return m_pIStream; }
 
 private:
 
@@ -42,81 +38,18 @@ private:
 	struct LinkingInfo
 	{
 		unsigned int objectId; // the object id from the object that contains the component
-		ComponentBase** addressOfReference; // the address of where the reference to the component will be stored
+		std::weak_ptr<ComponentBase>* addressOfReference; // the address of where the reference to the component will be stored
 		std::type_index typeId; //type id of the component its supposed to get
 	};
 
 private:
 
+	std::istream* m_pIStream{};
+
 	std::vector<LinkingInfo> m_LinkingInfos;
 
 	std::unordered_map<unsigned int, GameObject*> m_RegisteredObjects;
 };
-
-class FileDeserializer final : public std::ifstream, public DeserializerBase
-{
-	/**
-	* std::Ifstream constructors
-	*/
-	FileDeserializer() = default;
-	explicit FileDeserializer(const char* filename, std::ios_base::openmode mode = std::ios_base::in)
-		: std::ifstream(filename, mode)
-	{}
-	explicit FileDeserializer(const std::string& filename, std::ios_base::openmode mode = std::ios_base::in)
-		: std::ifstream(filename, mode)
-	{}
-	explicit FileDeserializer(const wchar_t* filename, std::ios_base::openmode mode = std::ios_base::in)
-		: std::ifstream(filename, mode)
-	{}
-	explicit FileDeserializer(const std::wstring& filename, std::ios_base::openmode mode = std::ios_base::in)
-		: std::ifstream(filename, mode)
-	{}
-	explicit FileDeserializer(const unsigned short* filename, std::ios_base::openmode mode = std::ios_base::in)
-		: std::ifstream(filename, mode)
-	{}
-	FileDeserializer(FILE* _File)
-		: std::ifstream(_File)
-	{}
-	FileDeserializer(FileDeserializer&& x) noexcept
-		: std::ifstream(std::move(x))
-	{}
-
-	/**
-	* Deserializer Interfaces
-	*/
-
-	void DeserializeGame() override;
-	Scene* DeserializeScene() override;
-	GameObject* DeserializeObject() override;
-};
-
-//TODO complete string parser
-//class StringDeserializer final : public std::istringstream, public DeserializerBase
-//{
-//	/**
-//	* std::IStringstream constructors
-//	*/
-//	StringDeserializer(StringDeserializer&& x)
-//		: std::istringstream(std::move(x))
-//	{}
-//	explicit StringDeserializer(std::ios_base::openmode which = std::ios_base::in)
-//		: std::istringstream(which)
-//	{}
-//	explicit StringDeserializer(const std::string& str, std::ios_base::openmode which = std::ios_base::in)
-//		: std::istringstream(str, which)
-//	{}
-//	explicit StringDeserializer(std::string&& str, std::ios_base::openmode which = std::ios_base::in)
-//		: std::istringstream(std::move(str), which)
-//	{}
-//
-//	/**
-//	* Deserializer Interfaces
-//	*/
-//
-//	void DeserializeGame() override;
-//	Scene* DeserializeScene() override;
-//	GameObject* DeserializeObject() override;
-//};
 
 struct ParsingError : public std::exception
 {
@@ -133,7 +66,7 @@ struct ParsingError : public std::exception
 	}
 };
 
-__forceinline bool CanContinue(std::istream& stream)
+inline bool CanContinue(std::istream& stream)
 {
 	char buffer{};
 	stream >> buffer;
@@ -142,13 +75,30 @@ __forceinline bool CanContinue(std::istream& stream)
 	return buffer == '{';
 }
 
-__forceinline bool IsEnd(std::istream& stream)
+inline char PeekNextChar(std::istream& stream)
 {
-	if (stream.peek() == '}')
+	char buffer{};
+	stream >> buffer;
+	stream.unget();
+	return buffer;
+}
+
+inline bool IsEnd(std::istream& stream)
+{
+	if (PeekNextChar(stream) == '}')
 	{
 		char buffer{};
 		stream >> buffer;
 		return true;
 	}
 	return false;
+}
+
+//https://www.cplusplus.com/forum/beginner/251052/
+inline void TrimWhitespace(std::string& string)
+{
+	constexpr const char* whiteSpace{ " \t\v\r\n" };
+	int begin = string.find_first_not_of(whiteSpace);
+	int end = string.find_last_not_of(whiteSpace);
+	string = begin == end ? std::string() : string.substr(begin, end - begin + 1);
 }

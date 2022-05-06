@@ -12,7 +12,7 @@ public:
 
 	virtual void DefineUserFields(UserFieldBinder& binder) const;
 
-	void BeginPlay() override;
+	void Initialize() override;
 
 	void Update(float) override;
 
@@ -45,6 +45,10 @@ public:
 	Delegate<> OnAnimationEnd;
 
 	//const std::string GetComponentName() override { return "SpriteComponent"; }
+
+private:
+
+	void UpdateSourceRect();
 
 private:
 

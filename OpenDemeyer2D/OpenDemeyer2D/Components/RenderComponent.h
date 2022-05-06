@@ -18,7 +18,7 @@ public:
 
 	void Render() const;
 
-	void BeginPlay() override;
+	void Initialize() override;
 
 	void SetTexture(std::shared_ptr<Texture2D> texture);
 
@@ -35,6 +35,9 @@ public:
 	void SetRenderLayer(int renderLayer) { m_RenderLayer = renderLayer; }
 
 	int GetRenderLayer() const { return m_RenderLayer; }
+
+	// array to 4 vec2 that will be filled with the vertex positions
+	glm::vec2* GetWorldRect(glm::vec2* vertices4) const;
 
 private:
 

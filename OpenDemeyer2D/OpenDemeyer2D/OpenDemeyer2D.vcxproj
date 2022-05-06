@@ -206,7 +206,6 @@
     <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.cpp" />
     <ClCompile Include="..\3rdParty\DearImGui\imgui.cpp" />
-    <ClCompile Include="..\3rdParty\DearImGui\imgui_demo.cpp" />
     <ClCompile Include="..\3rdParty\DearImGui\imgui_draw.cpp" />
     <ClCompile Include="..\3rdParty\DearImGui\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\DearImGui\imgui_widgets.cpp" />
@@ -221,6 +220,7 @@
     <ClCompile Include="EngineIO\CustomSerializers.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectTemplates.h" />
+    <ClCompile Include="GUIManager.cpp" />
     <ClCompile Include="OpenDemeyer2D.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -254,11 +254,14 @@
     <ClInclude Include="Dictionary.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EngineIO\TypeInformation.h" />
+    <ClInclude Include="EngineStyle.h" />
     <ClInclude Include="EventQueue.h" />
     <ClInclude Include="EngineIO\CustomSerializers.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameInstance.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GUIManager.h" />
+    <ClInclude Include="imgui_helpers.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="OpenDemeyer2D.h" />
     <ClInclude Include="RenderManager.h" />

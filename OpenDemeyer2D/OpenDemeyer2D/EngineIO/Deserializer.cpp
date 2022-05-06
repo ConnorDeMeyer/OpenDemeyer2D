@@ -36,17 +36,17 @@
 //	}
 //}
 
-void DeserializerBase::RegisterGameObject(unsigned int streamId, GameObject* object)
+void Deserializer::RegisterGameObject(unsigned int streamId, GameObject* object)
 {
 	m_RegisteredObjects.emplace(streamId, object);
 }
 
-void DeserializerBase::GetComponentFromObject(std::type_index typeId, unsigned int objectId, ComponentBase** ComponentAddress)
+void Deserializer::GetComponentFromObject(std::type_index typeId, unsigned int objectId, std::weak_ptr<ComponentBase>* ComponentAddress)
 {
 	auto it = m_RegisteredObjects.find(objectId);
 	if (it != m_RegisteredObjects.end())
 	{
-		*ComponentAddress = it->second->GetComponentById(typeId);
+		*ComponentAddress = it->second->GetComponentById(typeId)->GetWeakReference();
 	}
 	else // if the object hasn't been parsed yet keep the information inside m_LinkingInfos
 	{
@@ -58,18 +58,109 @@ void DeserializerBase::GetComponentFromObject(std::type_index typeId, unsigned i
 	}
 }
 
-void FileDeserializer::DeserializeGame()
+void Deserializer::DeserializeGame(std::istream& iStream)
 {
-	
+	m_pIStream = &iStream;
+
+	while (PeekNextChar(iStream) == '{')
+	{
+		while (CanContinue(*this->GetStream()))
+		{
+			std::string name;
+			iStream >> name;
+			auto& scene = SCENES.CreateScene(name);
+
+			scene.Deserialize(*this);
+		}
+		for (auto& link : m_LinkingInfos)
+		{
+			auto it = m_RegisteredObjects.find(link.objectId);
+			if (it != m_RegisteredObjects.end())
+			{
+				*link.addressOfReference = it->second->GetComponentById(link.typeId)->GetWeakReference();
+			}
+		}
+
+		m_RegisteredObjects.clear();
+		m_LinkingInfos.clear();
+	}
+
+	m_pIStream = nullptr;
 }
 
-Scene* FileDeserializer::DeserializeScene()
+Scene* Deserializer::DeserializeScene(std::istream& iStream)
 {
-	return nullptr;
+	m_pIStream = &iStream;
+
+	Scene* pScene{};
+	if (iStream.good())
+	{
+		while (CanContinue(*this->GetStream()))
+		{
+			std::string name;
+			iStream >> name;
+			pScene = new Scene(name);
+			pScene->Deserialize(*this);
+		}
+	}
+
+	for (auto& link : m_LinkingInfos)
+	{
+		auto it = m_RegisteredObjects.find(link.objectId);
+		if (it != m_RegisteredObjects.end())
+		{
+			*link.addressOfReference = it->second->GetComponentById(link.typeId)->GetWeakReference();
+		}
+	}
+
+	m_RegisteredObjects.clear();
+	m_LinkingInfos.clear();
+	m_pIStream = nullptr;
+
+	return pScene;
 }
 
-GameObject* FileDeserializer::DeserializeObject()
+GameObject* Deserializer::DeserializeObject(std::istream& iStream)
 {
-	return nullptr;
+	m_pIStream = &iStream;
+
+	GameObject* pObject{};
+	if (iStream.good())
+	{
+		pObject = new GameObject();
+		pObject->Deserialize(*this);
+	}
+
+	for (auto& link : m_LinkingInfos)
+	{
+		auto it = m_RegisteredObjects.find(link.objectId);
+		if (it != m_RegisteredObjects.end())
+		{
+			*link.addressOfReference = it->second->GetComponentById(link.typeId)->GetWeakReference();
+		}
+	}
+
+	m_RegisteredObjects.clear();
+	m_LinkingInfos.clear();
+	m_pIStream = nullptr;
+
+	return pObject;
 }
+
+//void FileDeserializer::DeserializeGame()
+//{
+//	if (good())
+//	{
+//		while (CanContinue(*this))
+//		{
+//			std::string name;
+//			*this >> name;
+//			auto& scene = SCENES.CreateScene(name);
+//
+//			scene.Deserialize(*this);
+//		}
+//	}
+//}
+
+
 

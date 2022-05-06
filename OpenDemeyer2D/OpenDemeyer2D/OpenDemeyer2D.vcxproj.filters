@@ -56,9 +56,6 @@
     <ClCompile Include="..\3rdParty\DearImGui\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="..\3rdParty\DearImGui\imgui_demo.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="..\3rdParty\DearImGui\imgui_draw.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -97,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="EngineIO\Deserializer.cpp">
       <Filter>EngineFiles\FileIO</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIManager.cpp">
+      <Filter>EngineFiles\Singletons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +223,15 @@
     </ClInclude>
     <ClInclude Include="EngineIO\Deserializer.h">
       <Filter>EngineFiles\FileIO</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineStyle.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIManager.h">
+      <Filter>EngineFiles\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_helpers.h">
+      <Filter>ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,2 +1,6 @@
 ﻿  Scanning sources for module dependencies...
-  CustomSerializers.cpp
+  GUIManager.cpp
+  SceneManager.cpp
+  Deserializer.cpp
+  Generating Code...
+  OpenDemeyer2D.vcxproj -> C:\Users\conno\source\repos\OpenDemeyer2D\OpenDemeyer2D\lib\Win32\Debug\OpenDemeyer2D.lib

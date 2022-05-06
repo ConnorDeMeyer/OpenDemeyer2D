@@ -8,12 +8,30 @@
 
 void SceneManager::Update(float deltaTime)
 {
-	m_pActiveScene->Update(deltaTime);
+	if (m_pActiveScene)
+		m_pActiveScene->Update(deltaTime);
+}
+
+void SceneManager::PreUpdate(bool isPlaying)
+{
+	for (Scene* pScene : m_Scenes)
+	{
+		pScene->PreUpdate(isPlaying);
+	}
+}
+
+void SceneManager::AfterUpdate()
+{
+	for (Scene* pScene : m_Scenes)
+	{
+		pScene->AfterUpdate();
+	}
 }
 
 void SceneManager::Render() const
 {
-	m_pActiveScene->Render();
+	if (m_pActiveScene)
+		m_pActiveScene->Render();
 }
 
 Scene& SceneManager::CreateScene(const std::string& name)
@@ -51,27 +69,43 @@ void SceneManager::SetActiveScene(Scene* pScene)
 	m_pActiveScene = pScene;
 }
 
-void SceneManager::RenderImGui()
-{
-	bool isOpen{};
-	ImGui::Begin("SceneGraph", &isOpen);
-
-	if (!isOpen) {
-		
-		for (Scene* pScene : m_Scenes)
-		{
-			pScene->RenderImGui();
-		}
-	}
-
-	ImGui::End();
-}
-
 void SceneManager::PhysicsStep(float timeStep, int velocityIterations, int positionIterations)
 {
-	b2World* physicsWorld = m_pActiveScene->GetPhysicsWorld();
-	physicsWorld->Step(timeStep, velocityIterations, positionIterations);
-	physicsWorld->ClearForces();
+	if (m_pActiveScene) {
+		b2World* physicsWorld = m_pActiveScene->GetPhysicsWorld();
+		physicsWorld->Step(timeStep, velocityIterations, positionIterations);
+		physicsWorld->ClearForces();
+	}
+}
+
+void SceneManager::RemoveScene(Scene* pScene)
+{
+	for (size_t i{}; i < m_Scenes.size(); ++i)
+	{
+		if (pScene == m_Scenes[i])
+		{
+			m_Scenes[i] = m_Scenes.back();
+			m_Scenes.pop_back();
+			if (m_pActiveScene == pScene)
+				m_pActiveScene = nullptr;
+			delete pScene;
+			return;
+		}
+	}
+}
+
+void SceneManager::RemoveAllScenes()
+{
+	for (auto pScene : m_Scenes)
+	{
+		delete pScene;
+	}
+	m_Scenes.clear();
+}
+
+void SceneManager::RemoveActiveScene()
+{
+	RemoveScene(m_pActiveScene);
 }
 
 void SceneManager::Serialize(std::ostream& os)
@@ -90,4 +124,44 @@ SceneManager::~SceneManager()
 	{
 		delete pScene;
 	}
+}
+
+void SceneManager::RenderImGui()
+{
+	ImGui::Begin("SceneGraph");
+	static char buffer[32]{};
+
+	if (ImGui::Button("Create Scene"))
+	{
+		ImGui::OpenPopup("Create Scene");
+	}
+
+	if (ImGui::BeginTabBar("Scenes"))
+	{
+		for (Scene* pScene : m_Scenes)
+		{
+			ImGui::PushID(pScene);
+			pScene->RenderImGui();
+			ImGui::PopID();
+		}
+		ImGui::EndTabBar();
+	}
+
+	if (ImGui::BeginPopupModal("Create Scene", 0, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::InputText("name", buffer, 32);
+		if (ImGui::Button("Create"))
+		{
+			CreateScene(std::string(buffer));
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+
+	ImGui::End();
 }

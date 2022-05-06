@@ -11,8 +11,8 @@ public:
 	virtual ~Transform() = default;
 
 public:
-
-	void BeginPlay() override;
+	
+	void Initialize() override;
 
 	void RenderImGui() override;
 
