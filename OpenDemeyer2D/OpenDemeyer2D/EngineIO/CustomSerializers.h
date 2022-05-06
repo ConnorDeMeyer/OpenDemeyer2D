@@ -7,11 +7,11 @@
 
 #include <SDL_rect.h>
 
-#include "Texture2D.h"
-#include "Surface2D.h"
-#include "Sound.h"
+#include "ResourceWrappers/Texture2D.h"
+#include "ResourceWrappers/Surface2D.h"
+#include "ResourceWrappers/Sound.h"
 
-#include "ComponentBase.h"
+#include "EngineFiles/ComponentBase.h"
 #include "Deserializer.h"
 
 // GLM

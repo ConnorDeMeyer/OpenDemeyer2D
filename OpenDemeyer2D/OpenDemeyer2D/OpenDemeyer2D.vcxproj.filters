@@ -22,25 +22,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>EngineFiles\Singletons</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>EngineFiles\Singletons</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderManager.cpp">
-      <Filter>EngineFiles\Singletons</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>EngineFiles\Singletons</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>EngineFiles</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>EngineFiles</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenDemeyer2D.cpp" />
     <ClCompile Include="Components\RenderComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
@@ -80,14 +61,8 @@
     <ClCompile Include="Components\PhysicsComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
-    <ClCompile Include="SteamAPI.cpp">
-      <Filter>EngineFiles</Filter>
-    </ClCompile>
     <ClCompile Include="Components\TextPixelComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectTemplates.h">
-      <Filter>EngineFiles</Filter>
     </ClCompile>
     <ClCompile Include="EngineIO\CustomSerializers.cpp">
       <Filter>EngineFiles\FileIO</Filter>
@@ -95,47 +70,18 @@
     <ClCompile Include="EngineIO\Deserializer.cpp">
       <Filter>EngineFiles\FileIO</Filter>
     </ClCompile>
-    <ClCompile Include="GUIManager.cpp">
-      <Filter>EngineFiles\Singletons</Filter>
-    </ClCompile>
+    <ClCompile Include="Singletons\GUIManager.cpp" />
+    <ClCompile Include="Singletons\InputManager.cpp" />
+    <ClCompile Include="Singletons\OpenDemeyer2D.cpp" />
+    <ClCompile Include="Singletons\RenderManager.cpp" />
+    <ClCompile Include="Singletons\ResourceManager.cpp" />
+    <ClCompile Include="Singletons\SceneManager.cpp" />
+    <ClCompile Include="EngineFiles\GameObject.cpp" />
+    <ClCompile Include="EngineFiles\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ODArray.h">
-      <Filter>UtilityFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="Singleton.h">
-      <Filter>UtilityFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>EngineFiles\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
-      <Filter>EngineFiles\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderManager.h">
-      <Filter>EngineFiles\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>EngineFiles\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture2D.h">
-      <Filter>UtilityFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>EngineFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>EngineFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentBase.h">
-      <Filter>EngineFiles</Filter>
-    </ClInclude>
     <ClInclude Include="Components\Transform.h">
       <Filter>EngineFiles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenDemeyer2D.h" />
-    <ClInclude Include="Font.h">
-      <Filter>UtilityFiles</Filter>
     </ClInclude>
     <ClInclude Include="Components\RenderComponent.h">
       <Filter>EngineFiles\Components</Filter>
@@ -145,12 +91,6 @@
     </ClInclude>
     <ClInclude Include="Components\TextureComponent.h">
       <Filter>EngineFiles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Delegate.h">
-      <Filter>UtilityFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderTarget.h">
-      <Filter>UtilityFiles</Filter>
     </ClInclude>
     <ClInclude Include="..\3rdParty\DearImGui\imconfig.h">
       <Filter>ImGui</Filter>
@@ -179,18 +119,6 @@
     <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Dictionary.h">
-      <Filter>UtilityFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="ICommand.h">
-      <Filter>UtilityFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="EventQueue.h">
-      <Filter>UtilityFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="GameInstance.h">
-      <Filter>EngineFiles</Filter>
-    </ClInclude>
     <ClInclude Include="Components\SpriteComponent.h">
       <Filter>EngineFiles\Components</Filter>
     </ClInclude>
@@ -200,20 +128,8 @@
     <ClInclude Include="Components\PhysicsComponent.h">
       <Filter>EngineFiles\Components</Filter>
     </ClInclude>
-    <ClInclude Include="SteamAPI.h">
-      <Filter>EngineFiles</Filter>
-    </ClInclude>
     <ClInclude Include="Components\TextPixelComponent.h">
       <Filter>EngineFiles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Surface2D.h">
-      <Filter>UtilityFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="Sound.h">
-      <Filter>UtilityFiles</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>EngineFiles</Filter>
     </ClInclude>
     <ClInclude Include="EngineIO\CustomSerializers.h">
       <Filter>EngineFiles\FileIO</Filter>
@@ -224,18 +140,34 @@
     <ClInclude Include="EngineIO\Deserializer.h">
       <Filter>EngineFiles\FileIO</Filter>
     </ClInclude>
-    <ClInclude Include="EngineStyle.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIManager.h">
-      <Filter>EngineFiles\Singletons</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_helpers.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="OD2pch.h" />
+    <ClInclude Include="UtilityFiles\Delegate.h" />
+    <ClInclude Include="UtilityFiles\Dictionary.h" />
+    <ClInclude Include="UtilityFiles\EventQueue.h" />
+    <ClInclude Include="UtilityFiles\ICommand.h" />
+    <ClInclude Include="UtilityFiles\ODArray.h" />
+    <ClInclude Include="UtilityFiles\RenderTarget.h" />
+    <ClInclude Include="UtilityFiles\Singleton.h" />
+    <ClInclude Include="UtilityFiles\Surface2D.h" />
+    <ClInclude Include="UtilityFiles\Texture2D.h" />
+    <ClInclude Include="Singletons\GUIManager.h" />
+    <ClInclude Include="Singletons\InputManager.h" />
+    <ClInclude Include="Singletons\OpenDemeyer2D.h" />
+    <ClInclude Include="Singletons\RenderManager.h" />
+    <ClInclude Include="Singletons\ResourceManager.h" />
+    <ClInclude Include="Singletons\SceneManager.h" />
+    <ClInclude Include="EngineFiles\Component.h" />
+    <ClInclude Include="EngineFiles\ComponentBase.h" />
+    <ClInclude Include="EngineFiles\GameInstance.h" />
+    <ClInclude Include="EngineFiles\GameObject.h" />
+    <ClInclude Include="EngineFiles\Scene.h" />
+    <ClInclude Include="EngineIO\Reflection.h" />
+    <ClInclude Include="ImGuiExt\EngineStyle.h" />
+    <ClInclude Include="ImGuiExt\imgui_helpers.h" />
+    <ClInclude Include="ResourceWrappers\Font.h" />
+    <ClInclude Include="ResourceWrappers\Sound.h" />
+    <ClInclude Include="ResourceWrappers\RenderTarget.h" />
+    <ClInclude Include="ResourceWrappers\Surface2D.h" />
+    <ClInclude Include="ResourceWrappers\Texture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="engineconfig.ini" />

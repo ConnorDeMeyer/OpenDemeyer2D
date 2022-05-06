@@ -1,12 +1,11 @@
-#include "../OD2pch.h"
 #include "TextureComponent.h"
 
 #include "imgui.h"
 #include "RenderComponent.h"
-#include "../GameObject.h"
-#include "../ResourceManager.h"
+#include "EngineFiles/GameObject.h"
+#include "Singletons/ResourceManager.h"
 
-#include "../RenderManager.h"
+#include "Singletons/RenderManager.h"
 
 void TextureComponent::DefineUserFields(UserFieldBinder& binder) const
 {

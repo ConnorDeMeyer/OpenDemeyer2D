@@ -1,11 +1,11 @@
-#include "../OD2pch.h"
 #include "TextComponent.h"
 
-#include "../GameObject.h"
+#include "EngineFiles/GameObject.h"
 #include "RenderComponent.h"
-#include "../Font.h"
-#include "../ResourceManager.h"
-#include "../RenderManager.h"
+#include "ResourceWrappers/Font.h"
+#include "Singletons/ResourceManager.h"
+#include "Singletons/RenderManager.h"
+#include "imgui.h"
 
 
 void TextComponent::Update(float)

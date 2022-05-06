@@ -1,9 +1,8 @@
-#include "../OD2pch.h"
 #include "Transform.h"
 
-#include "../GameObject.h"
+#include "EngineFiles/GameObject.h"
 #include "imgui.h"
-#include "../Dictionary.h"
+#include "UtilityFiles/Dictionary.h"
 
 
 void Transform::DefineUserFields(UserFieldBinder& binder) const

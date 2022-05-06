@@ -1,5 +1,7 @@
 ﻿#include "InputComponent.h"
-#include "../InputManager.h"
+#include "Singletons/InputManager.h"
+#include <functional>
+#include <SDL.h>
 
 #include "imgui.h"
 

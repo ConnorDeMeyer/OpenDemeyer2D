@@ -1,22 +1,17 @@
 ﻿#include "BurgerTimeGI.h"
-#include "SceneManager.h"
-#include "GameObject.h"
-#include "OD2pch.h"
-#include "Scene.h"
+#include "Singletons/SceneManager.h"
+#include "EngineFiles/GameObject.h"
+#include "EngineFiles/Scene.h"
 #include "Components/RenderComponent.h"
 #include "Components/SpriteComponent.h"
-#include "HealthComponent.h"
-#include "ResourceManager.h"
+#include "Singletons/ResourceManager.h"
 #include "Components/PhysicsComponent.h"
 #include "Components/TextPixelComponent.h"
 #include "Components/Transform.h"
 #include "GameplayPrefabs.h"
-#include "Stage.h"
-#include "SoundLoaderTest.h"
 
 #include <steam_api.h>
 
-#include "SteamAPI.h"
 #include "EngineIO/Deserializer.h"
 
 

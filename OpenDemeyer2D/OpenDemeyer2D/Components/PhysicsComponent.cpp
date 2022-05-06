@@ -5,8 +5,8 @@
 #include <b2_polygon_shape.h>
 #include "Components/Transform.h"
 
-#include "../Scene.h"
-#include "../OpenDemeyer2D.h"
+#include "EngineFiles/Scene.h"
+#include "Singletons/OpenDemeyer2D.h"
 
 
 void PhysicsComponent::DefineUserFields(UserFieldBinder&) const

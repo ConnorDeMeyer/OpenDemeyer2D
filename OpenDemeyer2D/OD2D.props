@@ -5,19 +5,53 @@
 	<PropertyGroup />
 	<ItemDefinitionGroup>
 		<Link>
-			<AdditionalLibraryDirectories>$(SolutionDir)3rdParty\glew-2.1.0\lib\Release\$(Platform);$(SolutionDir)3rdParty\box2d\lib\$(Platform)\$(Configuration);$(SolutionDir)lib\$(Platform)\$(Configuration);$(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform);</AdditionalLibraryDirectories>
-			<AdditionalDependencies>xinput.lib;glew32.lib;glew32s.lib;opengl32.lib;glu32.lib;OpenDemeyer2D.lib;box2d.lib;steam_api.lib;%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalLibraryDirectories>;
+$(SolutionDir)3rdParty\glew-2.1.0\lib\Release\$(Platform);
+$(SolutionDir)3rdParty\box2d\lib\$(Platform)\$(Configuration);
+$(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget);
+$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget);
+$(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget);
+$(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget);
+%(AdditionalLibraryDirectories)
+			</AdditionalLibraryDirectories>
+			<AdditionalDependencies>;
+xinput.lib;
+glew32.lib;
+glew32s.lib;
+opengl32.lib;
+glu32.lib;
+box2d.lib;
+SDL2_mixer.lib;
+SDL2.lib;
+SDL2main.lib;
+SDL2_image.lib;
+SDL2_ttf.lib;
+%(AdditionalDependencies)
+			</AdditionalDependencies>
 		</Link>
 		<ClCompile>
-			<AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\OpenDemeyer2D;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;
+			<AdditionalIncludeDirectories>;
+$(SolutionDir)\3rdParty\glew-2.1.0\include;
+$(SolutionDir)\3rdParty\DearImGui;
+$(SolutionDir)\3rdParty\box2d\include;
+$(SolutionDir)\OpenDemeyer2D;
+$(SolutionDir)\3rdParty\steamworks\public\steam;
+$(SolutionDir)3rdParty\SDL2_Mixer\include;
+$(SolutionDir)3rdParty\SDL2_ttf\include;
+$(SolutionDir)3rdParty\SDL2_image\include;
+$(SolutionDir)3rdParty\glm;
+$(SolutionDir)3rdParty\SDL2\include;
 			</AdditionalIncludeDirectories>
 		</ClCompile>
 		<PostBuildEvent>
-			<Command>xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
+			<Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform)*.dll $(OutputPath) /Y
-xcopy $(SolutionDir)OpenDemeyer2D\steam_appid.txt $(OutputPath) /R /Y
-xcopy $(SolutionDir)OpenDemeyer2D\imgui.ini $(OutputPath) /R /Y
-xcopy $(SolutionDir)OpenDemeyer2D\Engineconfig.ini $(OutputPath) /R /Y</Command>
+xcopy $(ProjectDir)imgui.ini $(OutputPath) /R /Y
+xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
 		</PostBuildEvent>
 	</ItemDefinitionGroup>
 	<ItemGroup />

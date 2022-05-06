@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "Component.h"
-#include "../InputManager.h"
+#include "EngineFiles/Component.h"
+#include "Singletons/InputManager.h"
 
 class InputComponent : public Component<InputComponent>
 {

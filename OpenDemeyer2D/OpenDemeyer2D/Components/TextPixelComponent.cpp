@@ -1,9 +1,9 @@
 ﻿#include "TextPixelComponent.h"
-#include "../GameObject.h"
+#include "EngineFiles/GameObject.h"
 #include "RenderComponent.h"
-#include "../ResourceManager.h"
-#include "../RenderManager.h"
-#include "../Surface2D.h"
+#include "Singletons/ResourceManager.h"
+#include "Singletons/RenderManager.h"
+#include "ResourceWrappers/Surface2D.h"
 
 #include "imgui.h"
 

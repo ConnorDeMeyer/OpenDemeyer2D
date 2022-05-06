@@ -1,9 +1,9 @@
 ﻿#include "CustomSerializers.h"
-#include "Scene.h"
-#include "Component.h"
-#include "ComponentBase.h"
+#include "EngineFiles/Scene.h"
+#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "TypeInformation.h"
-#include "GameObject.h"
+#include "EngineFiles/GameObject.h"
 
 #include <stack>
 #include <fstream>
@@ -13,7 +13,7 @@
 #include <sstream>
 #include "CustomSerializers.h"
 
-#include "ResourceManager.h"
+#include "Singletons/ResourceManager.h"
 
 
 std::ostream& operator<<(std::ostream& stream, const glm::vec2& vec)

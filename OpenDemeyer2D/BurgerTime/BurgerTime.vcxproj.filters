@@ -10,81 +10,37 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BurgerTimeGI.cpp" />
-    <ClCompile Include="PPSpriteMovement.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerResources.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PeterPepper.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerUI.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="GameplayPrefabs.cpp">
       <Filter>Prefabs</Filter>
     </ClCompile>
-    <ClCompile Include="Stage.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="BurgerPiece.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="StageMovement.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Score.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="HealthComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundLoaderTest.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
+    <ClCompile Include="Components\BurgerPiece.cpp" />
+    <ClCompile Include="Components\Enemy.cpp" />
+    <ClCompile Include="Components\HealthComponent.cpp" />
+    <ClCompile Include="Components\PeterPepper.cpp" />
+    <ClCompile Include="Components\PlayerResources.cpp" />
+    <ClCompile Include="Components\PlayerUI.cpp" />
+    <ClCompile Include="Components\PPSpriteMovement.cpp" />
+    <ClCompile Include="Components\Score.cpp" />
+    <ClCompile Include="Components\SoundLoaderTest.cpp" />
+    <ClCompile Include="Components\Stage.cpp" />
+    <ClCompile Include="Components\StageMovement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimeGI.h" />
-    <ClInclude Include="PPSpriteMovement.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerResources.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="PeterPepper.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerUI.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="GameplayPrefabs.h">
       <Filter>Prefabs</Filter>
     </ClInclude>
-    <ClInclude Include="Stage.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="BurgerPiece.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="StageMovement.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Score.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="HealthComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundLoaderTest.h">
-      <Filter>Components</Filter>
-    </ClInclude>
+    <ClInclude Include="Components\BurgerPiece.h" />
+    <ClInclude Include="Components\Enemy.h" />
+    <ClInclude Include="Components\HealthComponent.h" />
+    <ClInclude Include="Components\PeterPepper.h" />
+    <ClInclude Include="Components\PlayerResources.h" />
+    <ClInclude Include="Components\PlayerUI.h" />
+    <ClInclude Include="Components\PPSpriteMovement.h" />
+    <ClInclude Include="Components\Score.h" />
+    <ClInclude Include="Components\SoundLoaderTest.h" />
+    <ClInclude Include="Components\Stage.h" />
+    <ClInclude Include="Components\StageMovement.h" />
   </ItemGroup>
 </Project>

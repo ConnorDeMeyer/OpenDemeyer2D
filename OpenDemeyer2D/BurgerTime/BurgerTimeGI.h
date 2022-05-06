@@ -1,11 +1,11 @@
 ﻿#pragma once
-#include <GameInstance.h>
+#include "EngineFiles/GameInstance.h"
 
-class BurgerTimeGI : public GameInstance
+class BurgerTimeGI final : public GameInstance
 {
 public:
 
-
+	virtual ~BurgerTimeGI() = default;
 
 	void LoadGame() override;
 

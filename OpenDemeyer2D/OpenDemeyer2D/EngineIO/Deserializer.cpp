@@ -1,9 +1,9 @@
 #include "Deserializer.h"
 #include <fstream>
 
-#include <Scene.h>
-#include <GameObject.h>
-#include <SceneManager.h>
+#include "EngineFiles/Scene.h"
+#include "EngineFiles/GameObject.h"
+#include "Singletons/SceneManager.h"
 
 //void DeserializerBase::DeserializeGame(const std::string& file)
 //{

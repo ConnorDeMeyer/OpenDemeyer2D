@@ -1,7 +1,7 @@
 #pragma once
-#include "Component.h"
-#include "../Texture2D.h"
-#include "../RenderManager.h"
+#include "EngineFiles/Component.h"
+#include "ResourceWrappers/Texture2D.h"
+#include "Singletons/RenderManager.h"
 
 class Transform;
 

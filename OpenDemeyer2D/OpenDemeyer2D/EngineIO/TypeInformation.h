@@ -7,11 +7,11 @@
 #include <algorithm>
 #include <string>
 
-#include "Singleton.h"
-#include "ComponentBase.h"
+#include "UtilityFiles/Singleton.h"
+#include "EngineFiles/ComponentBase.h"
 #include "CustomSerializers.h"
 #include "Deserializer.h"
-#include "GameObject.h"
+#include "EngineFiles/GameObject.h"
 
 class ComponentBase;
 class TypeInformation;

@@ -1,9 +1,9 @@
-#include "../OD2pch.h"
 #include "RenderComponent.h"
 
 #include "Transform.h"
-#include "../GameObject.h"
-#include "../RenderManager.h"
+#include "EngineFiles/GameObject.h"
+#include "Singletons/RenderManager.h"
+#include "imgui.h"
 
 
 void RenderComponent::DefineUserFields(UserFieldBinder& binder) const

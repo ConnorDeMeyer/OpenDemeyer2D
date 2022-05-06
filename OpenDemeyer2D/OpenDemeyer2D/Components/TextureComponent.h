@@ -1,6 +1,6 @@
 #pragma once
-#include "Component.h"
-#include "../Texture2D.h"
+#include "EngineFiles/Component.h"
+#include "ResourceWrappers/Texture2D.h"
 #include <string>
 
 class RenderComponent;

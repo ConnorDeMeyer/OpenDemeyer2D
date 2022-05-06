@@ -1,12 +1,13 @@
-﻿#include "OD2pch.h"
-#include "OpenDemeyer2D.h"
+﻿#include "Singletons/OpenDemeyer2D.h"
 
 #if _DEBUG
 #include <vld.h>
 #endif
 
+#include <SDL.h>
+
 #include "BurgerTimeGI.h"
-#include "ComponentBase.h"
+#include "EngineFiles/ComponentBase.h"
 
 int main(int, char* []) {
 

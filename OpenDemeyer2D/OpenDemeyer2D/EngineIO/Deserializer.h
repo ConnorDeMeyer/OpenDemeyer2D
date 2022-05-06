@@ -98,7 +98,7 @@ inline bool IsEnd(std::istream& stream)
 inline void TrimWhitespace(std::string& string)
 {
 	constexpr const char* whiteSpace{ " \t\v\r\n" };
-	int begin = string.find_first_not_of(whiteSpace);
-	int end = string.find_last_not_of(whiteSpace);
+	size_t begin = string.find_first_not_of(whiteSpace);
+	size_t end = string.find_last_not_of(whiteSpace);
 	string = begin == end ? std::string() : string.substr(begin, end - begin + 1);
 }

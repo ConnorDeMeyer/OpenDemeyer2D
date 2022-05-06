@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Component.h"
+#include "EngineFiles/Component.h"
 #include <string>
 #include <SDL.h>
 

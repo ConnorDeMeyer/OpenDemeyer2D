@@ -2,8 +2,8 @@
 #include <b2_body.h>
 #include <glm/glm.hpp>
 
-#include "Component.h"
-#include "../Delegate.h"
+#include "EngineFiles/Component.h"
+#include "UtilityFiles/Delegate.h"
 
 
 class PhysicsComponent : public Component<PhysicsComponent>

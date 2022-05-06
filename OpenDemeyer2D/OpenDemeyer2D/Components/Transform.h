@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "EngineFiles/Component.h"
 #include <glm/vec2.hpp>
 #include <glm/matrix.hpp>
 
