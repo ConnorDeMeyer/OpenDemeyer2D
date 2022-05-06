@@ -27,23 +27,9 @@
 # Executables
 *.out
 *.app
+*.exe
 
-# .vs
-*.suo
-*.db
-*.db-smh
-*.db-wal
-*.opendb
-*.ipch
-*.db-shm
-*.pdb
-*.tlog
-*.lastbuildstate
-*.pdb
-*.idb
-*.tlog
-*.ilk
-*.log
-OpenDemeyer2D/.vs/OpenDemeyer2D/v17/HierarchyCache.v1.txt
-OpenDemeyer2D/.vs/OpenDemeyer2D/v17/fileList.bin
-OpenDemeyer2D/.vs/OpenDemeyer2D/v17/fileList.bin
+.vs/
+Build/
+Intermediate/
+lib/
