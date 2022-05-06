@@ -164,19 +164,14 @@ void GUIManager::RenderImGuiObjectInfo()
 
 		if (ImGui::BeginCombo("Add Component","Component"))
 		{
-			for (auto& typeInfo : TypeInformation::GetInstance().ClassNameIds)
+			for (auto& typeInfo : TypeInformation::GetInstance().GetTypeInfos())
 			{
 				bool Selected{};
-				if (ImGui::Selectable(typeInfo.first.c_str(), &Selected))
+				if (ImGui::Selectable(typeInfo.second.name.data(), &Selected))
 				{
 					try
 					{
-						auto& generators = TypeInformation::GetInstance().ClassGenerator;
-						auto it = generators.find(typeInfo.second);
-						if (it != generators.end())
-						{
-							it->second(m_pSelectedObject.lock().get());
-						}
+						typeInfo.second.componentGenerator(m_pSelectedObject.lock().get());
 					}
 					catch (std::exception&)
 					{
@@ -204,7 +199,8 @@ void GUIManager::RenderImGuiObjectInfo()
 		auto& components = pObject->GetComponents();
 		for (auto& comp : components)
 		{
-			if (ImGui::CollapsingHeader(comp.second->GetComponentName().c_str(), ImGuiTreeNodeFlags_None))
+			std::string label(comp.second->GetComponentName());
+			if (ImGui::CollapsingHeader(label.c_str(), ImGuiTreeNodeFlags_None))
 			{
 				comp.second->RenderImGui();
 			}
@@ -231,7 +227,7 @@ void GUIManager::RenderImGuiObjectLocation()
 			pRenderComp->GetWorldRect(vertices);
 
 			renderer.SetRenderTarget(renderer.GetRenderLayers().back());
-			renderer.RenderPolygon(vertices, 4, true);
+			renderer.RenderPolygon(vertices, 4, false);
 		}
 	}
 }

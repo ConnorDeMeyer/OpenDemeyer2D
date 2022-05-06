@@ -34,21 +34,6 @@ void Stage::LoadStageTexture()
 	m_StageTexture = RESOURCES.LoadTexture(pLevelLayout);
 
 	SDL_FreeSurface(pLevelLayout);
-
-	auto sheetTexture = RESOURCES.LoadTexture("Bitmaps/FullSheet.png");
-	// burger holders at the bottom
-	for (int i{}; i < 4; ++i)
-	{
-		auto go = new GameObject();
-		auto render = go->AddComponent<RenderComponent>();
-		auto texture = go->AddComponent<TextureComponent>();
-		texture->SetTexture(sheetTexture);
-		texture->SetSourceRect({ 112.f, 104.f, 48.f, 16.f });
-		render->SetRenderAlignMode(eRenderAlignMode::left);
-
-		go->GetTransform()->SetPosition({ 8.f + 48.f * i, -32.f });
-		go->SetParent(GetParent());
-	}
 	
 }
 
@@ -171,6 +156,22 @@ void Stage::LoadStageItems()
 		piece->GetTransform()->SetPosition({ 32.f + 48.f * float(info.posX), 4.f + 16.f * float(info.posY) });
 
 		piece->SetParent(GetParent());
+	}
+
+
+	auto sheetTexture = RESOURCES.LoadTexture("Bitmaps/FullSheet.png");
+	// burger holders at the bottom
+	for (int i{}; i < 4; ++i)
+	{
+		auto go = new GameObject();
+		auto render = go->AddComponent<RenderComponent>();
+		auto texture = go->AddComponent<TextureComponent>();
+		texture->SetTexture(sheetTexture);
+		texture->SetSourceRect({ 112.f, 104.f, 48.f, 16.f });
+		render->SetRenderAlignMode(eRenderAlignMode::left);
+
+		go->GetTransform()->SetPosition({ 8.f + 48.f * i, -32.f });
+		go->SetParent(GetParent());
 	}
 }
 
@@ -312,6 +313,7 @@ void Stage::Initialize()
 		renderComp->SetTexture(m_StageTexture);
 		renderComp->SetRenderAlignMode(eRenderAlignMode::bottomLeft);
 	}
+
 }
 
 void Stage::BeginPlay()

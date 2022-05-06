@@ -49,7 +49,7 @@ xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform)*.dll $(OutputPath) /Y
+xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform)\*.dll $(OutputPath) /Y
 xcopy $(ProjectDir)imgui.ini $(OutputPath) /R /Y
 xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
 		</PostBuildEvent>

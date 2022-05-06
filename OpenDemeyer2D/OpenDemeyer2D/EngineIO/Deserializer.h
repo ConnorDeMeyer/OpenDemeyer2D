@@ -24,6 +24,10 @@ public:
 
 	void GetComponentFromObject(std::type_index typeId, unsigned int objectId, std::weak_ptr<ComponentBase>* ComponentAddress);
 
+	bool CanContinue();
+	bool IsEnd();
+	char PeekChar();
+
 	void DeserializeGame(std::istream& iStream);
 	Scene* DeserializeScene(std::istream& iStream);
 	GameObject* DeserializeObject(std::istream& iStream);

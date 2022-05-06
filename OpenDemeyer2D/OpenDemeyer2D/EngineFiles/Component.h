@@ -22,16 +22,19 @@ class Component : public ComponentBase
 
 public:
 
-	const std::string GetComponentName() const override { return typeid(T).name(); }
+	const std::string_view GetComponentName() const override { __FUNCSIG__; return type_name<T>(); }
 
-	std::type_index GetComponentId() const override { return std::type_index(typeid(T)); }
+	uint32_t GetComponentId() const override { return hash(type_name<T>()); }
 
 	virtual void DefineUserFields(UserFieldBinder&) const {};
 
 	void Serialize(std::ostream& os) const override
 	{
-		auto& fields = TypeInformation::GetInstance().Fields[typeid(T)];
-		for (auto& field : fields.GetFields())
+		constexpr uint32_t id{ class_id<T>() };
+		auto typeInfo = TypeInformation::GetInstance().GetTypeInfo(id);
+		assert(typeInfo);
+
+		for (auto& field : typeInfo->field.GetFields())
 		{
 			os << field.first << ' '; 
 			field.second.Serialize(os, this);
@@ -41,15 +44,18 @@ public:
 
 	void Deserialize(Deserializer& is) override
 	{
-		auto& fields = TypeInformation::GetInstance().Fields[typeid(T)].GetFields();
+		constexpr uint32_t id{ class_id<T>() };
+		auto typeInfo = TypeInformation::GetInstance().GetTypeInfo(id);
+		assert(typeInfo);
+
 		if (CanContinue(*is.GetStream()))
 		{
 			while (!IsEnd(*is.GetStream()))
 			{
 				std::string fieldName;
 				*is.GetStream() >> fieldName;
-				auto it = fields.find(fieldName);
-				if (it != fields.end())
+				auto it = typeInfo->field.GetFields().find(fieldName);
+				if (it != typeInfo->field.GetFields().end())
 				{
 					it->second.Deserialize(is, this);
 				}

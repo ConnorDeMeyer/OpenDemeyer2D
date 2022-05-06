@@ -5,37 +5,6 @@
 #include "EngineFiles/GameObject.h"
 #include "Singletons/SceneManager.h"
 
-//void DeserializerBase::DeserializeGame(const std::string& file)
-//{
-//	std::ifstream ifstream{ file };
-//	if (ifstream)
-//		DeserializeGame(ifstream);
-//}
-//
-//void DeserializerBase::DeserializeGame(std::istream& stream)
-//{
-//	if (!stream) throw ParsingError("Empty stream received");
-//
-//	//auto& scenes = SCENES;
-//
-//	DeserializerBase deserializer{};
-//
-//	while (stream && CanContinue(stream)) // SCENES
-//	{
-//		std::string sceneName;
-//		stream >> sceneName;
-//
-//		//auto& scene = scenes.CreateScene(sceneName);
-//
-//		while (CanContinue(stream)) // OBJECTS
-//		{
-//			
-//		}
-//
-//
-//	}
-//}
-
 void Deserializer::RegisterGameObject(unsigned int streamId, GameObject* object)
 {
 	m_RegisteredObjects.emplace(streamId, object);
@@ -58,13 +27,41 @@ void Deserializer::GetComponentFromObject(std::type_index typeId, unsigned int o
 	}
 }
 
+bool Deserializer::CanContinue()
+{
+	char buffer{};
+	*m_pIStream >> buffer;
+	if (buffer != '{' && buffer != '}')
+		throw ParsingError("{ or } not found");
+	return buffer == '{';
+}
+
+bool Deserializer::IsEnd()
+{
+	if (PeekNextChar(*m_pIStream) == '}')
+	{
+		char buffer{};
+		*m_pIStream >> buffer;
+		return true;
+	}
+	return false;
+}
+
+char Deserializer::PeekChar()
+{
+	char buffer{};
+	*m_pIStream >> buffer;
+	m_pIStream->unget();
+	return buffer;
+}
+
 void Deserializer::DeserializeGame(std::istream& iStream)
 {
 	m_pIStream = &iStream;
 
 	while (PeekNextChar(iStream) == '{')
 	{
-		while (CanContinue(*this->GetStream()))
+		while (CanContinue())
 		{
 			std::string name;
 			iStream >> name;
@@ -95,7 +92,7 @@ Scene* Deserializer::DeserializeScene(std::istream& iStream)
 	Scene* pScene{};
 	if (iStream.good())
 	{
-		while (CanContinue(*this->GetStream()))
+		while (CanContinue())
 		{
 			std::string name;
 			iStream >> name;
@@ -147,20 +144,6 @@ GameObject* Deserializer::DeserializeObject(std::istream& iStream)
 	return pObject;
 }
 
-//void FileDeserializer::DeserializeGame()
-//{
-//	if (good())
-//	{
-//		while (CanContinue(*this))
-//		{
-//			std::string name;
-//			*this >> name;
-//			auto& scene = SCENES.CreateScene(name);
-//
-//			scene.Deserialize(*this);
-//		}
-//	}
-//}
 
 
 

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <memory>
 #include <string>
+#include <string_view>
 #include "UtilityFiles/Dictionary.h"
 #include "UtilityFiles/Singleton.h"
 #include <unordered_map>
@@ -56,9 +57,9 @@ public:
 	virtual void RenderImGui() {}
 
 	/** Gets the name of the component for debugging purposes*/
-	virtual const std::string GetComponentName() const = 0;
+	virtual const std::string_view GetComponentName() const = 0;
 
-	virtual std::type_index GetComponentId() const = 0;
+	virtual uint32_t GetComponentId() const = 0;
 
 	virtual void Serialize(std::ostream& stream) const = 0;
 

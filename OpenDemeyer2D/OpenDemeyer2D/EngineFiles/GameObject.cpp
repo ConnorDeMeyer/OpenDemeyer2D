@@ -180,8 +180,8 @@ void GameObject::SetParent(GameObject* pObject)
 	// Set as parent
 	m_Parent = pObject;
 
-	if (pObject) {
-
+	if (pObject) 
+	{
 		// Set as child
 		pObject->m_Children.emplace_back(this);
 
@@ -234,35 +234,26 @@ void GameObject::Deserialize(Deserializer& is)
 
 	auto& types = TypeInformation::GetInstance();
 
-	while (PeekNextChar(*is.GetStream()) == 'c')
+	while (is.PeekChar() == 'c')
 	{
+		// get the class name from the stream
 		std::string componentName;
 		std::getline(*is.GetStream(), componentName);
 
-		// Get the class id
-		auto it = types.ClassNameIds.find(componentName);
-		if (it != types.ClassNameIds.end())
-		{
-			// generate the component
-			std::type_index typeId{ it->second };
-			auto genIt = types.ClassGenerator.find(typeId);
+		// get the class id
+		auto typeInfo = types.GetTypeInfo(componentName);
+		assert(typeInfo);
 
-			if (genIt != types.ClassGenerator.end())
-			{
-				if (typeId != typeid(Transform))
-				{
-					auto pComponent = genIt->second(this);
-					pComponent->Deserialize(is);
-				}
-				else m_pTransform->Deserialize(is);
-			
-			} else assert(true);
-		} else assert(true);
+		// generate and add the component
+		auto pComponent = typeInfo->componentGenerator(this);
+
+		// deserialize the component
+		pComponent->Deserialize(is);
 	}
 
-	if (CanContinue(*is.GetStream()))
+	if (is.CanContinue())
 	{
-		while (!IsEnd(*is.GetStream()))
+		while (!is.IsEnd())
 		{
 			auto go = new GameObject();
 			go->SetParent(this);

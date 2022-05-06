@@ -153,7 +153,6 @@ void Engine::Run(GameInstance* pGameInstance)
 
 	pGameInstance->LoadGame();
 	m_pGameinstance = pGameInstance;
-
 	{
 		auto& renderer = RENDER;
 		auto& sceneManager = SCENES;

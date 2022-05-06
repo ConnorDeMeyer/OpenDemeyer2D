@@ -6,12 +6,14 @@
 #include <string>
 #include <algorithm>
 #include <string>
+#include <cassert>
 
 #include "UtilityFiles/Singleton.h"
 #include "EngineFiles/ComponentBase.h"
 #include "CustomSerializers.h"
 #include "Deserializer.h"
 #include "EngineFiles/GameObject.h"
+#include "Reflection.h"
 
 class ComponentBase;
 class TypeInformation;
@@ -98,18 +100,29 @@ public:
 	TypeIdentifier()
 	{
 		auto& instance = TypeInformation::GetInstance();
-		instance.ClassNameIds.emplace(std::string(typeid(T).name()), std::type_index(typeid(T)));
-		instance.ClassIdNames.emplace(std::type_index(typeid(T)), std::string(typeid(T).name()));
+		constexpr std::string_view name = type_name<T>();
 
-		instance.ClassGenerator.emplace(std::type_index(typeid(T)), [](GameObject* ob) -> T*
+		std::function<ComponentBase* (GameObject*)> generator;
+		if constexpr (std::is_same_v<Transform, T>)
+		{
+			generator = [](GameObject* ob) -> T*
+			{
+				return ob->GetTransform();
+			};
+		}
+		else
+		{
+			generator = [](GameObject* ob) -> T*
 			{
 				return ob->AddComponent<T>();
-			});
+			};
+		}
 
 		UserFieldBinder binder{};
 		T object{};
 		object.DefineUserFields(binder);
-		instance.Fields.emplace(std::type_index(typeid(T)), binder);
+
+		instance.AddTypeInfo(hash(name), {name,generator,binder});
 	}
 
 };
@@ -117,8 +130,54 @@ public:
 class TypeInformation : public Singleton<TypeInformation>
 {
 public:
-	std::unordered_map<std::type_index, std::function<ComponentBase*(GameObject*)>> ClassGenerator;
-	std::unordered_map<std::string, std::type_index> ClassNameIds;
-	std::unordered_map<std::type_index, std::string> ClassIdNames;
-	std::unordered_map<std::type_index, UserFieldBinder> Fields;
+
+	struct TypeInfo
+	{
+		std::string_view name;
+		std::function<ComponentBase* (GameObject*)> componentGenerator;
+		UserFieldBinder field;
+	};
+
+public:
+
+	void AddTypeInfo(uint32_t id,TypeInfo&& info)
+	{
+		auto it = m_TypeInfo.find(id);
+		if (it != m_TypeInfo.end())
+			assert(false && "Two types have same hash");
+		m_ClassNameIds.emplace(info.name, id);
+		m_TypeInfo.emplace(id, info);
+	}
+
+	TypeInfo* GetTypeInfo(const std::string& typeName)
+	{
+		auto it = m_ClassNameIds.find(typeName);
+		if (it != m_ClassNameIds.end())
+		{
+			auto typeIt = m_TypeInfo.find(it->second);
+			if (typeIt != m_TypeInfo.end())
+			{
+				return &typeIt->second;
+			}
+		}
+		return nullptr;
+	}
+
+	TypeInfo* GetTypeInfo(uint32_t id)
+	{
+		const auto it = m_TypeInfo.find(id);
+		if (it != m_TypeInfo.end())
+		{
+			return &it->second;
+		}
+		return nullptr;
+	}
+
+	const std::unordered_map<uint32_t, TypeInfo>& GetTypeInfos() const { return m_TypeInfo; }
+
+private:
+
+	std::unordered_map<std::string, uint32_t > m_ClassNameIds;
+	std::unordered_map<uint32_t, TypeInfo> m_TypeInfo;
+
 };
