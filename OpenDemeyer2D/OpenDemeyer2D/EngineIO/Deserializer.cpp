@@ -10,19 +10,24 @@ void Deserializer::RegisterGameObject(unsigned int streamId, GameObject* object)
 	m_RegisteredObjects.emplace(streamId, object);
 }
 
-void Deserializer::GetComponentFromObject(std::type_index typeId, unsigned int objectId, std::weak_ptr<ComponentBase>* ComponentAddress)
+void Deserializer::GetComponentFromObject(uint32_t objectId, uint32_t compId, std::function<void(std::weak_ptr<ComponentBase>*)> linker)
 {
 	auto it = m_RegisteredObjects.find(objectId);
 	if (it != m_RegisteredObjects.end())
 	{
-		*ComponentAddress = it->second->GetComponentById(typeId)->GetWeakReference();
+		auto pComp{ it->second->GetComponentById(compId) };
+		if (pComp)
+		{
+			auto weakRef{ pComp->GetWeakReference() };
+			linker(&weakRef);
+		}
 	}
 	else // if the object hasn't been parsed yet keep the information inside m_LinkingInfos
 	{
 		m_LinkingInfos.emplace_back(
 			objectId,
-			ComponentAddress,
-			typeId
+			compId,
+			linker
 		);
 	}
 }
@@ -74,7 +79,12 @@ void Deserializer::DeserializeGame(std::istream& iStream)
 			auto it = m_RegisteredObjects.find(link.objectId);
 			if (it != m_RegisteredObjects.end())
 			{
-				*link.addressOfReference = it->second->GetComponentById(link.typeId)->GetWeakReference();
+				auto pComp{ it->second->GetComponentById(link.typeId) };
+				if (pComp)
+				{
+					auto weakRef{ pComp->GetWeakReference() };
+					link.pointerLinker(&weakRef);
+				}
 			}
 		}
 
@@ -106,7 +116,12 @@ Scene* Deserializer::DeserializeScene(std::istream& iStream)
 		auto it = m_RegisteredObjects.find(link.objectId);
 		if (it != m_RegisteredObjects.end())
 		{
-			*link.addressOfReference = it->second->GetComponentById(link.typeId)->GetWeakReference();
+			auto pComp{ it->second->GetComponentById(link.typeId) };
+			if(pComp)
+			{
+				auto weakRef{ pComp->GetWeakReference() };
+				link.pointerLinker(&weakRef);
+			}
 		}
 	}
 
@@ -133,7 +148,12 @@ GameObject* Deserializer::DeserializeObject(std::istream& iStream)
 		auto it = m_RegisteredObjects.find(link.objectId);
 		if (it != m_RegisteredObjects.end())
 		{
-			*link.addressOfReference = it->second->GetComponentById(link.typeId)->GetWeakReference();
+			auto pComp{ it->second->GetComponentById(link.typeId) };
+			if (pComp)
+			{
+				auto weakRef{ pComp->GetWeakReference() };
+				link.pointerLinker(&weakRef);
+			}
 		}
 	}
 

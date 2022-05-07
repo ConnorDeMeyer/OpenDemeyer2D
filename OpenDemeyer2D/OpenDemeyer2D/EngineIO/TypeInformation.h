@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <string>
 #include <cassert>
+#include <type_traits>
 
 #include "UtilityFiles/Singleton.h"
 #include "EngineFiles/ComponentBase.h"
@@ -19,7 +20,6 @@ class ComponentBase;
 class TypeInformation;
 class GameObject;
 
-
 class UserFieldBinder final
 {
 private:
@@ -30,6 +30,7 @@ private:
 
 		virtual void Serialize(std::ostream& os, const void* address) const = 0;
 		virtual void DeSerialize(Deserializer& is, void* address) const = 0;
+		virtual void Copy(const void* originalAddress, void* copyAddress) const = 0;
 	};
 
 	template <typename T>
@@ -50,7 +51,15 @@ private:
 
 		void DeSerialize(Deserializer& is, void* address) const override
 		{
-			(*is.GetStream()) >> *static_cast<T*>(address);
+			if constexpr (is_weak_ptr<T>::value) // if it is a weak pointer we have to give the deserializer object instead.
+				is >> static_cast<T*>(address);
+			else
+				(*is.GetStream()) >> *static_cast<T*>(address);
+		}
+
+		void Copy(const void* originalAddress, void* copyAddress) const override
+		{
+			*static_cast<T*>(copyAddress) = *static_cast<const T*>(originalAddress);
 		}
 	};
 
@@ -70,6 +79,13 @@ private:
 		{
 			size_t address = reinterpret_cast<size_t>(pComponent) + offset;
 			pSerializer->DeSerialize(is, reinterpret_cast<void*>(address));
+		}
+
+		void Copy(const ComponentBase* originalComponent, ComponentBase* copyComponent) const
+		{
+			size_t Originaladdress = reinterpret_cast<size_t>(originalComponent) + offset;
+			size_t Copyaddress = reinterpret_cast<size_t>(copyComponent) + offset;
+			pSerializer->Copy(reinterpret_cast<void*>(Originaladdress), reinterpret_cast<void*>(Copyaddress));
 		}
 	};
 

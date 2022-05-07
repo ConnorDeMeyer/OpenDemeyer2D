@@ -2,6 +2,13 @@
 Test_Scene
 {
 1 1up
+class TextPixelComponent
+{
+FontSurface Bitmaps/Text.png
+FontColor 255 0 0 255
+CharSize 8
+Text 1UP
+}
 class Transform
 {
 position 32 248
@@ -14,16 +21,16 @@ renderLayer 0
 sourceRect 0 0 24 8
 pivot 1 0
 }
+{
+}
+2 hi score
 class TextPixelComponent
 {
 FontSurface Bitmaps/Text.png
 FontColor 255 0 0 255
 CharSize 8
-Text 1UP
+Text HI-SCORE
 }
-{
-}
-2 hi score
 class Transform
 {
 position 72 248
@@ -36,16 +43,16 @@ renderLayer 0
 sourceRect 0 0 64 8
 pivot 1 0
 }
-class TextPixelComponent
-{
-FontSurface Bitmaps/Text.png
-FontColor 255 0 0 255
-CharSize 8
-Text HI-SCORE
-}
 {
 }
 3 pepper
+class TextPixelComponent
+{
+FontSurface Bitmaps/Text.png
+FontColor 0 255 0 255
+CharSize 8
+Text PEPPER
+}
 class Transform
 {
 position 184 248
@@ -58,16 +65,19 @@ renderLayer 0
 sourceRect 0 0 48 8
 pivot 1 0
 }
-class TextPixelComponent
-{
-FontSurface Bitmaps/Text.png
-FontColor 0 255 0 255
-CharSize 8
-Text PEPPER
-}
 {
 }
 4 score
+class TextPixelComponent
+{
+FontSurface Bitmaps/Text.png
+FontColor 235 16 128 255
+CharSize 8
+Text 0
+}
+class Score
+{
+}
 class Transform
 {
 position 128 240
@@ -79,16 +89,6 @@ class RenderComponent
 renderLayer 0
 sourceRect 0 0 8 8
 pivot 0 0
-}
-class TextPixelComponent
-{
-FontSurface Bitmaps/Text.png
-FontColor 235 16 128 255
-CharSize 8
-Text 0
-}
-class Score
-{
 }
 {
 }
@@ -110,25 +110,26 @@ class Stage
 }
 {
 }
-62 Audio tester
-class Enemy
-{
-}
+6 Audio tester
 class SoundLoaderTest
 {
 }
-class Transform
-{
-position 0 0
-scale 1 1
-rotation 0
-}
 class StageMovement
 {
+Stage 5
+}
+class Transform
+{
+position 0 0
+scale 1 1
+rotation 0
+}
+class Enemy
+{
 }
 {
 }
-63 tester
+7 tester
 class Transform
 {
 position 0 0
@@ -137,7 +138,7 @@ rotation 0
 }
 {
 }
-64 tester2
+8 tester2
 class Transform
 {
 position 0 0
@@ -146,15 +147,16 @@ rotation 0
 }
 {
 }
-65 
-class Transform
-{
-position 0 0
-scale 1 1
-rotation 0
-}
+9 
 class StageMovement
 {
+Stage 5
+}
+class Transform
+{
+position 0 0
+scale 1 1
+rotation 0
 }
 {
 }

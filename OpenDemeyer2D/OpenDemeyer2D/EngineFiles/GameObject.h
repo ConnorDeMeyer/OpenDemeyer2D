@@ -88,7 +88,7 @@ public:
 	* Returns a ComponentBase* of the right type, You may have to cast it into the type of the component
 	* Return nullptr if none was found
 	*/
-	ComponentBase* GetComponentById(std::type_index typeId);
+	ComponentBase* GetComponentById(uint32_t typeId);
 
 	/**
 	* Adds a component to the object
@@ -128,7 +128,7 @@ public:
 	Scene* GetScene() const { return m_pScene; }
 
 	/** Get the underlying unordered map that containts the components. */
-	inline const std::unordered_map<std::type_index, ComponentBase*>& GetComponents() { return m_Components; };
+	inline const std::unordered_map<uint32_t, ComponentBase*>& GetComponents() { return m_Components; };
 
 	/** Serialize this game object into a stream*/
 	void Serialize(std::ostream& os);
@@ -156,9 +156,9 @@ public:
 
 	std::string GetDisplayName() const;
 
-	GameObject* Instantiate() const;
-
 	void SetScene(Scene* pScene);
+
+	void Copy(GameObject* originalObject);
 
 private:
 
@@ -171,7 +171,7 @@ private:
 	/** Container of all the components attached to this GameObject.*/
 	//ODArray<ComponentBase*> m_Components;
 
-	std::unordered_map<std::type_index, ComponentBase*> m_Components;
+	std::unordered_map<uint32_t, ComponentBase*> m_Components;
 
 	/** Container of children attached to this GameObject.*/
 	ODArray<GameObject*> m_Children;
@@ -211,7 +211,8 @@ T* GameObject::GetComponent() const
 	if constexpr (std::is_same_v<T, Transform>) {return reinterpret_cast<T*>(m_pTransform);}
 	else if constexpr (std::is_same_v<T, RenderComponent>) {return reinterpret_cast<T*>(m_pRenderComponent);}
 	else {
-		auto it = m_Components.find(typeid(T));
+		constexpr uint32_t typeId{ class_id<T>() };
+		auto it = m_Components.find(typeId);
 		return (it != m_Components.end()) ? reinterpret_cast<T*>(it->second) : nullptr;
 	}
 }
@@ -233,7 +234,8 @@ T* GameObject::AddComponent()
 		throw std::runtime_error("Component already in object");
 	}
 	T* comp = new T();
-	m_Components.insert({ typeid(T), comp });
+	constexpr uint32_t typeId{ class_id<T>() };
+	m_Components.insert({ typeId, comp});
 
 	comp->m_pParent = this;
 
@@ -252,7 +254,8 @@ void GameObject::RemoveComponent()
 {
 	if constexpr (std::is_same_v<T, Transform>) { throw std::runtime_error("Cannot remove transform component"); }
 
-	auto it = m_Components.find(typeid(T));
+	constexpr uint32_t typeId{ class_id<T>() };
+	auto it = m_Components.find(typeId);
 	if (it != m_Components.end())
 	{
 		delete it->second;

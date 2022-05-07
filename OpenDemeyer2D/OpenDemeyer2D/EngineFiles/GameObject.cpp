@@ -145,7 +145,7 @@ std::weak_ptr<GameObject> GameObject::GetWeakReference() const
 	return m_Reference;
 }
 
-ComponentBase* GameObject::GetComponentById(std::type_index typeId)
+ComponentBase* GameObject::GetComponentById(uint32_t typeId)
 {
 	auto it = m_Components.find(typeId);
 	if (it != m_Components.end())
@@ -274,13 +274,6 @@ std::string GameObject::GetDisplayName() const
 		m_Name.c_str();
 }
 
-GameObject* GameObject::Instantiate() const
-{
-	//GameObject* copyObj =  new GameObject();
-	return nullptr;
-	
-}
-
 void GameObject::SetScene(Scene* pScene)
 {
 	if (pScene != m_pScene)
@@ -296,6 +289,14 @@ void GameObject::SetScene(Scene* pScene)
 	for (auto child : m_Children)
 	{
 		child->SetScene(pScene);
+	}
+}
+
+void GameObject::Copy(GameObject* originalObject)
+{
+	for (auto& comp : originalObject->m_Components)
+	{
+		comp.second->MakeCopy(this);
 	}
 }
 
@@ -320,11 +321,26 @@ void GameObject::ImGuiPopup()
 			std::memcpy(buffer, m_Name.c_str(), m_Name.size());
 		}
 
+		if (ImGui::MenuItem("Duplicate"))
+		{
+			auto go = new GameObject();
+			go->Copy(this);
+			if (m_Parent)
+				go->SetParent(m_Parent);
+			else
+				m_pScene->Add(go);
+			go->SetName(m_Name);
+			go->SetTag(m_Tag);
+		}
+
 		ImGui::EndPopup();
 	}
 
 	if (changeName)
 		ImGui::OpenPopup("Change Obj Name");
+
+	if (deleteObj)
+		ImGui::OpenPopup("Delete Object");
 
 	if (ImGui::BeginPopupModal("Change Obj Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 	{
@@ -334,6 +350,24 @@ void GameObject::ImGuiPopup()
 			SetName(std::string(buffer));
 			ImGui::CloseCurrentPopup();
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::BeginPopupModal("Delete Object", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Are you sure you want to delete the object?");
+		if (ImGui::Button("Delete"))
+		{
+			Destroy();
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
 		if (ImGui::Button("Cancel"))
 		{
 			ImGui::CloseCurrentPopup();

@@ -22,9 +22,9 @@ class Component : public ComponentBase
 
 public:
 
-	const std::string_view GetComponentName() const override { __FUNCSIG__; return type_name<T>(); }
+	constexpr const std::string_view GetComponentName() const override { return type_name<T>(); }
 
-	uint32_t GetComponentId() const override { return hash(type_name<T>()); }
+	constexpr uint32_t GetComponentId() const override { return hash(type_name<T>()); }
 
 	virtual void DefineUserFields(UserFieldBinder&) const {};
 
@@ -63,33 +63,38 @@ public:
 		}
 	}
 
+	void Copy(const ComponentBase* pOriginal) override
+	{
+		constexpr uint32_t typeId{ class_id<T>() };
+		auto typeInfo = TypeInformation::GetInstance().GetTypeInfo(typeId);
+
+		if (typeInfo)
+		{
+			for (auto field : typeInfo->field.GetFields())
+			{
+				field.second.Copy(pOriginal, this);
+			}
+		}
+	}
+
+	ComponentBase* MakeCopy(GameObject* objectToAddto) const override
+	{
+		ComponentBase* comp{};
+		if constexpr (std::is_same_v<Transform, T>)
+			comp = objectToAddto->GetTransform();
+		else
+			comp = objectToAddto->AddComponent<T>();
+		comp->Copy(this);
+		return comp;
+	}
+
 	std::weak_ptr<T> GetWeakReferenceType()
 	{
 		return std::reinterpret_pointer_cast<T>(m_Reference);
 	}
-
-	
 
 private:
 
 	// Generate type information
 	inline static TypeIdentifier<T> TypeIdentifier{};
 };
-
-template <typename T>
-std::enable_if<std::is_base_of_v<ComponentBase, T>,
-std::ostream&> operator<<(std::ostream& stream, const std::weak_ptr<T>& component)
-{
-	if (component.expired()) return stream << 0;
-	return stream << component.lock()->GetParent()->GetId();
-}
-
-template <typename T>
-std::enable_if<std::is_base_of_v<ComponentBase, T>,
-Deserializer&> operator>>(Deserializer& stream, std::weak_ptr<T>& component)
-{
-	unsigned int id{};
-	(*stream.GetStream()) >> id;
-
-	stream.GetComponentFromObject(std::type_index(typeid(T)), id, &component);
-}

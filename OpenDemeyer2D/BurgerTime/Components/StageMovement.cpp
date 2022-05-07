@@ -72,7 +72,7 @@ void StageMovement::RenderImGui()
 	ImGui::ComponentSelect("Stage", this, m_pStage);
 }
 
-void StageMovement::DefineUserFields(UserFieldBinder&) const
+void StageMovement::DefineUserFields(UserFieldBinder& binder) const
 {
-	//binder.Add<std::weak_ptr<Stage>>("Stage", offsetof(StageMovement,m_pStage));
+	binder.Add<std::weak_ptr<Stage>>("Stage", offsetof(StageMovement,m_pStage));
 }

@@ -167,7 +167,8 @@ void GUIManager::RenderImGuiObjectInfo()
 			for (auto& typeInfo : TypeInformation::GetInstance().GetTypeInfos())
 			{
 				bool Selected{};
-				if (ImGui::Selectable(typeInfo.second.name.data(), &Selected))
+				std::string name{ typeInfo.second.name };
+				if (ImGui::Selectable(name.c_str(), &Selected))
 				{
 					try
 					{

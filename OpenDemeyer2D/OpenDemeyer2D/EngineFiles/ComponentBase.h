@@ -57,13 +57,18 @@ public:
 	virtual void RenderImGui() {}
 
 	/** Gets the name of the component for debugging purposes*/
-	virtual const std::string_view GetComponentName() const = 0;
+	virtual constexpr const std::string_view GetComponentName() const = 0;
 
-	virtual uint32_t GetComponentId() const = 0;
+	virtual constexpr uint32_t GetComponentId() const = 0;
 
 	virtual void Serialize(std::ostream& stream) const = 0;
 
 	virtual void Deserialize(Deserializer& is) = 0;
+
+	/** Copy values from the original when getting copied*/
+	virtual void Copy(const ComponentBase* pOriginal) = 0;
+
+	virtual ComponentBase* MakeCopy(GameObject* objectToAddto) const = 0;
 
 public:
 
@@ -88,3 +93,32 @@ protected:
 	std::shared_ptr<ComponentBase> m_Reference;
 
 };
+
+template<typename T> struct is_weak_ptr : std::false_type {};
+template<typename T> struct is_weak_ptr<std::weak_ptr<T>> : std::true_type {};
+
+template <typename T,
+	typename = std::enable_if_t<std::is_base_of_v<ComponentBase, T>>>
+std::ostream& operator<<(std::ostream& stream, const std::weak_ptr<T> component)
+{
+	if (component.expired()) return stream << 0;
+	return stream << component.lock()->GetParent()->GetId();
+}
+
+template <typename T,
+	typename = std::enable_if_t<std::is_base_of_v<ComponentBase,T>>>
+Deserializer& operator>>(Deserializer& stream, std::weak_ptr<T>* component)
+{
+	uint32_t id{};
+	(*stream.GetStream()) >> id;
+
+	auto linker = [component](std::weak_ptr<ComponentBase>* comp) -> void
+	{
+		*component = std::reinterpret_pointer_cast<T>(comp->lock());
+	};
+
+	constexpr uint32_t typeId{ class_id<T>() };
+	stream.GetComponentFromObject(id, typeId, linker);
+
+	return stream;
+}
