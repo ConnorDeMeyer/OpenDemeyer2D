@@ -169,6 +169,9 @@
     <ClInclude Include="ResourceWrappers\RenderTarget.h" />
     <ClInclude Include="ResourceWrappers\Surface2D.h" />
     <ClInclude Include="ResourceWrappers\Texture2D.h" />
+    <ClInclude Include="UtilityFiles\StateMachine.h" />
+    <ClInclude Include="EngineIO\EngineSettings.h" />
+    <ClInclude Include="ImGuiExt\CustomImGuiFields.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="engineconfig.ini" />

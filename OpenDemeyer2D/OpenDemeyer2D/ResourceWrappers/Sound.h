@@ -33,7 +33,7 @@ public:
 	void Play(int loops = -1, int fadeInTimeMs = 0, int playTimeMs = -1)
 	{
 		m_channel = Mix_FadeInChannelTimed(-1, m_Sound, loops, fadeInTimeMs, playTimeMs);
-		PlayingSounds[m_channel] = this;
+		Mix_Volume(m_channel, int(m_volume * MIX_MAX_VOLUME));
 	}
 
 	void Resume() const
@@ -81,14 +81,6 @@ private:
 	float m_volume{ 1.f };
 
 	std::string m_sourceFile{};
-
-	inline static std::unordered_map<int, Sound*> PlayingSounds{};
-
-	static void ChannelFinishedCallback(int channel)
-	{
-		if (PlayingSounds[channel])
-			PlayingSounds[channel]->m_channel = -1;
-	}
 
 };
 

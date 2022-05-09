@@ -255,10 +255,12 @@
     <ClInclude Include="EngineFiles\GameInstance.h" />
     <ClInclude Include="EngineFiles\GameObject.h" />
     <ClInclude Include="EngineFiles\Scene.h" />
+    <ClInclude Include="EngineIO\EngineSettings.h" />
     <ClInclude Include="EngineIO\Reflection.h" />
     <ClInclude Include="EngineIO\TypeInformation.h" />
     <ClInclude Include="EngineIO\CustomSerializers.h" />
     <ClInclude Include="EngineIO\Deserializer.h" />
+    <ClInclude Include="ImGuiExt\CustomImGuiFields.h" />
     <ClInclude Include="ImGuiExt\EngineStyle.h" />
     <ClInclude Include="ImGuiExt\imgui_helpers.h" />
     <ClInclude Include="ResourceWrappers\Font.h" />
@@ -279,6 +281,7 @@
     <ClInclude Include="UtilityFiles\ODArray.h" />
     <ClInclude Include="UtilityFiles\RenderTarget.h" />
     <ClInclude Include="UtilityFiles\Singleton.h" />
+    <ClInclude Include="UtilityFiles\StateMachine.h" />
     <ClInclude Include="UtilityFiles\Surface2D.h" />
     <ClInclude Include="UtilityFiles\Texture2D.h" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <vector>
 
 #include <glm/glm.hpp>
 
@@ -61,6 +62,38 @@ std::istream& operator>>(std::istream& stream, std::shared_ptr<Music>& music);
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Texture2D>& texture2d);
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Surface2D>& surface2d);
 
+//Box2D
+//class b2Body;
+//std::ostream& operator<<(std::ostream& stream, const b2Body* pBody);
+//
+//std::istream& operator>>(std::istream& stream, b2Body* pBody);
 
+// Vector
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& arr)
+{
+	os << "{\n";
+	for (auto& ele : arr)
+	{
+		os << ele << ' ';
+	}
+	os << "}\n";
+	return os;
+}
+
+template <typename T>
+std::istream& operator>>(std::istream& is, std::vector<T>& arr)
+{
+	if (CanContinue(is))
+	{
+		while (!IsEnd(is))
+		{
+			T element{};
+			is >> element;
+			arr.emplace_back(element);
+		}
+	}
+	return is;
+}
 
 

@@ -25,11 +25,11 @@ private:
 	bool m_IsLoadingMyAshes{};
 	bool m_IsLoadingValkerie{};
 
-	std::future<std::shared_ptr<void>> m_FutureMyAshes;
-	std::future<std::shared_ptr<void>> m_FutureValkerie;
-	std::future<std::shared_ptr<void>> m_FutureHop;
-	std::future<std::shared_ptr<void>> m_FuturePlunk;
-	std::future<std::shared_ptr<void>> m_FutureSquash;
+	std::future<std::shared_ptr<Music>> m_FutureMyAshes;
+	std::future<std::shared_ptr<Music>> m_FutureValkerie;
+	std::future<std::shared_ptr<Sound>> m_FutureHop;
+	std::future<std::shared_ptr<Sound>> m_FuturePlunk;
+	std::future<std::shared_ptr<Sound>> m_FutureSquash;
 
 };
 

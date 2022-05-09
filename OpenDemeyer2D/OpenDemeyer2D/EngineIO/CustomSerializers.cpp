@@ -14,6 +14,7 @@
 #include "CustomSerializers.h"
 
 #include "Singletons/ResourceManager.h"
+#include "box2d.h"
 
 
 std::ostream& operator<<(std::ostream& stream, const glm::vec2& vec)
@@ -257,21 +258,3 @@ std::istream& operator>>(std::istream& stream, std::shared_ptr<Surface2D>& surfa
 	surface = RESOURCES.LoadSurface(file);
 	return stream;
 }
-
-//std::ostream& operator<<(std::ostream& stream, const std::weak_ptr<ComponentBase>& component)
-//{
-//	if (component.expired()) return stream << 0;
-//	return stream << component.lock()->GetParent()->GetId();
-//}
-//
-//Deserializer& operator>>(Deserializer& stream, std::weak_ptr<ComponentBase>* component)
-//{
-//	unsigned int id{};
-//	(*stream.GetStream()) >> id;
-//
-//	stream.GetComponentFromObject(lock()->GetComponentId(), id, &component);
-//	return stream;
-//}
-
-
-

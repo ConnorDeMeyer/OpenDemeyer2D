@@ -2,13 +2,14 @@
 
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 template <typename T>
 class ODArray : public std::vector<T>
 {
 public:
 
-	ODArray(){}
+	ODArray() : std::vector<T>() {};
 
 	inline void SwapRemove(size_t position)
 	{
@@ -31,13 +32,3 @@ public:
 	}
 
 };
-
-template <typename T>
-std::ostream& operator<<(const ODArray<T>& arr, std::ostream& os)
-{
-	for (auto ele : arr)
-	{
-		os << ele;
-	}
-	return os;
-}

@@ -68,6 +68,8 @@ public:
 
 	const std::unordered_map<uint32, GameObject*>& GetAllObjects() const { return m_RegisteredObjects; }
 
+	void Copy(Scene* originalScene);
+
 private:
 
 	void RegisterObject(GameObject* pObject);

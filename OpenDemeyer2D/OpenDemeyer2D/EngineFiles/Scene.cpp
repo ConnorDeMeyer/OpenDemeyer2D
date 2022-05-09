@@ -216,6 +216,18 @@ void Scene::Deserialize(Deserializer& is)
 	}
 }
 
+void Scene::Copy(Scene* originalScene)
+{
+	m_SceneTree.reserve(originalScene->m_SceneTree.size());
+
+	for (auto pObject : originalScene->m_SceneTree)
+	{
+		auto go = new GameObject();
+		go->Copy(pObject);
+		Add(go);
+	}
+}
+
 void Scene::RegisterObject(GameObject* pObject)
 {
 	uint32_t id = uint32_t(m_RegisteredObjects.size()) + 1;

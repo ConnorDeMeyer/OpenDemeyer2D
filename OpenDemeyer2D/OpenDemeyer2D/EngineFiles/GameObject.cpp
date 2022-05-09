@@ -298,6 +298,15 @@ void GameObject::Copy(GameObject* originalObject)
 	{
 		comp.second->MakeCopy(this);
 	}
+	SetName(originalObject->m_Name);
+	SetTag(originalObject->m_Tag);
+
+	for (auto child : originalObject->m_Children)
+	{
+		auto go = new GameObject();
+		go->Copy(child);
+		go->SetParent(this);
+	}
 }
 
 void GameObject::ImGuiPopup()
@@ -329,8 +338,7 @@ void GameObject::ImGuiPopup()
 				go->SetParent(m_Parent);
 			else
 				m_pScene->Add(go);
-			go->SetName(m_Name);
-			go->SetTag(m_Tag);
+			
 		}
 
 		ImGui::EndPopup();

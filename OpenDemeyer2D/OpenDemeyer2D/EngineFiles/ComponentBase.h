@@ -66,7 +66,7 @@ public:
 	virtual void Deserialize(Deserializer& is) = 0;
 
 	/** Copy values from the original when getting copied*/
-	virtual void Copy(const ComponentBase* pOriginal) = 0;
+	virtual void Clone(const ComponentBase* pOriginal) = 0;
 
 	virtual ComponentBase* MakeCopy(GameObject* objectToAddto) const = 0;
 

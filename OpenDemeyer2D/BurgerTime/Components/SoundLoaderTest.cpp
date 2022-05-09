@@ -10,7 +10,7 @@ void SoundLoaderTest::RenderImGui()
 	if (ImGui::Button("Load My Ashes") && !m_IsLoadingMyAshes)
 	{
 		m_IsLoadingMyAshes = true;
-		m_FutureMyAshes = RESOURCES.LoadResourceAsync<Music>("Audio/Porcupine_Tree-My_Ashes.mp3");
+		m_FutureMyAshes = RESOURCES.LoadMusicAsync("Audio/Porcupine_Tree-My_Ashes.mp3");
 	}
 
 	if (m_IsLoadingMyAshes && m_FutureMyAshes.wait_for(0s) == std::future_status::ready)
@@ -49,7 +49,7 @@ void SoundLoaderTest::RenderImGui()
 	if (ImGui::Button("Load Valkerie") && !m_IsLoadingValkerie)
 	{
 		m_IsLoadingValkerie = true;
-		m_FutureValkerie = RESOURCES.LoadResourceAsync<Music>("Audio/Varien-The_Valkyrie_Trilogy.mp3");
+		m_FutureValkerie = RESOURCES.LoadMusicAsync("Audio/Varien-The_Valkyrie_Trilogy.mp3");
 	}
 
 	if (m_IsLoadingValkerie && m_FutureValkerie.wait_for(0s) == std::future_status::ready)
@@ -88,7 +88,7 @@ void SoundLoaderTest::RenderImGui()
 	if (ImGui::Button("Load Hop") && !m_IsLoadingHop)
 	{
 		m_IsLoadingHop = true;
-		m_FutureHop = RESOURCES.LoadResourceAsync<Sound>("Audio/sound-frogger-hop.wav");
+		m_FutureHop = RESOURCES.LoadSoundAsync("Audio/sound-frogger-hop.wav");
 	}
 
 	if (m_IsLoadingHop && m_FutureHop.wait_for(0s) == std::future_status::ready)
@@ -110,7 +110,7 @@ void SoundLoaderTest::RenderImGui()
 	if (ImGui::Button("Load Plunk") && !m_IsLoadingPlunk)
 	{
 		m_IsLoadingPlunk = true;
-		m_FuturePlunk = RESOURCES.LoadResourceAsync<Sound>("Audio/sound-frogger-plunk.wav");
+		m_FuturePlunk = RESOURCES.LoadSoundAsync("Audio/sound-frogger-plunk.wav");
 	}
 
 	if (m_IsLoadingPlunk && m_FuturePlunk.wait_for(0s) == std::future_status::ready)
@@ -132,7 +132,7 @@ void SoundLoaderTest::RenderImGui()
 	if (ImGui::Button("Load Squash") && !m_IsLoadingSquash)
 	{
 		m_IsLoadingSquash = true;
-		m_FutureSquash = RESOURCES.LoadResourceAsync<Sound>("Audio/sound-frogger-squash.wav");
+		m_FutureSquash = RESOURCES.LoadSoundAsync("Audio/sound-frogger-squash.wav");
 	}
 
 	if (m_IsLoadingSquash && m_FutureSquash.wait_for(0s) == std::future_status::ready)

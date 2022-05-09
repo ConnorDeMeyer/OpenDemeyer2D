@@ -1,12 +1,12 @@
 //#pragma once
 //
-//class GameObject;
-//class Scene;
+//class gameobject;
+//class scene;
 //
-//GameObject* PeterPepperFactory();
+//gameobject* peterpepperfactory();
 //
-//GameObject* PlayerUiFactory(GameObject* peterPepper);
+//gameobject* playeruifactory(gameobject* peterpepper);
 //
-//GameObject* EnemyFactory();
+//gameobject* enemyfactory();
 //
-//void AddGameUI(Scene* pScene);
+//void addgameui(scene* pscene);

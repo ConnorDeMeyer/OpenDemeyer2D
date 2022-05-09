@@ -8,9 +8,14 @@
 #include "Components/TextureComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/Transform.h"
+#include "Components/InputComponent.h"
+#include "Components/SpriteComponent.h"
+#include "Components/PhysicsComponent.h"
+#include "PPSpriteMovement.h"
 #include "imgui.h"
 #include "PeterPepper.h"
 #include "StageMovement.h"
+#include "../GameplayPrefabs.h"
 
 //constexpr char level1[stageSize]
 //{
@@ -177,12 +182,19 @@ void Stage::LoadStageItems()
 
 void Stage::SpawnPlayer()
 {
-	//m_pPeterPepper = PeterPepperFactory();
-	//auto stageMovement = m_pPeterPepper->GetComponent<StageMovement>();
-	//stageMovement->SetStage(this);
-	//
-	//m_pPeterPepper->SetParent(GetParent());
-	//m_pPeterPepper->GetTransform()->SetPosition({ 104,3 });
+	m_pPeterPepper = new GameObject();
+	m_pPeterPepper->AddComponent<PhysicsComponent>();
+	m_pPeterPepper->AddComponent<RenderComponent>();
+	m_pPeterPepper->AddComponent<InputComponent>();
+	m_pPeterPepper->AddComponent<SpriteComponent>();
+	m_pPeterPepper->AddComponent<PPSpriteMovement>();
+	m_pPeterPepper->AddComponent<PeterPepper>();
+	m_pPeterPepper->AddComponent<StageMovement>();
+	auto stageMovement = m_pPeterPepper->GetComponent<StageMovement>();
+	stageMovement->SetStage(this);
+	
+	m_pPeterPepper->SetParent(GetParent());
+	m_pPeterPepper->GetTransform()->SetPosition({ 104,3 });
 }
 
 constexpr int BigHorizontalTiles = stageWidth / 2;

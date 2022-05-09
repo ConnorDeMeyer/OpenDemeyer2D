@@ -1,22 +1,25 @@
 ﻿#pragma once
-#include <b2_body.h>
+#include "box2d.h"
 #include <glm/glm.hpp>
 
 #include "EngineFiles/Component.h"
 #include "UtilityFiles/Delegate.h"
 
 
+
 class PhysicsComponent : public Component<PhysicsComponent>
 {
 public:
 
-	virtual void DefineUserFields(UserFieldBinder& binder) const;
+	void DefineUserFields(UserFieldBinder& binder) const override;
 
 	virtual ~PhysicsComponent();
 	
 	void BeginPlay() override;
 
 	void Update(float) override;
+
+	void RenderImGui() override;
 
 	/** Get the Box2D body of this component.*/
 	b2Body* GetBody() const { return m_pBody; }
@@ -51,12 +54,14 @@ public:
 	 */
 	Delegate<PhysicsComponent*, const glm::vec2&, const glm::vec2&> OnHit;
 
-	//const std::string GetComponentName() override { return "PhysicsComponent"; }
 
 private:
 
 	void CreateBody();
 
 	b2Body* m_pBody{};
+
+	b2BodyDef m_BodyDef{};
+	std::vector<std::pair<b2FixtureDef, std::unique_ptr<b2Shape>>> m_FixtureDefs;
 
 };

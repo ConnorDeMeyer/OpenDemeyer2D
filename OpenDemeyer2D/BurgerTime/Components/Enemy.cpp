@@ -91,7 +91,7 @@ void Enemy::UpdateMovement()
 
 void Enemy::UpdateSprite()
 {
-	if (m_pStageMovement)
+	if (m_pStageMovement && m_pSpriteComponent)
 	{
 		auto& movement = m_pStageMovement->GetMovementInput();
 

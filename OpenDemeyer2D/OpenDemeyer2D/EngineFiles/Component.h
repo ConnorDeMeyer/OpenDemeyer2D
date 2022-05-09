@@ -63,7 +63,7 @@ public:
 		}
 	}
 
-	void Copy(const ComponentBase* pOriginal) override
+	void Clone(const ComponentBase* pOriginal) override
 	{
 		constexpr uint32_t typeId{ class_id<T>() };
 		auto typeInfo = TypeInformation::GetInstance().GetTypeInfo(typeId);
@@ -84,7 +84,7 @@ public:
 			comp = objectToAddto->GetTransform();
 		else
 			comp = objectToAddto->AddComponent<T>();
-		comp->Copy(this);
+		comp->Clone(this);
 		return comp;
 	}
 

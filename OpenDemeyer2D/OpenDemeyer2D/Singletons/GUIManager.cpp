@@ -200,11 +200,26 @@ void GUIManager::RenderImGuiObjectInfo()
 		auto& components = pObject->GetComponents();
 		for (auto& comp : components)
 		{
+			ImGui::PushID(comp.second);
 			std::string label(comp.second->GetComponentName());
-			if (ImGui::CollapsingHeader(label.c_str(), ImGuiTreeNodeFlags_None))
+			bool header{ ImGui::CollapsingHeader(label.c_str(), ImGuiTreeNodeFlags_None) };
+			if (ImGui::BeginPopupContextItem("component options"))
+			{
+				if (ImGui::MenuItem("delete component"))
+				{
+					pObject->RemoveComponent(comp.second);
+					ImGui::CloseCurrentPopup();
+					ImGui::EndPopup();
+					ImGui::PopID();
+					break;
+				}
+				ImGui::EndPopup();
+			}
+			if (header)
 			{
 				comp.second->RenderImGui();
 			}
+			ImGui::PopID();
 		}
 	}
 
@@ -334,24 +349,44 @@ void GUIManager::RenderImGuiGameWindow()
 	ImGui::Begin("Game", nullptr, flags);
 
 	// play/pause/stop buttons
-	ImGui::Button("Play");
+	if (ImGui::Button("Play"))
+	{
+		auto& scenes = SCENES;
+		auto activeScene = scenes.GetActiveScene();
+		if (activeScene)
+		{
+			auto& scene = scenes.CreateScene(activeScene->GetName() + std::string("(copy)"));
+			scene.Copy(activeScene);
+			scenes.SetActiveScene(&scene);
+
+			ENGINE.PlayGame();
+		}
+	}
 	ImGui::SameLine();
-	ImGui::Button("Pause");
+	if (ImGui::Button("Pause"))
+	{
+		ENGINE.PauseGame(true);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Resume"))
+	{
+		ENGINE.PauseGame(false);
+	}
 	ImGui::SameLine();
 	ImGui::Button("Stop");
 
 	float aspectRatio = float(m_GameResWidth) / float(m_GameResHeight);
 
 	auto pos = glm::vec2(ImGui::GetCursorPos()) + glm::vec2(ImGui::GetWindowPos());
-	auto size = ImGui::GetWindowSize();
-	size.y -= 30; // add offset
+	auto imageSize = ImGui::GetWindowSize();
+	imageSize.y -= 30; // add offset
 
 	if (m_bKeepAspectRatio)
 	{
-		ImVec2 newSize = { size.y * aspectRatio, size.y };
-		if (newSize.x > size.x)
-			newSize = { size.x, size.x / aspectRatio };
-		size = newSize;
+		ImVec2 newSize = { imageSize.y * aspectRatio, imageSize.y };
+		if (newSize.x > imageSize.x)
+			newSize = { imageSize.x, imageSize.x / aspectRatio };
+		imageSize = newSize;
 	}
 
 	auto& renderer = RENDER;
@@ -363,8 +398,11 @@ void GUIManager::RenderImGuiGameWindow()
 	}
 	renderer.SetRenderTargetScreen();
 
+	// Draw image in center
+	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - imageSize.x) * 0.5f);
+
 #pragma warning(disable : 4312)
-	ImGui::Image((ImTextureID)m_ImGuiRenderTarget->GetRenderedTexture(), size);
+	ImGui::Image((ImTextureID)m_ImGuiRenderTarget->GetRenderedTexture(), imageSize);
 #pragma warning(default : 4312)
 
 	// OBJECT SELECTOR
@@ -372,8 +410,8 @@ void GUIManager::RenderImGuiGameWindow()
 	{
 		glm::vec2 mousePos = ImGui::GetMousePos();
 		mousePos -= glm::vec2(pos);
-		mousePos.x *= m_GameResWidth / size.x;
-		mousePos.y *= m_GameResHeight / size.y;
+		mousePos.x *= m_GameResWidth / imageSize.x;
+		mousePos.y *= m_GameResHeight / imageSize.y;
 		mousePos.y = m_GameResHeight - mousePos.y;
 
 		auto& sceneTree = SCENES.GetActiveScene()->GetSceneTree();
@@ -392,8 +430,8 @@ void GUIManager::RenderImGuiGameWindow()
 	{
 		glm::vec2 mousePos = ImGui::GetMousePos();
 		mousePos -= glm::vec2(pos);
-		mousePos.x *= m_GameResWidth / size.x;
-		mousePos.y *= m_GameResHeight / size.y;
+		mousePos.x *= m_GameResWidth / imageSize.x;
+		mousePos.y *= m_GameResHeight / imageSize.y;
 		mousePos.y = m_GameResHeight - mousePos.y;
 
 		auto& sceneTree = SCENES.GetActiveScene()->GetSceneTree();

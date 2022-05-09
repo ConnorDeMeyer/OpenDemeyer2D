@@ -141,6 +141,8 @@ void SpriteComponent::Reset()
 
 void SpriteComponent::UpdateSourceRect()
 {
+	if (!m_Texture) return;
+
 	if (m_CurrentFrame >= m_TotalFrames)
 	{
 		if (m_bLoop)

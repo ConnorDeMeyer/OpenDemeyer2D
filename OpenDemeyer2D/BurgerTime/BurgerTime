@@ -124,9 +124,6 @@ position 0 0
 scale 1 1
 rotation 0
 }
-class Enemy
-{
-}
 {
 }
 7 tester
@@ -157,6 +154,9 @@ class Transform
 position 0 0
 scale 1 1
 rotation 0
+}
+class PhysicsComponent
+{
 }
 {
 }

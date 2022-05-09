@@ -93,7 +93,6 @@ void Engine::Initialize()
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
 		throw std::runtime_error(Mix_GetError());
 	}
-	Mix_ChannelFinished(&Sound::ChannelFinishedCallback);
 
 	/**
 	* WINDOW

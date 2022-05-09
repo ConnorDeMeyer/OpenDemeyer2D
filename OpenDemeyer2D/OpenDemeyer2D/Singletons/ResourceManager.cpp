@@ -38,81 +38,284 @@ void ResourceManager::Init(const std::string& dataPath)
 		throw std::runtime_error(std::string("Failed to load support for fonts: ") + SDL_GetError());
 	}
 
-	PopulateResourceLocks<Texture2D>();
-	PopulateResourceLocks<Font>();
-	PopulateResourceLocks<RenderTarget>();
-	PopulateResourceLocks<Surface2D>();
-	PopulateResourceLocks<Sound>();
-	PopulateResourceLocks<Music>();
+	m_SurfaceLoaderThread = std::jthread(&ResourceManager::SurfaceLoaderThread, this);
+	m_SoundLoaderThread = std::jthread(&ResourceManager::SoundLoaderThread, this);
+	m_MusicLoaderThread = std::jthread(&ResourceManager::MusicLoaderThread, this);
 
-	// Initialized the file loaders
+	LoadFilePaths();
 
-	// TEXTURE2D
-	{
-		ResourceFileLoaderFunction TextureLoader = [this](const std::string& fullPath) -> std::shared_ptr<void>
-		{
-			SDL_Surface* pLoadedSurface = IMG_Load(fullPath.c_str());
-			if (!pLoadedSurface)
-			{
-				throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
-			}
-			auto texture2d = this->LoadTexture(pLoadedSurface);
-
-			return std::static_pointer_cast<void>(texture2d);
-		};
-		m_ResourceLoaders.insert({ typeid(Texture2D),TextureLoader });
-	}
-	// SURFACE2D
-	{
-		ResourceFileLoaderFunction SurfaceLoader = [this](const std::string& fullPath) -> std::shared_ptr<void>
-		{
-			SDL_Surface* pLoadedSurface = IMG_Load(fullPath.c_str());
-			if (!pLoadedSurface)
-			{
-				throw std::runtime_error(std::string("Failed to load surface: ") + SDL_GetError());
-			}
-
-			return  std::static_pointer_cast<void>(std::make_shared<Surface2D>(pLoadedSurface));
-		};
-		m_ResourceLoaders.insert({ typeid(Surface2D),SurfaceLoader });
-	}
-	// SOUND
-	{
-		ResourceFileLoaderFunction SoundLoader = [this](const std::string& fullPath) -> std::shared_ptr<void>
-		{
-			// load sample.wav in to sample
-			Mix_Chunk* sample;
-			sample = Mix_LoadWAV(fullPath.c_str());
-			if (!sample) {
-				throw std::runtime_error(Mix_GetError());
-			}
-
-			return std::static_pointer_cast<void>(std::make_shared<Sound>(sample));
-		};
-		m_ResourceLoaders.insert({ typeid(Sound),SoundLoader });
-	}
-	// MUSIC
-	{
-		ResourceFileLoaderFunction MusicLoader = [this](const std::string& fullPath) -> std::shared_ptr<void>
-		{
-			// load the MP3 file "music.mp3" to play as music
-			Mix_Music* music;
-			music = Mix_LoadMUS(fullPath.c_str());
-			if (!music) {
-				throw std::runtime_error(Mix_GetError());
-			}
-
-			return  std::static_pointer_cast<void>(std::make_shared<Music>(music));
-		};
-		m_ResourceLoaders.insert({ typeid(Music),MusicLoader });
-	}
 }
+
+#pragma region FileLoaders
 
 std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file)
 {
-	auto pTexture = std::static_pointer_cast<Texture2D>(LoadResource<Texture2D>(file));
-	pTexture->m_sourceFile = file;
-	return pTexture;
+	auto it = m_Texture2DFiles.find(file);
+	if (it != m_Texture2DFiles.end() && !it->second.expired())
+	{
+		return it->second.lock();
+	}
+
+	std::string fullPath = m_DataPath + file;
+	SDL_Surface* pLoadedSurface{};
+	{
+		std::scoped_lock<std::mutex> lock(m_IMGLock);
+
+		pLoadedSurface = IMG_Load(fullPath.c_str());
+		if (!pLoadedSurface)
+		{
+			throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+		}
+	}
+
+	auto texture2d = LoadTexture(pLoadedSurface);
+	texture2d->m_sourceFile = file;
+	m_Texture2DFiles.emplace(file, texture2d);
+
+	return texture2d;
+}
+
+std::shared_ptr<Font> ResourceManager::LoadFont(const std::string& file, unsigned size)
+{
+	// Load the resource and lock the resource loading mechanism
+	//std::scoped_lock<std::mutex> lock(*m_ResourceLoaderLocks[typeid(Font)]);
+
+	auto it = m_LoadedFonts.find(std::make_pair(file, size));
+	if (it != m_LoadedFonts.end())
+	{
+		if (!it->second.expired())
+			return it->second.lock();
+	}
+
+	auto sharedFont = std::make_shared<Font>(m_DataPath + file, size);
+
+	// Add to the list
+	m_LoadedFonts.insert(std::make_pair(std::make_pair(file, size), sharedFont));
+
+	return sharedFont;
+}
+
+std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file)
+{
+	auto it = m_Surface2DFiles.find(file);
+	if (it != m_Surface2DFiles.end() && !it->second.expired())
+	{
+		return it->second.lock();
+	}
+
+	// SURFACE LOADER
+	std::string fullPath = m_DataPath + file;
+	SDL_Surface* pLoadedSurface{};
+	{
+		std::scoped_lock<std::mutex> lock(m_IMGLock);
+
+		pLoadedSurface = IMG_Load(fullPath.c_str());
+		if (!pLoadedSurface)
+		{
+			throw std::runtime_error(std::string("Failed to load surface: ") + SDL_GetError());
+		}
+	}
+
+	auto surface2D = std::make_shared<Surface2D>(pLoadedSurface);
+	surface2D->m_sourceFile = file;
+	m_Surface2DFiles.emplace(file, surface2D);
+
+	return surface2D;
+}
+
+std::shared_ptr<Sound> ResourceManager::LoadSound(const std::string& file)
+{
+	auto it = m_SoundFiles.find(file);
+	if (it != m_SoundFiles.end() && !it->second.expired())
+	{
+		return it->second.lock();
+	}
+
+	// SOUND LOADING
+	Mix_Chunk* sample;
+	std::string fullPath = m_DataPath + file;
+	{
+		std::scoped_lock<std::mutex> lock(m_MixLock);
+
+		sample = Mix_LoadWAV(fullPath.c_str());
+		if (!sample) {
+			throw std::runtime_error(Mix_GetError());
+		}
+	}
+
+	auto sound = std::make_shared<Sound>(sample);
+	sound->m_sourceFile = file;
+	m_SoundFiles.emplace(file, sound);
+
+	return sound;
+}
+
+
+std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file)
+{
+	auto it = m_MusicFiles.find(file);
+	if (it != m_MusicFiles.end() && !it->second.expired())
+	{
+		return it->second.lock();
+	}
+
+	// MUSIC LOADING
+	Mix_Music* musicSample;
+	std::string fullPath = m_DataPath + file;
+	{
+		std::scoped_lock<std::mutex> lock(m_MixLock);
+
+		musicSample = Mix_LoadMUS(fullPath.c_str());
+		if (!musicSample) {
+			throw std::runtime_error(Mix_GetError());
+		}
+	}
+
+	auto music = std::make_shared<Music>(musicSample);
+	music->m_sourceFile = file;
+	m_MusicFiles.emplace(file, music);
+
+	return music;
+}
+
+#pragma endregion
+
+#pragma region FileLoadersAsync
+
+std::future<std::shared_ptr<Surface2D>> ResourceManager::LoadSurfaceAsync(const std::string& file)
+{
+	std::scoped_lock<std::mutex> lock(m_SurfaceQueueLock);
+
+	m_SurfaceLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Surface2D>>());
+	return m_SurfaceLoaderQueue.back().second->get_future();
+}
+
+std::future<std::shared_ptr<Sound>> ResourceManager::LoadSoundAsync(const std::string& file)
+{
+	std::scoped_lock<std::mutex> lock(m_SoundQueueLock);
+
+	m_SoundLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Sound>>());
+	return m_SoundLoaderQueue.back().second->get_future();
+}
+
+std::future<std::shared_ptr<Music>> ResourceManager::LoadMusicAsync(const std::string& file)
+{
+	std::scoped_lock<std::mutex> lock(m_MusicQueueLock);
+
+	m_MusicLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Music>>());
+	return m_MusicLoaderQueue.back().second->get_future();
+}
+
+#pragma endregion
+
+#pragma region ThreadedLoaders
+
+using namespace std::chrono_literals;
+
+void ResourceManager::SoundLoaderThread()
+{
+	auto& queue = m_SoundLoaderQueue;
+
+	bool* terminate{ &m_TerminateLoaderThreads };
+	std::condition_variable threadIdle;
+	std::mutex waitlock;
+	std::unique_lock<std::mutex> uniqueWaitLock(waitlock);
+
+	while (true)
+	{
+		threadIdle.wait_for(uniqueWaitLock, 100ms, [&terminate, &queue]
+			{
+				return (*terminate || !queue.empty());
+			});
+
+		// terminate the thread if terminateLoaderThreads is true
+		if (*terminate)
+			return;
+
+		if (queue.empty())
+			continue;
+
+		std::pair<std::string, std::shared_ptr<std::promise<std::shared_ptr<Sound>>>> entry;
+		{
+			std::scoped_lock<std::mutex> lock(m_SoundQueueLock);
+			entry = queue.front();
+			queue.pop_front();
+		}
+		entry.second->set_value(LoadSound(entry.first));
+	}
+}
+
+void ResourceManager::MusicLoaderThread()
+{
+	auto& queue = m_MusicLoaderQueue;
+
+	bool* terminate{ &m_TerminateLoaderThreads };
+	std::condition_variable threadIdle;
+	std::mutex waitlock;
+	std::unique_lock<std::mutex> uniqueWaitLock(waitlock);
+
+	while (true)
+	{
+		threadIdle.wait_for(uniqueWaitLock, 100ms, [&terminate, &queue]
+			{
+				return (*terminate || !queue.empty());
+			});
+
+		// terminate the thread if terminateLoaderThreads is true
+		if (*terminate)
+			return;
+
+		if (queue.empty())
+			continue;
+
+		std::pair<std::string, std::shared_ptr<std::promise<std::shared_ptr<Music>>>> entry;
+		{
+			std::scoped_lock<std::mutex> lock(m_MusicQueueLock);
+			entry = queue.front();
+			queue.pop_front();
+		}
+		entry.second->set_value(LoadMusic(entry.first));
+	}
+}
+
+void ResourceManager::SurfaceLoaderThread()
+{
+	auto& queue = m_SurfaceLoaderQueue;
+
+	bool* terminate{ &m_TerminateLoaderThreads };
+	std::condition_variable threadIdle;
+	std::mutex waitlock;
+	std::unique_lock<std::mutex> uniqueWaitLock(waitlock);
+
+	while (true)
+	{
+		threadIdle.wait_for(uniqueWaitLock, 100ms, [&terminate, &queue]
+			{
+				return (*terminate || !queue.empty());
+			});
+
+		// terminate the thread if terminateLoaderThreads is true
+		if (*terminate)
+			return;
+
+		if (queue.empty())
+			continue;
+
+		std::pair<std::string, std::shared_ptr<std::promise<std::shared_ptr<Surface2D>>>> entry;
+		{
+			std::scoped_lock<std::mutex> lock(m_SurfaceQueueLock);
+			entry = queue.front();
+			queue.pop_front();
+		}
+		entry.second->set_value(LoadSurface(entry.first));
+	}
+}
+
+#pragma endregion
+
+void ResourceManager::LoadFilePaths()
+{
+
 }
 
 std::shared_ptr<Texture2D> ResourceManager::LoadTexture(SDL_Surface* pSurface)
@@ -196,38 +399,13 @@ std::shared_ptr<Texture2D> ResourceManager::LoadTexture(int width, int height)
 {
 
 	SDL_Surface* pSurface{};
-	{
-		// Load the resource and lock the resource loading mechanism
-		std::scoped_lock<std::mutex> lock(*m_ResourceLoaderLocks[typeid(Surface2D)]);
-
-		pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-	}
+	pSurface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 
 	auto texture = LoadTexture(pSurface);
 
 	SDL_FreeSurface(pSurface);
 
 	return texture;
-}
-
-std::shared_ptr<Font> ResourceManager::LoadFont(const std::string& file, unsigned size)
-{
-	// Load the resource and lock the resource loading mechanism
-	std::scoped_lock<std::mutex> lock(*m_ResourceLoaderLocks[typeid(Font)]);
-
-	auto it = m_LoadedFonts.find(std::make_pair(file, size));
-	if (it != m_LoadedFonts.end())
-	{
-		if (!it->second.expired())
-			return it->second.lock();
-	}
-
-	auto sharedFont = std::make_shared<Font>(m_DataPath + file, size);
-
-	// Add to the list
-	m_LoadedFonts.insert(std::make_pair(std::make_pair(file, size), sharedFont));
-
-	return sharedFont;
 }
 
 std::shared_ptr<RenderTarget> ResourceManager::CreateRenderTexture(int width, int height)
@@ -276,29 +454,10 @@ std::shared_ptr<RenderTarget> ResourceManager::CreateRenderTexture(int width, in
 	return std::make_shared<RenderTarget>(frameBuffer, renderedTexture, width, height);
 }
 
-std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file)
-{
-	auto pSurface = std::static_pointer_cast<Surface2D>(LoadResource<Surface2D>(file));
-	pSurface->m_sourceFile = file;
-	return pSurface;
-}
-
 std::shared_ptr<Surface2D> ResourceManager::LoadSurface(int width, int height)
 {
 	SDL_Surface* pSurface = SDL_CreateRGBSurfaceWithFormat(0,width,height,32,SDL_PIXELFORMAT_RGBA32);
 	return std::make_shared<Surface2D>(pSurface);
 }
 
-std::shared_ptr<Sound> ResourceManager::LoadSound(const std::string& file)
-{
-	auto pSound = std::static_pointer_cast<Sound>(LoadResource<Sound>(file));
-	pSound->m_sourceFile = file;
-	return pSound;
-}
 
-std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file)
-{
-	auto pMusic = std::static_pointer_cast<Music>(LoadResource<Music>(file));
-	pMusic->m_sourceFile = file;
-	return pMusic;
-}
