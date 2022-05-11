@@ -79,6 +79,7 @@
     <ClCompile Include="EngineFiles\GameObject.cpp" />
     <ClCompile Include="EngineFiles\Scene.cpp" />
     <ClCompile Include="EngineFiles\ComponentBase.cpp" />
+    <ClCompile Include="ImGuiExt\FileDetailView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Transform.h">
@@ -172,6 +173,7 @@
     <ClInclude Include="UtilityFiles\StateMachine.h" />
     <ClInclude Include="EngineIO\EngineSettings.h" />
     <ClInclude Include="ImGuiExt\CustomImGuiFields.h" />
+    <ClInclude Include="ImGuiExt\FileDetailView.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="engineconfig.ini" />

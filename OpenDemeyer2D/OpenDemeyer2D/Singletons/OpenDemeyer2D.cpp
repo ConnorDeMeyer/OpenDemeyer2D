@@ -120,6 +120,12 @@ void Engine::Initialize()
 	}
 
 	RENDER.Init(m_Window);
+
+	// tell the resource manager where he can find the game data
+	std::string dataPath;
+	m_EngineSettings.GetData(OD_RESOURCES_PATH, dataPath);
+	ResourceManager::GetInstance().Init(dataPath);
+
 	GUI.Init(m_Window);
 }
 
@@ -144,11 +150,6 @@ void Engine::Cleanup()
 void Engine::Run(GameInstance* pGameInstance)
 {
 	Initialize();
-
-	// tell the resource manager where he can find the game data
-	std::string dataPath;
-	m_EngineSettings.GetData(OD_RESOURCES_PATH, dataPath);
-	ResourceManager::GetInstance().Init(dataPath);
 
 	pGameInstance->LoadGame();
 	m_pGameinstance = pGameInstance;
@@ -338,6 +339,7 @@ void Engine::PlayGame()
 {
 	m_Playing = true;
 	m_Paused = false;
+	SCENES.GetActiveScene()->BeginPlay();
 }
 
 void Engine::StopGame()

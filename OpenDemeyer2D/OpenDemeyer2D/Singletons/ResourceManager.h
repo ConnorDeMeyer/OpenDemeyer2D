@@ -14,8 +14,10 @@
 #include <SDL.h>
 #include <cassert>
 #include <iostream>
+#include <filesystem>
 
 #include "UtilityFiles/Singleton.h"
+#include "ImGuiExt/FileDetailView.h"
 #define RESOURCES ResourceManager::GetInstance()
 
 class Texture2D;
@@ -24,6 +26,19 @@ class RenderTarget;
 class Surface2D;
 class Sound;
 class Music;
+class FileDetailView;
+
+struct Directory
+{
+	Directory(const std::filesystem::path& _dirPath)
+		: dirPath{ _dirPath }
+	{};
+
+	Directory* previous{};
+	std::filesystem::path dirPath;
+	std::vector<Directory*> Directories;
+	std::vector<std::unique_ptr<FileDetailView>> Files;
+};
 
 class ResourceManager final : public Singleton<ResourceManager>
 {
@@ -44,34 +59,36 @@ public:
 
 public: //**// TEXTURE2D //**//
 
-	std::shared_ptr<Texture2D> LoadTexture(const std::string& file);
+	std::shared_ptr<Texture2D> LoadTexture(const std::string& file, bool keepLoaded = false);
 	std::shared_ptr<Texture2D> LoadTexture(SDL_Surface* pSurface);
 	std::shared_ptr<Texture2D> LoadTexture(int width, int height);
 
 private:
 
+	std::vector<std::shared_ptr<Texture2D>> m_AlwaysLoadedTextures;
 	std::unordered_map<std::string, std::weak_ptr<Texture2D>> m_Texture2DFiles;
 
 	std::mutex m_IMGLock;
 
 public: //**// SURFACE2D //**//
 
-	std::shared_ptr<Surface2D> LoadSurface(const std::string& file);
+	std::shared_ptr<Surface2D> LoadSurface(const std::string& file, bool keepLoaded = false);
 	std::shared_ptr<Surface2D> LoadSurface(int width, int height);
-	std::future<std::shared_ptr<Surface2D>> LoadSurfaceAsync(const std::string& file);
+	std::future<std::shared_ptr<Surface2D>> LoadSurfaceAsync(const std::string& file, bool keepLoaded = false);
 
 private:
 
 	void SurfaceLoaderThread();
 
+	std::vector<std::shared_ptr<Surface2D>> m_AlwaysLoadedSurfaces;
 	std::unordered_map<std::string, std::weak_ptr<Surface2D>> m_Surface2DFiles;
-	std::deque<std::pair<std::string, std::shared_ptr<std::promise<std::shared_ptr<Surface2D>>>>> m_SurfaceLoaderQueue;
+	std::deque<std::tuple<std::string, std::shared_ptr<std::promise<std::shared_ptr<Surface2D>>>, bool>> m_SurfaceLoaderQueue;
 	std::mutex m_SurfaceQueueLock;
 	std::jthread m_SurfaceLoaderThread;
 
 public: //**// FONT //**//
 
-	std::shared_ptr<Font> LoadFont(const std::string& file, uint32_t size);
+	std::shared_ptr<Font> LoadFont(const std::string& file, uint32_t size, bool keepLoaded = false);
 
 private:
 
@@ -83,15 +100,16 @@ public: //**// RENDER TARGET //**//
 
 public: //**// SOUND //**//
 
-	std::shared_ptr<Sound> LoadSound(const std::string& file);
-	std::future<std::shared_ptr<Sound>> LoadSoundAsync(const std::string& file);
+	std::shared_ptr<Sound> LoadSound(const std::string& file, bool keepLoaded = false);
+	std::future<std::shared_ptr<Sound>> LoadSoundAsync(const std::string& file, bool keepLoaded = false);
 
 private:
 
 	void SoundLoaderThread();
 
+	std::vector<std::shared_ptr<Sound>> m_AlwaysLoadedSounds;
 	std::unordered_map<std::string, std::weak_ptr<Sound>> m_SoundFiles;
-	std::deque<std::pair<std::string, std::shared_ptr<std::promise<std::shared_ptr<Sound>>>>> m_SoundLoaderQueue;
+	std::deque<std::tuple<std::string, std::shared_ptr<std::promise<std::shared_ptr<Sound>>>, bool>> m_SoundLoaderQueue;
 	std::mutex m_SoundQueueLock;
 	std::jthread m_SoundLoaderThread;
 
@@ -99,17 +117,22 @@ private:
 
 public: //**// MUSIC //**//
 
-	std::shared_ptr<Music> LoadMusic(const std::string& file);
-	std::future<std::shared_ptr<Music>> LoadMusicAsync(const std::string& file);
+	std::shared_ptr<Music> LoadMusic(const std::string& file, bool keepLoaded = false);
+	std::future<std::shared_ptr<Music>> LoadMusicAsync(const std::string& file, bool keepLoaded = false);
 
 private:
 
 	void MusicLoaderThread();
 
+	std::vector<std::shared_ptr<Music>> m_AlwaysLoadedMusic;
 	std::unordered_map<std::string, std::weak_ptr<Music>> m_MusicFiles;
-	std::deque<std::pair<std::string, std::shared_ptr<std::promise<std::shared_ptr<Music>>>>> m_MusicLoaderQueue;
+	std::deque<std::tuple<std::string, std::shared_ptr<std::promise<std::shared_ptr<Music>>>, bool>> m_MusicLoaderQueue;
 	std::mutex m_MusicQueueLock;
 	std::jthread m_MusicLoaderThread;
+
+public:
+
+	Directory* GetRootDirectory() const { return m_RootDirectory; }
 
 private:
 
@@ -124,4 +147,7 @@ private:
 
 	// TODO change this into a unordered_map. needs a special hash funtion
 	std::map<std::pair<std::string, unsigned int>, std::weak_ptr<Font>> m_LoadedFonts;
+
+	std::vector<std::unique_ptr<Directory>> m_Directories{};
+	Directory* m_RootDirectory{};
 };

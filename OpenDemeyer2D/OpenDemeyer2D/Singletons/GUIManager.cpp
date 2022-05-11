@@ -1,18 +1,29 @@
 #include "Singletons/GUIManager.h"
+
 #include "OpenDemeyer2D.h"
+
+#include "box2d.h"
+
 #include "imgui.h"
-#include "backends/imgui_impl_sdl.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_sdl.h"
+
 #include "ImGuiExt/EngineStyle.h"
+#include "ImGuiExt/FileDetailView.h"
+
 #include "Singletons/ResourceManager.h"
 #include "Singletons/SceneManager.h"
+#include "Singletons/RenderManager.h"
+
 #include "ResourceWrappers/RenderTarget.h"
-#include "RenderManager.h"
-#include "box2d.h"
+
 #include "EngineFiles/GameObject.h"
 #include "EngineFiles/Component.h"
 #include "EngineFiles/Scene.h"
+
 #include "Components/RenderComponent.h"
+#include "Components/PhysicsComponent.h"
+#include "Components/Transform.h"
 
 void GUIManager::Init(SDL_Window* window)
 {
@@ -43,6 +54,8 @@ void GUIManager::Init(SDL_Window* window)
 	SetImGuiStyle();
 
 	m_ImGuiRenderTarget = RESOURCES.CreateRenderTexture(m_GameResWidth, m_GameResHeight);
+
+	m_pCurrentDirectory = RESOURCES.GetRootDirectory();
 }
 
 void GUIManager::Destroy()
@@ -67,13 +80,16 @@ void GUIManager::EndGUI()
 
 void GUIManager::RenderGUI()
 {
+	RenderImGuiFileView();
+	RenderImGuiDirView();
+	RenderImGuiMainMenu();
+	RenderImGuiFileDetails();
 	SCENES.RenderImGui();
 	ENGINE.RenderStats();
 	ENGINE.RenderSettings();
 	RenderImGuiGameWindow();
 	RenderImGuiRenderInfo();
 	RenderImGuiObjectInfo();
-	RenderImGuiMainMenu();
 	ImGui::Render();
 }
 
@@ -116,42 +132,84 @@ void GUIManager::RenderHitboxes() const
 	static_assert(sizeof(b2Vec2) == sizeof(glm::vec2));
 
 	auto& renderer = RENDER;
-
 	renderer.SetRenderTarget(renderer.GetRenderLayers().back());
-
-	auto pWorld = SCENES.GetActiveScene()->GetPhysicsWorld();
-
 	renderer.SetColor({ 255,55,255,200 });
 
-	for (auto pBody{ pWorld->GetBodyList() }; pBody; pBody = pBody->GetNext())
+	// when the game is running and bodies are initialized
+	if (SCENES.GetActiveScene()->HasBegunPlay())
 	{
-		auto& position = pBody->GetPosition();
-		for (auto fixture{ pBody->GetFixtureList() }; fixture; fixture = fixture->GetNext())
+		auto pWorld = SCENES.GetActiveScene()->GetPhysicsWorld();
+
+		for (auto pBody{ pWorld->GetBodyList() }; pBody; pBody = pBody->GetNext())
 		{
-			switch (fixture->GetType())
+			auto& position = pBody->GetPosition();
+			for (auto fixture{ pBody->GetFixtureList() }; fixture; fixture = fixture->GetNext())
 			{
-			case b2Shape::Type::e_polygon:
-			{
-				auto polygon = reinterpret_cast<b2PolygonShape*>(fixture->GetShape());
-				b2Vec2 positions[b2_maxPolygonVertices]{};
-				for (int32 i{}; i < polygon->m_count; ++i)
+				switch (fixture->GetType())
 				{
-					positions[i] = polygon->m_vertices[i] + position;
+				case b2Shape::Type::e_polygon:
+				{
+					auto polygon = reinterpret_cast<b2PolygonShape*>(fixture->GetShape());
+					b2Vec2 positions[b2_maxPolygonVertices]{};
+					for (int32 i{}; i < polygon->m_count; ++i)
+					{
+						positions[i] = polygon->m_vertices[i] + position;
+					}
+					renderer.RenderPolygon(reinterpret_cast<glm::vec2*>(positions), polygon->m_count, true);
 				}
-				renderer.RenderPolygon(reinterpret_cast<glm::vec2*>(positions), polygon->m_count, true);
+				break;
+				case b2Shape::Type::e_circle:
+				{
+					auto circle = reinterpret_cast<b2CircleShape*>(fixture->GetShape());
+					glm::vec2 center = { position.x + circle->m_p.x,position.y + circle->m_p.y };
+					renderer.RenderEllipse(center, { circle->m_radius, circle->m_radius }, true);
+				}
+				break;
+				}
 			}
-			break;
-			case b2Shape::Type::e_circle:
+
+		}
+	}
+	else // editor mode where there are no bodies yet
+	{
+		auto scene = SCENES.GetActiveScene();
+		for (auto go : scene->GetAllObjects())
+		{
+			if (auto comp = go.second->GetComponent<PhysicsComponent>())
 			{
-				auto circle = reinterpret_cast<b2CircleShape*>(fixture->GetShape());
-				glm::vec2 center = { position.x + circle->m_p.x,position.y + circle->m_p.y };
-				renderer.RenderEllipse(center, { circle->m_radius, circle->m_radius }, true);
-			}
-			break;
+				Transform* transform = go.second->GetTransform();
+				auto& pos = transform->GetWorldPosition();
+				for (auto& fixture : comp->GetFixtureDefs())
+				{
+					switch (fixture.second->GetType())
+					{
+					case b2Shape::Type::e_polygon:
+					{
+						auto polygon = reinterpret_cast<b2PolygonShape*>(fixture.second.get());
+						glm::vec2 positions[b2_maxPolygonVertices]{};
+						for (int32 i{}; i < polygon->m_count; ++i)
+						{
+							positions[i] = reinterpret_cast<const glm::vec2&>(polygon->m_vertices[i]) + pos;
+						}
+						RENDER.RenderPolygon(positions, polygon->m_count, true);
+					}
+					break;
+					case b2Shape::Type::e_circle:
+					{
+						auto circle = reinterpret_cast<b2CircleShape*>(fixture.second.get());
+						glm::vec2 center = { pos.x + circle->m_p.x,pos.y + circle->m_p.y };
+						RENDER.RenderEllipse(center, { circle->m_radius, circle->m_radius }, true);
+					}
+					break;
+					case b2Shape::Type::e_edge:
+
+						break;
+					}
+				}
 			}
 		}
-
 	}
+
 }
 
 void GUIManager::RenderImGuiObjectInfo()
@@ -188,8 +246,8 @@ void GUIManager::RenderImGuiObjectInfo()
 
 		if (ImGui::BeginPopupModal("Add Component Error", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			ImGui::Text("Component is already in the Game Object");
-			if (ImGui::Button("continue"))
+			ImGui::TextWrapped("Component is already in the Game Object");
+			if (ImGui::Button("continue", { 200,0 }))
 			{
 				ImGui::CloseCurrentPopup();
 			}
@@ -263,6 +321,96 @@ void GUIManager::RenderImGuiMainMenu()
 		}
 		ImGui::EndMainMenuBar();
 	}
+}
+
+void GUIManager::RenderImGuiDirView()
+{
+	ImGui::Begin("Directory View");
+
+	auto root = RESOURCES.GetRootDirectory();
+	ImGui::PushID(root);
+	if (ImGui::TreeNodeEx(root->dirPath.string().c_str(), root->Directories.empty() * ImGuiTreeNodeFlags_Leaf))
+	{
+		for (auto subDir : root->Directories)
+		{
+			RenderImGuiDirViewRecursive(subDir);
+		}
+		ImGui::TreePop();
+	}
+	ImGui::PopID();
+
+	ImGui::End();
+}
+
+void GUIManager::RenderImGuiDirViewRecursive(Directory* dir)
+{
+	ImGui::PushID(dir);
+	if (ImGui::TreeNodeEx(dir->dirPath.filename().string().c_str(), dir->Directories.empty() * ImGuiTreeNodeFlags_Leaf))
+	{
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+			m_pCurrentDirectory = dir;
+		for (auto subDir : dir->Directories)
+		{
+			RenderImGuiDirViewRecursive(subDir);
+		}
+		ImGui::TreePop();
+	}
+	else if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+		m_pCurrentDirectory = dir;
+
+	ImGui::PopID();
+}
+
+void GUIManager::RenderImGuiFileView()
+{
+	ImGui::Begin("File View");
+
+	static std::string errorMessage{};
+
+	if (m_pCurrentDirectory)
+	{
+		for (auto& file : m_pCurrentDirectory->Files)
+		{
+			/*if (ImGui::Selectable(file->GetFileName().c_str()))
+			{
+				try
+				{
+					m_FileDetails = file.get();
+				}
+				catch (std::runtime_error& e)
+				{
+					errorMessage = e.what();
+					ImGui::OpenPopup("Error Viewing File");
+				}
+			}*/
+			if (file->RenderImGuiFileName())
+			{
+				m_FileDetails = file.get();
+			}
+		}
+	}
+
+	if (ImGui::BeginPopupModal("Error Viewing File", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::TextWrapped(errorMessage.c_str());
+		if (ImGui::Button("continue", {200,0}))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+
+	ImGui::End();
+}
+
+void GUIManager::RenderImGuiFileDetails()
+{
+	ImGui::Begin("File Details");
+
+	if (m_FileDetails)
+		m_FileDetails->RenderDetails();
+	
+	ImGui::End();
 }
 
 inline float cross2D(const glm::vec2& vec0, const glm::vec2& vec1)
@@ -399,7 +547,8 @@ void GUIManager::RenderImGuiGameWindow()
 	renderer.SetRenderTargetScreen();
 
 	// Draw image in center
-	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - imageSize.x) * 0.5f);
+	float offsetX = (ImGui::GetWindowWidth() - imageSize.x) * 0.5f;
+	ImGui::SetCursorPosX(offsetX);
 
 #pragma warning(disable : 4312)
 	ImGui::Image((ImTextureID)m_ImGuiRenderTarget->GetRenderedTexture(), imageSize);
@@ -410,6 +559,7 @@ void GUIManager::RenderImGuiGameWindow()
 	{
 		glm::vec2 mousePos = ImGui::GetMousePos();
 		mousePos -= glm::vec2(pos);
+		mousePos.x -= offsetX;
 		mousePos.x *= m_GameResWidth / imageSize.x;
 		mousePos.y *= m_GameResHeight / imageSize.y;
 		mousePos.y = m_GameResHeight - mousePos.y;

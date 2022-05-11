@@ -63,12 +63,22 @@ std::istream& operator>>(std::istream& stream, std::shared_ptr<Texture2D>& textu
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Surface2D>& surface2d);
 
 //Box2D
-//class b2Body;
-//std::ostream& operator<<(std::ostream& stream, const b2Body* pBody);
-//
-//std::istream& operator>>(std::istream& stream, b2Body* pBody);
+struct b2BodyDef;
+struct b2FixtureDef;
+class b2Shape;
+struct b2Vec2;
 
-// Vector
+std::ostream& operator<<(std::ostream& stream, const b2Vec2& vec2);
+std::ostream& operator<<(std::ostream& stream, const b2BodyDef& body);
+std::ostream& operator<<(std::ostream& stream, const b2FixtureDef& fixture);
+std::ostream& operator<<(std::ostream& stream, const b2Shape* shape);
+
+std::istream& operator>>(std::istream& stream, b2Vec2& vec2);
+std::istream& operator>>(std::istream& stream, b2BodyDef& body);
+std::istream& operator>>(std::istream& stream, b2FixtureDef& fixture);
+std::istream& operator>>(std::istream& stream, b2Shape*& shape);
+
+// std::vector
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T>& arr)
 {
@@ -77,7 +87,7 @@ std::ostream& operator<<(std::ostream& os, const std::vector<T>& arr)
 	{
 		os << ele << ' ';
 	}
-	os << "}\n";
+	os << "\n}";
 	return os;
 }
 
@@ -86,6 +96,7 @@ std::istream& operator>>(std::istream& is, std::vector<T>& arr)
 {
 	if (CanContinue(is))
 	{
+		arr.clear();
 		while (!IsEnd(is))
 		{
 			T element{};
@@ -95,5 +106,33 @@ std::istream& operator>>(std::istream& is, std::vector<T>& arr)
 	}
 	return is;
 }
+
+// std::pair
+template <typename T0, typename T1>
+std::ostream& operator<<(std::ostream& os, const std::pair<T0, T1>& pair)
+{
+	return os << pair.first << ' ' << pair.second;
+}
+
+template <typename T0, typename T1>
+std::istream& operator>>(std::istream& is, std::pair<T0, T1>& pair)
+{
+	return is >> pair.first >> pair.second;
+}
+
+// std::unique_ptr
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const std::unique_ptr<T>& ptr)
+{
+	return os << ptr->get();
+}
+
+template <typename T>
+std::istream& operator>>(std::istream& is, std::unique_ptr<T>& ptr)
+{
+	ptr = std::unique_ptr<T>(new T());
+	return is >> ptr.get();
+}
+
 
 

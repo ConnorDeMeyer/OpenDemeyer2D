@@ -223,6 +223,7 @@
     <ClCompile Include="EngineFiles\GameObject.cpp" />
     <ClCompile Include="EngineFiles\Scene.cpp" />
     <ClCompile Include="EngineIO\CustomSerializers.cpp" />
+    <ClCompile Include="ImGuiExt\FileDetailView.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="EngineIO\Deserializer.cpp" />
     <ClCompile Include="Singletons\GUIManager.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="EngineIO\Deserializer.h" />
     <ClInclude Include="ImGuiExt\CustomImGuiFields.h" />
     <ClInclude Include="ImGuiExt\EngineStyle.h" />
+    <ClInclude Include="ImGuiExt\FileDetailView.h" />
     <ClInclude Include="ImGuiExt\imgui_helpers.h" />
     <ClInclude Include="ResourceWrappers\Font.h" />
     <ClInclude Include="ResourceWrappers\RenderTarget.h" />

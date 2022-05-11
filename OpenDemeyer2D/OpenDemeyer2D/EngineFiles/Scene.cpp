@@ -47,6 +47,9 @@ void Scene::DestroyObjectImmediately(GameObject* pObject)
 
 void Scene::Update(float deltaTime)
 {
+	if (!m_HasBegunPlay)
+		return;
+
 	// Update every object
 	for (GameObject* child : m_SceneTree)
 	{

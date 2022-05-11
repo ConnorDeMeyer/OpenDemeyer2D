@@ -36,6 +36,8 @@ public:
 
 	void BeginPlay() override;
 
+	virtual void DefineUserFields(UserFieldBinder&) const;
+
 	bool CanMoveInDirection(const glm::vec2& position, movementDirection direction);
 
 	void SnapToGridX(Transform* transform);
@@ -47,6 +49,7 @@ public:
 	void RenderImGui() override;
 
 	void UpdateStageTexture(const std::shared_ptr<Texture2D>& texture);
+
 
 private:
 
@@ -69,7 +72,7 @@ private:
 
 	Uint8 m_FallenHamburgers[4]{};
 
-	char m_LevelLayout[stageSize]
+	std::vector<int> m_LevelLayout
 	{
 		1,1,1,1,1,1,1,1,1,
 		2,0,2,2,2,0,2,0,2,

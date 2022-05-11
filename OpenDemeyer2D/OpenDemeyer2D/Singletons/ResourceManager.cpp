@@ -3,6 +3,9 @@
  */
 #include "ResourceManager.h"
 
+#include <stack>
+#include <vector>
+
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL.h>
@@ -15,6 +18,8 @@
 #include "ResourceWrappers/RenderTarget.h"
 #include "ResourceWrappers/Sound.h"
 #include "ResourceWrappers/Font.h"
+
+#include "ImGuiExt/FileDetailView.h"
 
 void ResourceManager::Init(const std::string& dataPath)
 {
@@ -48,7 +53,7 @@ void ResourceManager::Init(const std::string& dataPath)
 
 #pragma region FileLoaders
 
-std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file)
+std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file, bool keepLoaded)
 {
 	auto it = m_Texture2DFiles.find(file);
 	if (it != m_Texture2DFiles.end() && !it->second.expired())
@@ -56,12 +61,11 @@ std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file)
 		return it->second.lock();
 	}
 
-	std::string fullPath = m_DataPath + file;
 	SDL_Surface* pLoadedSurface{};
 	{
 		std::scoped_lock<std::mutex> lock(m_IMGLock);
 
-		pLoadedSurface = IMG_Load(fullPath.c_str());
+		pLoadedSurface = IMG_Load(file.c_str());
 		if (!pLoadedSurface)
 		{
 			throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
@@ -72,10 +76,15 @@ std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file)
 	texture2d->m_sourceFile = file;
 	m_Texture2DFiles.emplace(file, texture2d);
 
+	if (keepLoaded)
+	{
+		m_AlwaysLoadedTextures.emplace_back(texture2d);
+	}
+
 	return texture2d;
 }
 
-std::shared_ptr<Font> ResourceManager::LoadFont(const std::string& file, unsigned size)
+std::shared_ptr<Font> ResourceManager::LoadFont(const std::string& file, unsigned size, bool)
 {
 	// Load the resource and lock the resource loading mechanism
 	//std::scoped_lock<std::mutex> lock(*m_ResourceLoaderLocks[typeid(Font)]);
@@ -95,7 +104,7 @@ std::shared_ptr<Font> ResourceManager::LoadFont(const std::string& file, unsigne
 	return sharedFont;
 }
 
-std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file)
+std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file, bool keepLoaded)
 {
 	auto it = m_Surface2DFiles.find(file);
 	if (it != m_Surface2DFiles.end() && !it->second.expired())
@@ -104,12 +113,11 @@ std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file)
 	}
 
 	// SURFACE LOADER
-	std::string fullPath = m_DataPath + file;
 	SDL_Surface* pLoadedSurface{};
 	{
 		std::scoped_lock<std::mutex> lock(m_IMGLock);
 
-		pLoadedSurface = IMG_Load(fullPath.c_str());
+		pLoadedSurface = IMG_Load(file.c_str());
 		if (!pLoadedSurface)
 		{
 			throw std::runtime_error(std::string("Failed to load surface: ") + SDL_GetError());
@@ -120,10 +128,15 @@ std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file)
 	surface2D->m_sourceFile = file;
 	m_Surface2DFiles.emplace(file, surface2D);
 
+	if (keepLoaded)
+	{
+		m_AlwaysLoadedSurfaces.emplace_back(surface2D);
+	}
+
 	return surface2D;
 }
 
-std::shared_ptr<Sound> ResourceManager::LoadSound(const std::string& file)
+std::shared_ptr<Sound> ResourceManager::LoadSound(const std::string& file, bool keepLoaded)
 {
 	auto it = m_SoundFiles.find(file);
 	if (it != m_SoundFiles.end() && !it->second.expired())
@@ -133,11 +146,10 @@ std::shared_ptr<Sound> ResourceManager::LoadSound(const std::string& file)
 
 	// SOUND LOADING
 	Mix_Chunk* sample;
-	std::string fullPath = m_DataPath + file;
 	{
 		std::scoped_lock<std::mutex> lock(m_MixLock);
 
-		sample = Mix_LoadWAV(fullPath.c_str());
+		sample = Mix_LoadWAV(file.c_str());
 		if (!sample) {
 			throw std::runtime_error(Mix_GetError());
 		}
@@ -147,11 +159,16 @@ std::shared_ptr<Sound> ResourceManager::LoadSound(const std::string& file)
 	sound->m_sourceFile = file;
 	m_SoundFiles.emplace(file, sound);
 
+	if (keepLoaded)
+	{
+		m_AlwaysLoadedSounds.emplace_back(sound);
+	}
+
 	return sound;
 }
 
 
-std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file)
+std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file, bool keepLoaded)
 {
 	auto it = m_MusicFiles.find(file);
 	if (it != m_MusicFiles.end() && !it->second.expired())
@@ -161,11 +178,10 @@ std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file)
 
 	// MUSIC LOADING
 	Mix_Music* musicSample;
-	std::string fullPath = m_DataPath + file;
 	{
 		std::scoped_lock<std::mutex> lock(m_MixLock);
 
-		musicSample = Mix_LoadMUS(fullPath.c_str());
+		musicSample = Mix_LoadMUS(file.c_str());
 		if (!musicSample) {
 			throw std::runtime_error(Mix_GetError());
 		}
@@ -175,6 +191,11 @@ std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file)
 	music->m_sourceFile = file;
 	m_MusicFiles.emplace(file, music);
 
+	if (keepLoaded)
+	{
+		m_AlwaysLoadedMusic.emplace_back(music);
+	}
+
 	return music;
 }
 
@@ -182,28 +203,28 @@ std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file)
 
 #pragma region FileLoadersAsync
 
-std::future<std::shared_ptr<Surface2D>> ResourceManager::LoadSurfaceAsync(const std::string& file)
+std::future<std::shared_ptr<Surface2D>> ResourceManager::LoadSurfaceAsync(const std::string& file, bool keepLoaded)
 {
 	std::scoped_lock<std::mutex> lock(m_SurfaceQueueLock);
 
-	m_SurfaceLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Surface2D>>());
-	return m_SurfaceLoaderQueue.back().second->get_future();
+	m_SurfaceLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Surface2D>>(), keepLoaded);
+	return std::get<1>(m_SurfaceLoaderQueue.back())->get_future();
 }
 
-std::future<std::shared_ptr<Sound>> ResourceManager::LoadSoundAsync(const std::string& file)
+std::future<std::shared_ptr<Sound>> ResourceManager::LoadSoundAsync(const std::string& file, bool keepLoaded)
 {
 	std::scoped_lock<std::mutex> lock(m_SoundQueueLock);
 
-	m_SoundLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Sound>>());
-	return m_SoundLoaderQueue.back().second->get_future();
+	m_SoundLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Sound>>(), keepLoaded);
+	return std::get<1>(m_SoundLoaderQueue.back())->get_future();
 }
 
-std::future<std::shared_ptr<Music>> ResourceManager::LoadMusicAsync(const std::string& file)
+std::future<std::shared_ptr<Music>> ResourceManager::LoadMusicAsync(const std::string& file, bool keepLoaded)
 {
 	std::scoped_lock<std::mutex> lock(m_MusicQueueLock);
 
-	m_MusicLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Music>>());
-	return m_MusicLoaderQueue.back().second->get_future();
+	m_MusicLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Music>>(), keepLoaded);
+	return std::get<1>(m_MusicLoaderQueue.back())->get_future();
 }
 
 #pragma endregion
@@ -235,13 +256,13 @@ void ResourceManager::SoundLoaderThread()
 		if (queue.empty())
 			continue;
 
-		std::pair<std::string, std::shared_ptr<std::promise<std::shared_ptr<Sound>>>> entry;
+		std::tuple<std::string, std::shared_ptr<std::promise<std::shared_ptr<Sound>>>, bool> entry;
 		{
 			std::scoped_lock<std::mutex> lock(m_SoundQueueLock);
 			entry = queue.front();
 			queue.pop_front();
 		}
-		entry.second->set_value(LoadSound(entry.first));
+		std::get<1>(entry)->set_value(LoadSound(std::get<0>(entry), std::get<2>(entry)));
 	}
 }
 
@@ -268,13 +289,13 @@ void ResourceManager::MusicLoaderThread()
 		if (queue.empty())
 			continue;
 
-		std::pair<std::string, std::shared_ptr<std::promise<std::shared_ptr<Music>>>> entry;
+		std::tuple<std::string, std::shared_ptr<std::promise<std::shared_ptr<Music>>>,bool> entry;
 		{
 			std::scoped_lock<std::mutex> lock(m_MusicQueueLock);
 			entry = queue.front();
 			queue.pop_front();
 		}
-		entry.second->set_value(LoadMusic(entry.first));
+		std::get<1>(entry)->set_value(LoadMusic(std::get<0>(entry), std::get<2>(entry)));
 	}
 }
 
@@ -301,13 +322,13 @@ void ResourceManager::SurfaceLoaderThread()
 		if (queue.empty())
 			continue;
 
-		std::pair<std::string, std::shared_ptr<std::promise<std::shared_ptr<Surface2D>>>> entry;
+		std::tuple<std::string, std::shared_ptr<std::promise<std::shared_ptr<Surface2D>>>,bool> entry;
 		{
 			std::scoped_lock<std::mutex> lock(m_SurfaceQueueLock);
 			entry = queue.front();
 			queue.pop_front();
 		}
-		entry.second->set_value(LoadSurface(entry.first));
+		std::get<1>(entry)->set_value(LoadSurface(std::get<0>(entry), std::get<2>(entry)));
 	}
 }
 
@@ -315,7 +336,38 @@ void ResourceManager::SurfaceLoaderThread()
 
 void ResourceManager::LoadFilePaths()
 {
+	std::filesystem::recursive_directory_iterator it(m_DataPath);
 
+	std::unique_ptr<Directory> topDir{ new Directory(m_DataPath) };
+	m_RootDirectory = topDir.get();
+
+	std::stack<Directory*, std::vector<Directory*>> directoryStack;
+	directoryStack.push(m_RootDirectory);
+
+	m_Directories.emplace_back(std::move(topDir));
+
+	int currentDepth{it.depth()};
+	for (auto& entry : it)
+	{
+		if (it.depth() > currentDepth)
+		{
+			directoryStack.push(m_Directories.back().get());
+		}
+		else if (it.depth() < currentDepth)
+		{
+			directoryStack.pop();
+		}
+		currentDepth = it.depth();
+
+		if (entry.is_directory())
+		{
+			m_Directories.emplace_back(new Directory(entry.path()));
+			m_Directories.back().get()->previous = directoryStack.top();
+			directoryStack.top()->Directories.emplace_back(m_Directories.back().get());
+		}
+		else if (entry.is_regular_file())
+			directoryStack.top()->Files.emplace_back(FileDetailView::FileDetailFactory(entry.path()));
+	}
 }
 
 std::shared_ptr<Texture2D> ResourceManager::LoadTexture(SDL_Surface* pSurface)

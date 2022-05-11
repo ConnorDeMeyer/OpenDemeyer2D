@@ -342,6 +342,11 @@ void Stage::BeginPlay()
 
 }
 
+void Stage::DefineUserFields(UserFieldBinder& binder) const
+{
+	binder.Add<std::vector<int>>("LevelLayout", offsetof(Stage, m_LevelLayout));
+}
+
 constexpr const char* tileNames[4]
 {
 	"none",

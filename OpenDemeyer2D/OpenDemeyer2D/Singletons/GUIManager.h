@@ -5,9 +5,14 @@
 #include <SDL.h>
 #include <glm/glm.hpp>
 #include <chrono>
+#include <filesystem>
+
+#include "ImGuiExt/FileDetailView.h"
 
 class GameObject;
 class RenderTarget;
+struct Directory;
+//class FileDetailView;
 
 #define GUI GUIManager::GetInstance()
 
@@ -33,10 +38,15 @@ private:
 
 	void RenderImGuiGameWindow();
 	void RenderImGuiRenderInfo();
-	void RenderHitboxes() const;
 	void RenderImGuiObjectInfo();
 	void RenderImGuiObjectLocation();
 	void RenderImGuiMainMenu();
+	void RenderImGuiDirView();
+	void RenderImGuiDirViewRecursive(Directory* dir);
+	void RenderImGuiFileView();
+	void RenderImGuiFileDetails();
+
+	void RenderHitboxes() const;
 
 private:
 
@@ -54,5 +64,8 @@ private:
 
 	std::shared_ptr<RenderTarget> m_ImGuiRenderTarget;
 
+	Directory* m_pCurrentDirectory{};
+	std::filesystem::path m_SelectedFile;
+	FileDetailView* m_FileDetails{};
 };
 

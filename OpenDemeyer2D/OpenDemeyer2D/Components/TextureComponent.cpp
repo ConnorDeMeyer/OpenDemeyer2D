@@ -6,6 +6,7 @@
 #include "Singletons/ResourceManager.h"
 
 #include "Singletons/RenderManager.h"
+#include "EngineIO/Reflection.h"
 
 void TextureComponent::DefineUserFields(UserFieldBinder& binder) const
 {
@@ -35,9 +36,30 @@ void TextureComponent::SetTexture(const std::string& filePath)
 
 void TextureComponent::RenderImGui()
 {
+	if (ImGui::BeginCombo("TextureFile",(m_Texture) ? m_Texture->GetFilePath().c_str() : "Texture2D"))
+	{
+		ImGui::Selectable("test");
+		ImGui::EndCombo();
+	}
+	if (ImGui::BeginDragDropTarget())
+	{
+		constexpr std::string_view texture2d = type_name<Texture2D>();
+		std::string texture2dString{ texture2d };
+
+		if (auto payload = ImGui::AcceptDragDropPayload(texture2dString.c_str()))
+		{
+			m_Texture = *static_cast<const std::shared_ptr<Texture2D>*>(payload->Data);
+		}
+		ImGui::EndDragDropTarget();
+	}
+	
+
+	if (m_Texture)
+	{
 #pragma warning(disable : 4312)
-	ImGui::Image((ImTextureID)(m_Texture->GetId()), { 100,100 });
+		ImGui::Image((ImTextureID)(m_Texture->GetId()), { 100,100 });
 #pragma warning(default : 4312)
+	}
 
 	//Change source rect
 	ImGui::Text("Source Rectangle");

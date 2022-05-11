@@ -12,9 +12,10 @@
 
 #include "imgui.h"
 
-void PhysicsComponent::DefineUserFields(UserFieldBinder& ) const
+void PhysicsComponent::DefineUserFields(UserFieldBinder& binder) const
 {
-	//binder.Add<b2Body*>("Body", offsetof(PhysicsComponent, m_pBody));
+	binder.Add<b2BodyDef>("Body", offsetof(PhysicsComponent, m_BodyDef));
+	//binder.Add<std::vector<std::pair<b2FixtureDef, std::unique_ptr<b2Shape>>>>("Fixtures", offsetof(PhysicsComponent, m_FixtureDefs));
 }
 
 PhysicsComponent::~PhysicsComponent()
@@ -369,7 +370,7 @@ void PhysicsComponent::RenderImGui()
 					ImGui::EndTooltip();
 				}
 
-				ImGui::InputFloat("Friction", &fixture.density);
+				ImGui::InputFloat("Density", &fixture.density);
 				if (ImGui::IsItemHovered())
 				{
 					ImGui::BeginTooltip();

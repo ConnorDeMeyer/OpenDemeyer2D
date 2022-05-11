@@ -70,6 +70,10 @@ public:
 
 	void Copy(Scene* originalScene);
 
+	void BeginPlay() { m_HasBegunPlay = true; }
+
+	bool HasBegunPlay() { return m_HasBegunPlay; }
+
 private:
 
 	void RegisterObject(GameObject* pObject);
@@ -106,6 +110,8 @@ private:
 	b2World* m_pb2World{};
 
 	std::unordered_map<uint32, GameObject*> m_RegisteredObjects;
+
+	bool m_HasBegunPlay{};
 
 };
 

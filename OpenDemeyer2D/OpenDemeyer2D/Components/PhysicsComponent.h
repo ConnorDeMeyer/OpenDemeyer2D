@@ -54,6 +54,7 @@ public:
 	 */
 	Delegate<PhysicsComponent*, const glm::vec2&, const glm::vec2&> OnHit;
 
+	const std::vector<std::pair<b2FixtureDef, std::unique_ptr<b2Shape>>>& GetFixtureDefs() const { return m_FixtureDefs; }
 
 private:
 

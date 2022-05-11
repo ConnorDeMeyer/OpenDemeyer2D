@@ -258,3 +258,142 @@ std::istream& operator>>(std::istream& stream, std::shared_ptr<Surface2D>& surfa
 	surface = RESOURCES.LoadSurface(file);
 	return stream;
 }
+
+std::ostream& operator<<(std::ostream& stream, const b2Vec2& vec2)
+{
+	return stream << vec2.x << ' ' << vec2.y;
+}
+
+std::ostream& operator<<(std::ostream& stream, const b2BodyDef& body)
+{
+	return stream
+		<< body.allowSleep << ' '
+		<< body.bullet << ' '
+		<< body.fixedRotation << ' '
+		<< body.angularDamping << ' '
+		<< body.gravityScale << ' '
+		<< body.linearDamping << ' '
+		<< int(body.type);
+}
+
+std::ostream& operator<<(std::ostream& stream, const b2FixtureDef& fixture)
+{
+	return stream
+		<< fixture.isSensor << ' '
+		<< fixture.friction << ' '
+		<< fixture.restitution << ' '
+		<< fixture.restitutionThreshold << ' '
+		<< fixture.density << ' '
+		<< fixture.filter.categoryBits << ' '
+		<< fixture.filter.maskBits << ' '
+		<< fixture.filter.groupIndex;
+}
+
+std::ostream& operator<<(std::ostream& stream, const b2Shape* shape)
+{
+	stream << int(shape->m_type);
+
+	switch (shape->GetType())
+	{
+	case b2Shape::Type::e_circle:
+	{
+		auto circle = reinterpret_cast<const b2CircleShape*>(shape);
+		return stream << ' ' << circle->m_p << ' ' << circle->m_radius;
+	}
+		break;
+	case b2Shape::Type::e_polygon:
+	{
+		auto polygon = reinterpret_cast<const b2PolygonShape*>(shape);
+		stream << ' ' << polygon->m_count << ' ';
+		for (int i{}; i < polygon->m_count; ++i)
+		{
+			stream << polygon->m_vertices[i];
+			if (i + 1 != polygon->m_count)
+				stream << ' ';
+		}
+		return stream;
+	}
+		break;
+	case b2Shape::Type::e_edge:
+	{
+		//TODO
+	}
+		break;
+	}
+
+	return stream;
+}
+
+std::istream& operator>>(std::istream& stream, b2Vec2& vec2)
+{
+	return stream >> vec2.x >> vec2.y;
+}
+
+std::istream& operator>>(std::istream& stream, b2BodyDef& body)
+{
+	int bodyType{};
+	stream
+		>> body.allowSleep
+		>> body.bullet 
+		>> body.fixedRotation
+		>> body.angularDamping
+		>> body.gravityScale
+		>> body.linearDamping
+		>> bodyType;
+	body.type = b2BodyType(bodyType);
+	return stream;
+}
+
+std::istream& operator>>(std::istream& stream, b2FixtureDef& fixture)
+{
+	return stream
+		>> fixture.isSensor
+		>> fixture.friction
+		>> fixture.restitution
+		>> fixture.restitutionThreshold 
+		>> fixture.density
+		>> fixture.filter.categoryBits
+		>> fixture.filter.maskBits 
+		>> fixture.filter.groupIndex;
+}
+
+std::istream& operator>>(std::istream& stream, b2Shape*& shape)
+{
+	if (shape)
+		delete shape;
+
+	int shapeType{};
+	stream >> shapeType;
+	
+	shape->m_type = b2Shape::Type(shapeType);
+
+	switch (shape->m_type)
+	{
+	case b2Shape::Type::e_circle:
+	{
+		auto circle = new b2CircleShape();
+		shape = circle;
+		return stream >> circle->m_p >> circle->m_radius;
+	}
+	break;
+	case b2Shape::Type::e_polygon:
+	{
+		auto polygon = new b2PolygonShape();
+		shape = polygon;
+		stream >> polygon->m_count;
+		for (int i{}; i < polygon->m_count; ++i)
+		{
+			stream >> polygon->m_vertices[i];
+		}
+		return stream;
+	}
+	break;
+	case b2Shape::Type::e_edge:
+	{
+		//TODO
+	}
+	break;
+	}
+
+	return stream;
+}
