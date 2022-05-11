@@ -179,13 +179,13 @@ void GUIManager::RenderHitboxes() const
 			{
 				Transform* transform = go.second->GetTransform();
 				auto& pos = transform->GetWorldPosition();
-				for (auto& fixture : comp->GetFixtureDefs())
+				for (auto& shape : comp->GetShapes())
 				{
-					switch (fixture.second->GetType())
+					switch (shape->GetType())
 					{
 					case b2Shape::Type::e_polygon:
 					{
-						auto polygon = reinterpret_cast<b2PolygonShape*>(fixture.second.get());
+						auto polygon = reinterpret_cast<b2PolygonShape*>(shape);
 						glm::vec2 positions[b2_maxPolygonVertices]{};
 						for (int32 i{}; i < polygon->m_count; ++i)
 						{
@@ -196,7 +196,7 @@ void GUIManager::RenderHitboxes() const
 					break;
 					case b2Shape::Type::e_circle:
 					{
-						auto circle = reinterpret_cast<b2CircleShape*>(fixture.second.get());
+						auto circle = reinterpret_cast<b2CircleShape*>(shape);
 						glm::vec2 center = { pos.x + circle->m_p.x,pos.y + circle->m_p.y };
 						RENDER.RenderEllipse(center, { circle->m_radius, circle->m_radius }, true);
 					}

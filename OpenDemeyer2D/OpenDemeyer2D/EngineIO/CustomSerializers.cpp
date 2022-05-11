@@ -364,10 +364,8 @@ std::istream& operator>>(std::istream& stream, b2Shape*& shape)
 
 	int shapeType{};
 	stream >> shapeType;
-	
-	shape->m_type = b2Shape::Type(shapeType);
 
-	switch (shape->m_type)
+	switch (b2Shape::Type(shapeType))
 	{
 	case b2Shape::Type::e_circle:
 	{
@@ -394,6 +392,8 @@ std::istream& operator>>(std::istream& stream, b2Shape*& shape)
 	}
 	break;
 	}
+
+	shape->m_type = b2Shape::Type(shapeType);
 
 	return stream;
 }

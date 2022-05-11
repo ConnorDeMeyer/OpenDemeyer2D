@@ -15,7 +15,8 @@
 void PhysicsComponent::DefineUserFields(UserFieldBinder& binder) const
 {
 	binder.Add<b2BodyDef>("Body", offsetof(PhysicsComponent, m_BodyDef));
-	//binder.Add<std::vector<std::pair<b2FixtureDef, std::unique_ptr<b2Shape>>>>("Fixtures", offsetof(PhysicsComponent, m_FixtureDefs));
+	binder.Add<std::vector<b2FixtureDef>>("Fixtures", offsetof(PhysicsComponent, m_FixtureDefs));
+	binder.Add<std::vector<b2Shape*>>("Shapes", offsetof(PhysicsComponent, m_Shapes));
 }
 
 PhysicsComponent::~PhysicsComponent()
@@ -26,6 +27,11 @@ PhysicsComponent::~PhysicsComponent()
 		{
 			scene->GetPhysicsWorld()->DestroyBody(m_pBody);
 		}
+	}
+
+	for (auto shape : m_Shapes)
+	{
+		delete shape;
 	}
 }
 
@@ -125,15 +131,16 @@ void PhysicsComponent::RenderImGui()
 	{
 		if (ImGui::Button("Add Fixture"))
 		{
-			m_FixtureDefs.emplace_back(b2FixtureDef(), new b2CircleShape());
+			m_FixtureDefs.emplace_back(b2FixtureDef());
+			m_Shapes.emplace_back(new b2CircleShape());
 		}
 
-		for (auto it{m_FixtureDefs.begin()}; it != m_FixtureDefs.end(); ++it)
+		for (size_t it{}; it < m_FixtureDefs.size(); ++it)
 		{
-			ImGui::PushID(&*it);
+			ImGui::PushID(&m_FixtureDefs[it]);
 
-			auto& fixture = it->first;
-			auto& shape = it->second;
+			auto& fixture = m_FixtureDefs[it];
+			auto& shape = m_Shapes[it];
 
 			if (ImGui::TreeNode("Fixture"))
 			{
@@ -142,7 +149,8 @@ void PhysicsComponent::RenderImGui()
 				{
 					if (ImGui::MenuItem("Delete fixture"))
 					{
-						m_FixtureDefs.erase(it);
+						m_FixtureDefs.erase(m_FixtureDefs.begin() + it);
+						m_Shapes.erase(m_Shapes.begin() + it);
 						ImGui::CloseCurrentPopup();
 						ImGui::EndPopup();
 						ImGui::TreePop();
@@ -181,28 +189,29 @@ void PhysicsComponent::RenderImGui()
 						{
 							if (i != int(shape->GetType()))
 							{
+								delete shape;
 								switch (b2Shape::Type(i))
 								{
 								case b2Shape::Type::e_circle:
 								{
 									auto circle = new b2CircleShape();
-									shape = std::unique_ptr<b2CircleShape>(circle);
+									shape = circle;
 									circle->m_radius = 10;
 								}
 								break;
 								case b2Shape::Type::e_edge:
 								{
 									auto edge = new b2EdgeShape();
-									shape = std::unique_ptr<b2EdgeShape>(edge);
+									shape = edge;
 									edge->m_vertex1 = {};
 									edge->m_vertex2 = {};
 								}
 								break;
 								case b2Shape::Type::e_polygon:
-									shape = std::unique_ptr<b2PolygonShape>(new b2PolygonShape());
+									shape = new b2PolygonShape();
 									break;
 								case b2Shape::Type::e_chain:
-									shape = std::unique_ptr<b2ChainShape>(new b2ChainShape());
+									shape = new b2ChainShape();
 									break;
 								}
 							}
@@ -236,7 +245,7 @@ void PhysicsComponent::RenderImGui()
 				{
 				case b2Shape::Type::e_circle:
 					{
-					if (auto circle{ dynamic_cast<b2CircleShape*>(shape.get()) })
+					if (auto circle{ dynamic_cast<b2CircleShape*>(shape) })
 					{
 						ImGui::InputFloat2("Position", reinterpret_cast<float*>(&circle->m_p));
 						ImGui::InputFloat("Radius", &circle->m_radius);
@@ -245,7 +254,7 @@ void PhysicsComponent::RenderImGui()
 					break;
 				case b2Shape::Type::e_edge:
 					{
-					if (auto edge{ dynamic_cast<b2EdgeShape*>(shape.get()) })
+					if (auto edge{ dynamic_cast<b2EdgeShape*>(shape) })
 					{
 						if (ImGui::Checkbox("One Sided", &edge->m_oneSided))
 						{
@@ -276,7 +285,7 @@ void PhysicsComponent::RenderImGui()
 					break;
 				case b2Shape::Type::e_polygon:
 					{
-					if (auto polygon{ dynamic_cast<b2PolygonShape*>(shape.get()) })
+					if (auto polygon{ dynamic_cast<b2PolygonShape*>(shape) })
 					{
 						if (ImGui::TreeNode("Set As Box"))
 						{
@@ -318,7 +327,7 @@ void PhysicsComponent::RenderImGui()
 					break;
 				case b2Shape::Type::e_chain:
 					{
-					if (auto chain{ dynamic_cast<b2ChainShape*>(shape.get()) })
+					if (auto chain{ dynamic_cast<b2ChainShape*>(shape) })
 					{
 
 					}
@@ -411,7 +420,8 @@ void PhysicsComponent::RenderImGui()
 				{
 					if (ImGui::MenuItem("Delete fixture"))
 					{
-						m_FixtureDefs.erase(it);
+						m_FixtureDefs.erase(m_FixtureDefs.begin() + it);
+						m_Shapes.erase(m_Shapes.begin() + it);
 						ImGui::CloseCurrentPopup();
 						ImGui::EndPopup();
 						ImGui::PopID();

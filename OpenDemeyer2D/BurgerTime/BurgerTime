@@ -161,6 +161,12 @@ rotation 0
 class PhysicsComponent
 {
 Body 1 0 0 0 1 0 0
+Fixtures {
+0 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+0 0 0 40 
+}
 }
 {
 }
