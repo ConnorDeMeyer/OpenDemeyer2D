@@ -1,6 +1,8 @@
 #include "TextureComponent.h"
 
 #include "imgui.h"
+#include "ImGuiExt/imgui_helpers.h"
+
 #include "RenderComponent.h"
 #include "EngineFiles/GameObject.h"
 #include "Singletons/ResourceManager.h"
@@ -10,21 +12,17 @@
 
 void TextureComponent::DefineUserFields(UserFieldBinder& binder) const
 {
-	binder.Add<SDL_FRect>("SourceRect", offsetof(TextureComponent, m_SourceRect));
 	binder.Add<std::shared_ptr<Texture2D>>("Texture2D", offsetof(TextureComponent, m_Texture));
 }
 
 void TextureComponent::Initialize()
 {
-	m_pRenderComponent = GetParent()->GetComponent<RenderComponent>();
-
 	UpdateRenderComponent();
 }
 
 void TextureComponent::SetTexture(const std::shared_ptr<Texture2D>& texture)
 {
 	m_Texture = texture;
-	if (m_SourceRect.w == 0 || m_SourceRect.h == 0) m_SourceRect = { 0,0,float(m_Texture->GetWidth()), float(m_Texture->GetHeight()) };
 	UpdateRenderComponent();
 }
 
@@ -36,56 +34,25 @@ void TextureComponent::SetTexture(const std::string& filePath)
 
 void TextureComponent::RenderImGui()
 {
-	if (ImGui::BeginCombo("TextureFile",(m_Texture) ? m_Texture->GetFilePath().c_str() : "Texture2D"))
-	{
-		ImGui::Selectable("test");
-		ImGui::EndCombo();
-	}
-	if (ImGui::BeginDragDropTarget())
-	{
-		constexpr std::string_view texture2d = type_name<Texture2D>();
-		std::string texture2dString{ texture2d };
-
-		if (auto payload = ImGui::AcceptDragDropPayload(texture2dString.c_str()))
-		{
-			m_Texture = *static_cast<const std::shared_ptr<Texture2D>*>(payload->Data);
-		}
-		ImGui::EndDragDropTarget();
-	}
 	
+	ImGui::ResourceSelect("Texture2D", m_Texture);
 
 	if (m_Texture)
 	{
+		float width = ImGui::GetWindowSize().x - 20.f;
+		float aspectRatio = float(m_Texture->GetWidth()) / float(m_Texture->GetHeight());
+
 #pragma warning(disable : 4312)
-		ImGui::Image((ImTextureID)(m_Texture->GetId()), { 100,100 });
+		ImGui::Image((ImTextureID)(m_Texture->GetId()), { width,width / aspectRatio });
 #pragma warning(default : 4312)
 	}
 
-	//Change source rect
-	ImGui::Text("Source Rectangle");
-	float x{ m_SourceRect.x }, y{ m_SourceRect.y }, w{ m_SourceRect.w }, h{ m_SourceRect.h };
-	ImGui::InputFloat("X Coordinate", &x);
-	ImGui::InputFloat("Y Coordinate", &y);
-	ImGui::InputFloat("Width", &w);
-	ImGui::InputFloat("Height", &h);
-
-	if (m_SourceRect.x != x || m_SourceRect.y != y || m_SourceRect.w != w || m_SourceRect.h != h)
-	{
-		SetSourceRect({ x,y,w,h });
-	}
-}
-
-void TextureComponent::SetSourceRect(const SDL_FRect& sourceRect)
-{
-	m_SourceRect = sourceRect;
-	if (m_pRenderComponent) m_pRenderComponent->SetSourceRect(sourceRect);
 }
 
 void TextureComponent::UpdateRenderComponent()
 {
-	if (m_pRenderComponent) {
+	if (auto render = GetRenderComponent()) {
 		if (m_Texture)
-			m_pRenderComponent->SetTexture(m_Texture);
-		m_pRenderComponent->SetSourceRect(m_SourceRect);
+			render->SetTexture(m_Texture);
 	}
 }

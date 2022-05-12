@@ -76,7 +76,7 @@ public:
 	std::weak_ptr<ComponentBase> GetWeakReference() const { return m_Reference; }
 
 	/** Returns the parent of this component*/
-	GameObject* GetParent() const { return m_pParent; }
+	inline GameObject* GetParent() const { return m_pParent; }
 
 private:
 

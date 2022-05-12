@@ -56,9 +56,6 @@ private:
 
 public:
 
-	/** Calls the RenderImGui() method on the components*/
-	void RenderImGui();
-
 	/** Will flag the Game Object for deletion at the end of the frame*/
 	void Destroy();
 
@@ -121,6 +118,8 @@ public:
 	 */
 	void SetParent(GameObject* pObject);
 
+	void SetParent(Scene* pScene);
+
 	/**
 	* Get the scene it is currently in.
 	* Returns nullptr if it is not in a scene.
@@ -159,12 +158,6 @@ public:
 	void SetScene(Scene* pScene);
 
 	void Copy(GameObject* originalObject);
-
-private:
-
-	void ImGuiPopup();
-
-
 
 private:
 

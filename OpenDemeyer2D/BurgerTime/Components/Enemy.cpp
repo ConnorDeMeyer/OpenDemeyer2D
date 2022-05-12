@@ -2,6 +2,7 @@
 #include "EngineFiles/GameObject.h"
 #include "StageMovement.h"
 #include "Components/SpriteComponent.h"
+#include "Components/RenderComponent.h"
 #include "Components/Transform.h"
 #include "Singletons/ResourceManager.h"
 
@@ -9,11 +10,15 @@ void Enemy::BeginPlay()
 {
 	m_pStageMovement = GetParent()->GetComponent<StageMovement>();
 	m_pSpriteComponent = GetParent()->GetComponent<SpriteComponent>();
+	auto renderComp = GetRenderComponent();
 
 	if (m_pSpriteComponent)
 	{
-		m_pSpriteComponent->SetTexture(RESOURCES.LoadTexture("Bitmaps/FullSheet.png"));
 		m_pSpriteComponent->SetTotalFrames(2);
+	}
+	if (renderComp)
+	{
+		renderComp->SetTexture(RESOURCES.LoadTexture("Bitmaps/FullSheet.png"));
 	}
 
 	SetEnemyType(m_EnemyType);

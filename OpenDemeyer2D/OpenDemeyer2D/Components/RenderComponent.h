@@ -18,15 +18,15 @@ public:
 
 	void Render() const;
 
-	void Initialize() override;
+	//void Initialize() override;
 
 	void SetTexture(std::shared_ptr<Texture2D> texture);
+
+	const std::shared_ptr<Texture2D>& GetTexture() const { return m_Texture; }
 
 	void SetRenderAlignMode(eRenderAlignMode mode);
 
 	void SetSourceRect(const SDL_FRect& srcRect);
-
-	//const std::string GetComponentName() override { return "RenderComponent"; }
 
 	void RenderImGui() override;
 
@@ -42,8 +42,6 @@ public:
 private:
 
 	std::shared_ptr<Texture2D> m_Texture;
-
-	Transform* m_pTransform;
 
 	SDL_FRect m_SourceRect;
 

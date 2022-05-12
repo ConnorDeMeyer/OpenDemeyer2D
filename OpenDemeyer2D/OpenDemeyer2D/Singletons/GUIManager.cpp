@@ -56,6 +56,30 @@ void GUIManager::Init(SDL_Window* window)
 	m_ImGuiRenderTarget = RESOURCES.CreateRenderTexture(m_GameResWidth, m_GameResHeight);
 
 	m_pCurrentDirectory = RESOURCES.GetRootDirectory();
+
+
+	// ImGui settings window setup
+	auto it = settings.begin();
+	while (it != settings.end())
+	{
+		std::string key = it->first;
+
+		auto sstream = std::stringstream();
+
+		it->second->OStreamValue(sstream);
+
+		std::string value;
+		sstream >> value;
+
+		// check if the setting isn't already in there
+		assert(m_SettingsInputBuffer.find(key) == m_SettingsInputBuffer.end());
+
+		char* buffer = new char[INPUT_TEXT_BUFFER_SIZE] {};
+		_memccpy(buffer, value.c_str(), '\0', value.size());
+		m_SettingsInputBuffer.insert(std::make_pair(key, buffer));
+
+		++it;
+	}
 }
 
 void GUIManager::Destroy()
@@ -64,6 +88,13 @@ void GUIManager::Destroy()
 	ImGui_ImplSDL2_Shutdown();
 
 	ImGui::DestroyContext();
+}
+
+GUIManager::~GUIManager()
+{
+	// cleanup ImGui variables
+	for (auto& buffer : m_SettingsInputBuffer)
+		delete[] buffer.second;
 }
 
 void GUIManager::BeginGUI()
@@ -84,9 +115,9 @@ void GUIManager::RenderGUI()
 	RenderImGuiDirView();
 	RenderImGuiMainMenu();
 	RenderImGuiFileDetails();
-	SCENES.RenderImGui();
-	ENGINE.RenderStats();
-	ENGINE.RenderSettings();
+	RenderImGuiSceneGraph();
+	RenderImGuiEngineStats();
+	RenderImGuiEngineSettings();
 	RenderImGuiGameWindow();
 	RenderImGuiRenderInfo();
 	RenderImGuiObjectInfo();
@@ -329,7 +360,7 @@ void GUIManager::RenderImGuiDirView()
 
 	auto root = RESOURCES.GetRootDirectory();
 	ImGui::PushID(root);
-	if (ImGui::TreeNodeEx(root->dirPath.string().c_str(), root->Directories.empty() * ImGuiTreeNodeFlags_Leaf))
+	if (ImGui::TreeNodeEx(root->dirPath.string().c_str(), root->Directories.empty() * ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow))
 	{
 		for (auto subDir : root->Directories)
 		{
@@ -345,7 +376,7 @@ void GUIManager::RenderImGuiDirView()
 void GUIManager::RenderImGuiDirViewRecursive(Directory* dir)
 {
 	ImGui::PushID(dir);
-	if (ImGui::TreeNodeEx(dir->dirPath.filename().string().c_str(), dir->Directories.empty() * ImGuiTreeNodeFlags_Leaf))
+	if (ImGui::TreeNodeEx(dir->dirPath.filename().string().c_str(), dir->Directories.empty() * ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow))
 	{
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 			m_pCurrentDirectory = dir;
@@ -411,6 +442,310 @@ void GUIManager::RenderImGuiFileDetails()
 		m_FileDetails->RenderDetails();
 	
 	ImGui::End();
+}
+
+void GUIManager::RenderImGuiEngineStats()
+{
+	ImGui::Begin("Statistics");
+
+	int w{}, h{};
+	ENGINE.GetResolution(w, h);
+
+	ImGui::Text("Application average %.3f ms/frame", 1000.f / ImGui::GetIO().Framerate);
+	ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+	ImGui::Text("Resolution: %.3i x %.1i", w, h);
+
+	ImGui::End();
+}
+
+void GUIManager::RenderImGuiEngineSettings()
+{
+	ImGui::Begin("Engine Settings");
+
+	auto& settings = ENGINE.GetSettings();
+
+	auto it = settings.begin();
+	while (it != settings.end())
+	{
+		auto itBuffer = m_SettingsInputBuffer.find(it->first);
+		if (itBuffer != m_SettingsInputBuffer.end())
+		{
+			ImGui::InputText(it->first.c_str(), itBuffer->second, INPUT_TEXT_BUFFER_SIZE);
+		}
+		++it;
+	}
+
+	if (ImGui::Button("Save settings"))
+	{
+		ENGINE.SaveSettings();
+	}
+
+	ImGui::End();
+}
+
+void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
+{
+	if (m_bSceneGraphQuickExit)
+		return;
+
+	ImGui::PushID(go);
+
+	// Object name in tree
+	bool treeNode = (ImGui::TreeNodeEx(go->GetName().empty() ?
+		std::string("GameObject" + std::to_string(go->GetId())).c_str() :
+		go->GetName().c_str(),
+		ImGuiTreeNodeFlags_Leaf * go->GetChildren().empty() | ImGuiTreeNodeFlags_OpenOnArrow));
+
+	// POPUP
+	{
+		bool changeName{};
+		bool deleteObj{};
+		static char buffer[32]{};
+
+		if (ImGui::BeginPopupContextItem())
+		{
+			if (ImGui::MenuItem("Delete Object"))
+			{
+				deleteObj = true;
+			}
+
+			if (ImGui::MenuItem("Change Name"))
+			{
+				changeName = true;
+				std::memcpy(buffer, go->GetDisplayName().c_str(), go->GetDisplayName().size());
+			}
+
+			if (ImGui::MenuItem("Duplicate"))
+			{
+				auto otherGo = new GameObject();
+				otherGo->Copy(go);
+				if (go->GetParent())
+					otherGo->SetParent(go->GetParent());
+				else
+					go->GetScene()->Add(otherGo);
+			}
+
+			if (ImGui::MenuItem("Add Empty Child"))
+			{
+				auto newGo = new GameObject();
+				newGo->SetParent(go);
+			}
+
+			ImGui::EndPopup();
+		}
+
+		if (changeName)
+			ImGui::OpenPopup("Change Obj Name");
+
+		if (deleteObj)
+			ImGui::OpenPopup("Delete Object");
+
+		if (ImGui::BeginPopupModal("Change Obj Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::InputText("new name", buffer, 32);
+			if (ImGui::Button("Change Name"))
+			{
+				go->SetName(std::string(buffer));
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::BeginPopupModal("Delete Object", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Are you sure you want to delete the object?");
+			if (ImGui::Button("Delete"))
+			{
+				go->Destroy();
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
+	if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+		if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			SetSelectedObject(go);
+
+	// PAYLOAD
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	{
+		ImGui::SetDragDropPayload("GameObject", &go, sizeof(GameObject*));
+
+		ImGui::Text(go->GetDisplayName().c_str());
+
+		ImGui::EndDragDropSource();
+	}
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+		{
+			auto goPayload = *static_cast<GameObject**>(payload->Data);
+			goPayload->SetParent(go);
+			m_bSceneGraphQuickExit = true;
+		}
+
+		ImGui::EndDragDropTarget();
+	}
+
+	if (treeNode)
+	{
+		for (auto& child : go->GetChildren())
+		{
+			RenderImGuiGameObjectRecursive(child);
+		}
+		ImGui::TreePop();
+	}
+
+	ImGui::PopID();
+}
+
+void GUIManager::RenderImGuiSceneGraph()
+{
+	ImGui::Begin("SceneGraph");
+
+	static char buffer[32]{};
+
+	if (ImGui::Button("Create Scene"))
+	{
+		ImGui::OpenPopup("Create Scene");
+	}
+
+	if (ImGui::BeginTabBar("Scenes"))
+	{
+		for (Scene* pScene : SCENES.GetScenes())
+		{
+			ImGui::PushID(pScene);
+			RenderImGuiScene(pScene);
+			ImGui::PopID();
+		}
+		ImGui::EndTabBar();
+	}
+
+	if (ImGui::BeginPopupModal("Create Scene", 0, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::InputText("name", buffer, 32);
+		if (ImGui::Button("Create"))
+		{
+			SCENES.CreateScene(std::string(buffer));
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+
+	ImGui::End();
+}
+
+void GUIManager::RenderImGuiScene(Scene* pScene)
+{
+	ImGui::PushID(pScene);
+	
+	bool beginTab = ImGui::BeginTabItem(pScene->GetName().c_str());
+
+	// POPUP
+	{
+		bool changeName{};
+		static char buffer[32]{};
+
+		if (ImGui::BeginPopupContextItem("Scene settings"))
+		{
+			if (ImGui::MenuItem("Delete Scene"))
+			{
+				SCENES.RemoveScene(pScene);
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Change Name"))
+			{
+				changeName = true;
+				std::memcpy(buffer, pScene->GetName().c_str(), pScene->GetName().size());
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Set as active"))
+			{
+				SCENES.SetActiveScene(pScene);
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Add GameObject"))
+			{
+				pScene->Add(new GameObject());
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+
+		if (changeName)
+			ImGui::OpenPopup("Change Scene Name");
+
+		if (ImGui::BeginPopupModal("Change Scene Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::InputText("new name", buffer, 32);
+			if (ImGui::Button("Change Name"))
+			{
+				pScene->ChangeName(std::string(buffer));
+				ImGui::CloseCurrentPopup();
+			}
+			if (ImGui::Button("Cancel"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+	}
+
+	// TAB
+	if (beginTab) {
+
+		ImGui::BeginChild("SceneGraph");
+
+		// SCENE GRAPH
+		auto& gameObjects = pScene->GetSceneTree();
+		m_bSceneGraphQuickExit = false;
+
+		for (size_t i{}; i < gameObjects.size(); ++i)
+		{
+			auto pObject{ gameObjects[i] };
+			RenderImGuiGameObjectRecursive(pObject);
+		}
+
+		ImGui::EndChild();
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
+			{
+				auto goPayload = *static_cast<GameObject**>(payload->Data);
+				goPayload->SetParent(pScene);
+			}
+		
+			ImGui::EndDragDropTarget();
+		}
+
+		ImGui::EndTabItem();
+	}
+
+
+	ImGui::PopID();
 }
 
 inline float cross2D(const glm::vec2& vec0, const glm::vec2& vec1)

@@ -8,6 +8,7 @@
 #include "Components/RenderComponent.h"
 #include "Components/Transform.h"
 #include "StageMovement.h"
+#include "Singletons/ResourceManager.h"
 
 void PPSpriteMovement::BeginPlay()
 {
@@ -22,15 +23,15 @@ void PPSpriteMovement::BeginPlay()
 	m_pSpriteComponent = GetParent()->GetComponent<SpriteComponent>();
 	if (m_pSpriteComponent)
 	{
-		m_pSpriteComponent->SetTexture("Bitmaps/FullSheet.png");
 		m_pSpriteComponent->SetFrameDimension({ 16,16 });
 		m_pSpriteComponent->SetTotalFrames(3);
 		m_pSpriteComponent->SetTimePerFrame(1.f/8.f);
 		m_pSpriteComponent->OnAnimationEnd.BindFunction(this, [this] { this->ResetAnimation(); });
 	}
 	
-	auto pRender = GetParent()->GetComponent<RenderComponent>();
+	auto pRender = GetRenderComponent();
 	pRender->SetPivot({ 0.5f,1.f });
+	pRender->SetTexture(RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png"));
 }
 
 void PPSpriteMovement::Update(float)

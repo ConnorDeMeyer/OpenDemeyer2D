@@ -12,30 +12,30 @@ void TextComponent::Update(float)
 {
 	if (m_NeedsUpdate)
 	{
-		const auto surf = TTF_RenderText_Blended(m_Font->GetFont(), m_Text.c_str(), m_Color);
-		if (surf == nullptr)
-		{
-			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
-		}
-
-		m_TextTexture = RESOURCES.LoadTexture(surf);
-		
-		SDL_FreeSurface(surf);
-
-		m_NeedsUpdate = false;
-
-		if (m_pRenderComp)
-		{
-			m_pRenderComp->SetTexture(m_TextTexture);
-		}
+		//const auto surf = TTF_RenderText_Blended(m_Font->GetFont(), m_Text.c_str(), m_Color);
+		//if (surf == nullptr)
+		//{
+		//	throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
+		//}
+		//
+		//m_TextTexture = RESOURCES.LoadTexture(surf);
+		//
+		//SDL_FreeSurface(surf);
+		//
+		//m_NeedsUpdate = false;
+		//
+		//if (m_pRenderComp)
+		//{
+		//	m_pRenderComp->SetTexture(m_TextTexture);
+		//}
 	}
 }
 
 void TextComponent::Initialize()
 {
-	m_pRenderComp = GetParent()->GetComponent<RenderComponent>();
-
-	if (m_pRenderComp && m_TextTexture) m_pRenderComp->SetTexture(m_TextTexture);
+	//m_pRenderComp = GetParent()->GetComponent<RenderComponent>();
+	//
+	//if (m_pRenderComp && m_TextTexture) m_pRenderComp->SetTexture(m_TextTexture);
 }
 
 void TextComponent::SetFont(const std::shared_ptr<Font>& font)
@@ -76,12 +76,6 @@ void TextComponent::RenderImGui()
 	{
 		SetText(std::string(buffer));
 	}
-
-	// Show texture
-	float ratio = float(m_TextTexture->GetWidth()) / float(m_TextTexture->GetHeight());
-#pragma warning(disable : 4312)
-	ImGui::Image((ImTextureID)(m_TextTexture->GetId()), { 16 * ratio,16 });
-#pragma warning(default : 4312)
 
 	// Change Color
 	float colors[4]{ m_Color.r / 255.f, m_Color.g / 255.f, m_Color.b / 255.f, m_Color.a / 255.f };

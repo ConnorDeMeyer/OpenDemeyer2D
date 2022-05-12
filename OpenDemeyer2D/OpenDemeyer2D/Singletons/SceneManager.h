@@ -38,9 +38,6 @@ public:
 
 	void SetActiveScene(Scene* pScene);
 
-	/** Renders the ImGui of the scene*/
-	void RenderImGui();
-
 	/** Returns the scene that is currently being updated and rendered*/
 	Scene* GetActiveScene() const { return m_pActiveScene; }
 

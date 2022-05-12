@@ -25,11 +25,7 @@ void TextPixelComponent::Update(float)
 
 void TextPixelComponent::Initialize()
 {
-	m_pRenderComp = GetParent()->GetComponent<RenderComponent>();
-
 	UpdateFontTexture();
-
-	if (m_pRenderComp && m_TextTexture) m_pRenderComp->SetTexture(m_TextTexture);
 }
 
 void TextPixelComponent::setFontTexture(const std::shared_ptr<Surface2D>& surface)
@@ -69,14 +65,6 @@ void TextPixelComponent::RenderImGui()
 		UpdateFontTexture();
 	}
 
-	if (m_TextTexture) {
-		// Show texture
-		float ratio = float(m_TextTexture->GetWidth()) / float(m_TextTexture->GetHeight());
-#pragma warning(disable : 4312)
-		ImGui::Image((ImTextureID)(m_TextTexture->GetId()), { 16 * ratio,16 });
-#pragma warning(default : 4312)
-	}
-
 	// Change Color
 	float colors[4]{ m_Color.r / 255.f, m_Color.g / 255.f, m_Color.b / 255.f, m_Color.a / 255.f };
 	ImGui::ColorEdit4("Text color", colors);
@@ -100,6 +88,10 @@ void TextPixelComponent::RenderImGui()
 
 void TextPixelComponent::UpdateFontTexture()
 {
+	if (!GetRenderComponent())
+		return;
+
+
 	size_t textSize = m_Text.size();
 
 	// create an empty surface
@@ -151,13 +143,9 @@ void TextPixelComponent::UpdateFontTexture()
 		}
 	}
 
-	m_TextTexture = RESOURCES.LoadTexture(pSurface);
+	GetRenderComponent()->SetTexture(RESOURCES.LoadTexture(pSurface));
 	SDL_FreeSurface(pSurface);
 
 	m_NeedsUpdate = false;
 
-	if (m_pRenderComp)
-	{
-		m_pRenderComp->SetTexture(m_TextTexture);
-	}
 }

@@ -91,7 +91,7 @@ void Scene::AfterUpdate()
 	// Delete the destroyed Objects
 	for (GameObject* object : m_DestroyableObjects)
 	{
-		object->SetParent(nullptr);
+		object->SetParent(static_cast<GameObject*>(nullptr));
 		DestroyObjectImmediately(object);
 	}
 	m_DestroyableObjects.clear();
@@ -103,81 +103,6 @@ void Scene::Render() const
 	{
 		child->Render();
 	}
-}
-
-void Scene::ImGuiScenePopup()
-{
-	bool changeName{};
-	static char buffer[32]{};
-
-	if (ImGui::BeginPopupContextItem("Scene settings"))
-	{
-		if (ImGui::MenuItem("Delete Scene"))
-		{
-			SCENES.RemoveScene(this);
-			ImGui::CloseCurrentPopup();
-		}
-
-		if (ImGui::MenuItem("Change Name"))
-		{
-			changeName = true;
-			std::memcpy(buffer, m_Name.c_str(), m_Name.size());
-			ImGui::CloseCurrentPopup();
-		}
-
-		if (ImGui::MenuItem("Set as active"))
-		{
-			SCENES.SetActiveScene(this);
-			ImGui::CloseCurrentPopup();
-		}
-
-		if (ImGui::MenuItem("Add GameObject"))
-		{
-			Add(new GameObject());
-			ImGui::CloseCurrentPopup();
-		}
-
-		ImGui::EndPopup();
-	}
-
-	if (changeName)
-		ImGui::OpenPopup("Change Scene Name");
-
-	if (ImGui::BeginPopupModal("Change Scene Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-	{
-		ImGui::InputText("new name", buffer, 32);
-		if (ImGui::Button("Change Name"))
-		{
-			ChangeName(std::string(buffer));
-			ImGui::CloseCurrentPopup();
-		}
-		if (ImGui::Button("Cancel"))
-		{
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::EndPopup();
-	}
-}
-
-void Scene::RenderImGui()
-{
-	ImGui::PushID(this);
-
-	if (ImGui::BeginTabItem(m_Name.c_str())) {
-
-		ImGuiScenePopup();
-
-		for (size_t i{}; i < m_SceneTree.size(); ++i)
-		{
-			auto pObject{ m_SceneTree[i] };
-			pObject->RenderImGui();
-		}
-
-		ImGui::EndTabItem();
-	}
-	else ImGuiScenePopup();
-
-	ImGui::PopID();
 }
 
 void Scene::ChangeName(const std::string& name)
@@ -229,6 +154,17 @@ void Scene::Copy(Scene* originalScene)
 		go->Copy(pObject);
 		Add(go);
 	}
+}
+
+void Scene::AddToSceneTree(GameObject* go)
+{
+	for (auto sgo : m_SceneTree)
+	{
+		if (sgo == go)
+			return;
+	}
+
+	m_SceneTree.push_back(go);
 }
 
 void Scene::RegisterObject(GameObject* pObject)

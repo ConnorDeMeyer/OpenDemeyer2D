@@ -80,6 +80,7 @@
     <ClCompile Include="EngineFiles\Scene.cpp" />
     <ClCompile Include="EngineFiles\ComponentBase.cpp" />
     <ClCompile Include="ImGuiExt\FileDetailView.cpp" />
+    <ClCompile Include="ImGuiExt\imgui_helpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Transform.h">

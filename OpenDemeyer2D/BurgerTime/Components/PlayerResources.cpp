@@ -69,9 +69,13 @@ void PlayerResources::UpdateResources()
 	for (auto go : m_Resources)
 	{
 		auto textureComp = go->GetComponent<TextureComponent>();
-		textureComp->SetTexture(m_pTexture);
-		textureComp->SetSourceRect(m_SourceRect);
-		go->GetTransform()->SetPosition({ 0,TexturePosY });
-		TexturePosY += m_SourceRect.h;
+		auto renderComp = GetRenderComponent();
+		if (renderComp && textureComp) 
+		{
+			textureComp->SetTexture(m_pTexture);
+			renderComp->SetSourceRect(m_SourceRect);
+			go->GetTransform()->SetPosition({ 0,TexturePosY });
+			TexturePosY += m_SourceRect.h;
+		}
 	}
 }

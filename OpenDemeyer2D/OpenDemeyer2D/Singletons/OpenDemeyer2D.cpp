@@ -134,10 +134,6 @@ void Engine::Cleanup()
 	GUI.Destroy();
 	RENDER.Destroy();
 
-	// cleanup ImGui variables
-	for (auto& buffer : m_SettingsInputBuffer)
-		delete[] buffer.second;
-
 	delete m_pGameinstance;
 
 	Mix_CloseAudio();
@@ -215,17 +211,6 @@ void Engine::GetWindowDimensions(int& width, int& height)
 	SDL_GetWindowSize(m_Window, &width, &height);
 }
 
-void Engine::RenderStats()
-{
-	ImGui::Begin("Statistics");
-
-	ImGui::Text("Application average %.3f ms/frame", 1000.f / ImGui::GetIO().Framerate);
-	ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-	ImGui::Text("Resolution: %.3i x %.1i", m_ResolutionWidth, m_ResolutionHeight);
-
-	ImGui::End();
-}
-
 void Engine::InitializeSettings()
 {
 	// Load default values
@@ -271,29 +256,6 @@ void Engine::InitializeSettings()
 			m_EngineSettings.StreamChange(sstream);
 		}
 	}
-
-	// ImGui settings window setup
-	auto it = m_EngineSettings.begin();
-	while (it != m_EngineSettings.end())
-	{
-		std::string key = it->first;
-
-		auto sstream = std::stringstream();
-
-		it->second->OStreamValue(sstream);
-
-		std::string value;
-		sstream >> value;
-
-		// check if the setting isn't already in there
-		assert(m_SettingsInputBuffer.find(key) == m_SettingsInputBuffer.end());
-
-		char* buffer = new char[INPUT_TEXT_BUFFER_SIZE] {};
-		_memccpy(buffer, value.c_str(), '\0', value.size());
-		m_SettingsInputBuffer.insert(std::make_pair(key, buffer));
-
-		++it;
-	}
 	
 }
 
@@ -310,29 +272,6 @@ void Engine::SaveSettings() const
 
 		++it;
 	}
-}
-
-void Engine::RenderSettings()
-{
-	ImGui::Begin("Engine Settings");
-
-	auto it = m_EngineSettings.begin();
-	while (it != m_EngineSettings.end())
-	{
-		auto itBuffer = m_SettingsInputBuffer.find(it->first);
-		if (itBuffer != m_SettingsInputBuffer.end())
-		{
-			ImGui::InputText(it->first.c_str(), itBuffer->second, INPUT_TEXT_BUFFER_SIZE);
-		}
-		++it;
-	}
-
-	if (ImGui::Button("Save settings"))
-	{
-		SaveSettings();
-	}
-
-	ImGui::End();
 }
 
 void Engine::PlayGame()

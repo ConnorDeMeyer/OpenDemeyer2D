@@ -63,6 +63,8 @@ public: //**// TEXTURE2D //**//
 	std::shared_ptr<Texture2D> LoadTexture(SDL_Surface* pSurface);
 	std::shared_ptr<Texture2D> LoadTexture(int width, int height);
 
+	const std::unordered_map<std::string, std::weak_ptr<Texture2D>>& GetTexture2DFiles() const { return m_Texture2DFiles; }
+
 private:
 
 	std::vector<std::shared_ptr<Texture2D>> m_AlwaysLoadedTextures;
@@ -75,6 +77,8 @@ public: //**// SURFACE2D //**//
 	std::shared_ptr<Surface2D> LoadSurface(const std::string& file, bool keepLoaded = false);
 	std::shared_ptr<Surface2D> LoadSurface(int width, int height);
 	std::future<std::shared_ptr<Surface2D>> LoadSurfaceAsync(const std::string& file, bool keepLoaded = false);
+
+	const std::unordered_map<std::string, std::weak_ptr<Surface2D>>& GetSurface2DFiles() const { return m_Surface2DFiles; }
 
 private:
 
@@ -103,6 +107,8 @@ public: //**// SOUND //**//
 	std::shared_ptr<Sound> LoadSound(const std::string& file, bool keepLoaded = false);
 	std::future<std::shared_ptr<Sound>> LoadSoundAsync(const std::string& file, bool keepLoaded = false);
 
+	const std::unordered_map<std::string, std::weak_ptr<Sound>>& GetSoundFiles() const { return m_SoundFiles; }
+
 private:
 
 	void SoundLoaderThread();
@@ -119,6 +125,8 @@ public: //**// MUSIC //**//
 
 	std::shared_ptr<Music> LoadMusic(const std::string& file, bool keepLoaded = false);
 	std::future<std::shared_ptr<Music>> LoadMusicAsync(const std::string& file, bool keepLoaded = false);
+
+	const std::unordered_map<std::string, std::weak_ptr<Music>>& GetMusicFiles() const { return m_MusicFiles; }
 
 private:
 

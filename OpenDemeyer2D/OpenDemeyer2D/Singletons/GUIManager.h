@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <glm/glm.hpp>
 #include <chrono>
+#include <unordered_map>
 #include <filesystem>
 
 #include "ImGuiExt/FileDetailView.h"
@@ -12,6 +13,7 @@
 class GameObject;
 class RenderTarget;
 struct Directory;
+class Scene;
 //class FileDetailView;
 
 #define GUI GUIManager::GetInstance()
@@ -24,6 +26,8 @@ public:
 
 	void Init(SDL_Window* window);
 	void Destroy();
+
+	virtual ~GUIManager();
 
 	std::shared_ptr<RenderTarget>& GetImGuiRenderTarget() { m_ImGuiRenderTarget; }
 
@@ -45,6 +49,11 @@ private:
 	void RenderImGuiDirViewRecursive(Directory* dir);
 	void RenderImGuiFileView();
 	void RenderImGuiFileDetails();
+	void RenderImGuiEngineStats();
+	void RenderImGuiEngineSettings();
+	void RenderImGuiGameObjectRecursive(GameObject* go);
+	void RenderImGuiSceneGraph();
+	void RenderImGuiScene(Scene* pScene);
 
 	void RenderHitboxes() const;
 
@@ -52,8 +61,13 @@ private:
 
 	SDL_Window* m_Window{};
 
+	// ImGui data members
+	const size_t INPUT_TEXT_BUFFER_SIZE = 128;
+	std::unordered_map<std::string, char*> m_SettingsInputBuffer;
+
 	bool m_bKeepAspectRatio{ true };
 	bool m_bShowHitboxes{ false };
+	bool m_bSceneGraphQuickExit{ };
 
 	int m_GameResWidth{};
 	int m_GameResHeight{};

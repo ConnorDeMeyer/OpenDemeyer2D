@@ -49,9 +49,6 @@ public:
 	/** Renders the scene objects in the scene tree.*/
 	void Render() const;
 
-	/** Renders the ImGui of the gameobjects*/
-	void RenderImGui();
-
 	/** Returns the name of this scene.*/
 	const std::string& GetName() { return m_Name; }
 
@@ -74,6 +71,8 @@ public:
 
 	bool HasBegunPlay() { return m_HasBegunPlay; }
 
+	void AddToSceneTree(GameObject* go);
+
 private:
 
 	void RegisterObject(GameObject* pObject);
@@ -87,8 +86,6 @@ private:
 	void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
 
 	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
-
-	void ImGuiScenePopup();
 
 private:
 

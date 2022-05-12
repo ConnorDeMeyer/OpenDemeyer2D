@@ -15,7 +15,7 @@
 
 void BurgerPiece::BeginPlay()
 {
-	auto sheetTexture = RESOURCES.LoadTexture("Bitmaps/FullSheet.png");
+	auto sheetTexture = RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png");
 
 	for (int i{}; i < 4; ++i)
 	{
@@ -50,7 +50,7 @@ void BurgerPiece::SetType(BurgerPieceType type)
 
 	for (int i{}; i < 4; ++i)
 	{
-		auto texture = m_pSegments[i]->GetComponent<TextureComponent>();
+		auto texture = m_pSegments[i]->GetRenderComponent();
 		texture->SetSourceRect({ 112.f + float(i) * 8.f, 48.f + int(type) * 8.f, 8.f, 8.f });
 	}
 }

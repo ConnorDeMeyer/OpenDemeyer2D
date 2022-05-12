@@ -14,6 +14,9 @@
 #include "EngineIO/Reflection.h"
 
 
+class Transform;
+class RenderComponent;
+
 template <typename T>
 class Component : public ComponentBase
 {
@@ -27,6 +30,9 @@ public:
 	constexpr uint32_t GetComponentId() const override { return hash(type_name<T>()); }
 
 	virtual void DefineUserFields(UserFieldBinder&) const {};
+
+	inline Transform* GetTransform() const { return GetParent()->GetTransform(); }
+	inline RenderComponent* GetRenderComponent() const { return GetParent()->GetRenderComponent(); }
 
 	void Serialize(std::ostream& os) const override
 	{

@@ -16,10 +16,6 @@ public:
 
 	void Update(float) override;
 
-	void SetTexture(const std::shared_ptr<Texture2D>& texture);
-
-	void SetTexture(const std::string& filePath);
-
 	void RenderImGui() override;
 
 	void SetFrameDimension(const glm::vec2& dimension);
@@ -44,17 +40,11 @@ public:
 
 	Delegate<> OnAnimationEnd;
 
-	//const std::string GetComponentName() override { return "SpriteComponent"; }
-
 private:
 
 	void UpdateSourceRect();
 
 private:
-
-	std::shared_ptr<Texture2D> m_Texture;
-
-	RenderComponent* m_pRenderComponent{};
 
 	glm::vec2 m_FrameDimension{ 32.f, 32.f };
 	int m_FrameOffset{};

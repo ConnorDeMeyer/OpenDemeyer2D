@@ -7,7 +7,6 @@
 
 void SpriteComponent::DefineUserFields(UserFieldBinder& binder) const
 {
-	binder.Add<std::shared_ptr<Texture2D>>("Texture", offsetof(SpriteComponent, m_Texture));
 	binder.Add<glm::vec2>("frameDimension", offsetof(SpriteComponent, m_FrameDimension));
 	binder.Add<int>("frameOffset", offsetof(SpriteComponent, m_FrameOffset));
 	binder.Add<float>("frameTime", offsetof(SpriteComponent, m_TimePerFrame));
@@ -18,8 +17,6 @@ void SpriteComponent::DefineUserFields(UserFieldBinder& binder) const
 
 void SpriteComponent::Initialize()
 {
-	m_pRenderComponent = GetParent()->GetRenderComponent();
-
 	UpdateSourceRect();
 }
 
@@ -41,25 +38,8 @@ void SpriteComponent::Update(float deltaTime)
 	}
 }
 
-void SpriteComponent::SetTexture(const std::shared_ptr<Texture2D>& texture)
-{
-	m_Texture = texture;
-	if (m_pRenderComponent) m_pRenderComponent->SetTexture(m_Texture);
-}
-
-void SpriteComponent::SetTexture(const std::string& filePath)
-{
-	m_Texture = RESOURCES.LoadTexture(filePath);
-	if (m_pRenderComponent && m_Texture) m_pRenderComponent->SetTexture(m_Texture);
-}
-
 void SpriteComponent::RenderImGui()
 {
-	// image
-#pragma warning(disable : 4312)
-	ImGui::Image((ImTextureID)(m_Texture->GetId()), { 100,100 });
-#pragma warning(default : 4312)
-
 	// Time per frame
 	float tpf{ m_TimePerFrame };
 	ImGui::InputFloat("Seconds Per Frame", &tpf);
@@ -125,9 +105,17 @@ void SpriteComponent::SetTimePerFrame(float value)
 
 void SpriteComponent::SetCurrentFrame(int frame)
 {
+	RenderComponent* render = GetRenderComponent();
+	if (!render)
+		return;
+
+	auto texture = render->GetTexture();
+	if (!texture)
+		return;
+
 	m_CurrentFrame = frame;
 	int actualFrame = m_CurrentFrame + m_FrameOffset;
-	int horizontalFrames{ int(m_Texture->GetWidth() / m_FrameDimension.x) };
+	int horizontalFrames{ int(texture->GetWidth() / m_FrameDimension.x) };
 	m_CurrentFrameY = actualFrame / horizontalFrames;
 	m_CurrentFrameX = actualFrame % horizontalFrames;
 }
@@ -141,8 +129,6 @@ void SpriteComponent::Reset()
 
 void SpriteComponent::UpdateSourceRect()
 {
-	if (!m_Texture) return;
-
 	if (m_CurrentFrame >= m_TotalFrames)
 	{
 		if (m_bLoop)
@@ -153,17 +139,23 @@ void SpriteComponent::UpdateSourceRect()
 		OnAnimationEnd.BroadCast();
 	}
 
+	RenderComponent* render = GetRenderComponent();
+	if (!render)
+		return;
+
+	auto texture = render->GetTexture();
+	if (!texture)
+		return;
+
 	int actualFrame = m_CurrentFrame + m_FrameOffset;
-	int horizontalFrames{ int(m_Texture->GetWidth() / m_FrameDimension.x) };
+	int horizontalFrames{ int(texture->GetWidth() / m_FrameDimension.x) };
 	m_CurrentFrameY = actualFrame / horizontalFrames;
 	m_CurrentFrameX = actualFrame % horizontalFrames;
 
-
-	if (m_pRenderComponent)
-		m_pRenderComponent->SetSourceRect(SDL_FRect{
-			m_CurrentFrameX * m_FrameDimension.x,
-			m_CurrentFrameY * m_FrameDimension.y,
-			m_FrameDimension.x,
-			m_FrameDimension.y
-			});
+	render->SetSourceRect(SDL_FRect{
+		m_CurrentFrameX * m_FrameDimension.x,
+		m_CurrentFrameY * m_FrameDimension.y,
+		m_FrameDimension.x,
+		m_FrameDimension.y
+		});
 }

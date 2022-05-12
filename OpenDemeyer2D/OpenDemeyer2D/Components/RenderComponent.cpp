@@ -15,16 +15,12 @@ void RenderComponent::DefineUserFields(UserFieldBinder& binder) const
 
 void RenderComponent::Render() const
 {
-	if (m_Texture && m_pTransform)
+	auto transform = GetTransform();
+	if (m_Texture && transform)
 	{
-		RENDER.RenderTexture(m_Texture, m_pTransform->GetWorldPosition(), m_pTransform->GetWorldScale(), m_pTransform->GetWorldRotation(),
+		RENDER.RenderTexture(m_Texture, transform->GetWorldPosition(), transform->GetWorldScale(), transform->GetWorldRotation(),
 			m_Pivot, &m_SourceRect, m_RenderLayer);
 	}
-}
-
-void RenderComponent::Initialize()
-{
-	m_pTransform = GetParent()->GetTransform();
 }
 
 void RenderComponent::SetTexture(std::shared_ptr<Texture2D> texture)

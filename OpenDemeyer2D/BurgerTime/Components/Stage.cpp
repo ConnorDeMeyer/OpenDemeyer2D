@@ -164,7 +164,7 @@ void Stage::LoadStageItems()
 	}
 
 
-	auto sheetTexture = RESOURCES.LoadTexture("Bitmaps/FullSheet.png");
+	auto sheetTexture = RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png");
 	// burger holders at the bottom
 	for (int i{}; i < 4; ++i)
 	{
@@ -172,7 +172,7 @@ void Stage::LoadStageItems()
 		auto render = go->AddComponent<RenderComponent>();
 		auto texture = go->AddComponent<TextureComponent>();
 		texture->SetTexture(sheetTexture);
-		texture->SetSourceRect({ 112.f, 104.f, 48.f, 16.f });
+		GetRenderComponent()->SetSourceRect({112.f, 104.f, 48.f, 16.f});
 		render->SetRenderAlignMode(eRenderAlignMode::left);
 
 		go->GetTransform()->SetPosition({ 8.f + 48.f * i, -32.f });

@@ -224,6 +224,7 @@
     <ClCompile Include="EngineFiles\Scene.cpp" />
     <ClCompile Include="EngineIO\CustomSerializers.cpp" />
     <ClCompile Include="ImGuiExt\FileDetailView.cpp" />
+    <ClCompile Include="ImGuiExt\imgui_helpers.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="EngineIO\Deserializer.cpp" />
     <ClCompile Include="Singletons\GUIManager.cpp" />

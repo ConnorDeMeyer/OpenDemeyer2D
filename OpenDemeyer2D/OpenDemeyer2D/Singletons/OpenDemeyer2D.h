@@ -32,17 +32,11 @@ public:
 
 	SDL_Window* GetWindow() const { return m_Window; }
 
-	/** Render ImGui stats of the engine*/
-	void RenderStats();
-
 	void InitializeSettings();
 
 	void SaveSettings() const;
 
 	const Dictionary& GetSettings() const { return m_EngineSettings; }
-
-	/** Render the settings in an ImGui window*/
-	void RenderSettings();
 
 	void PlayGame();
 
@@ -76,10 +70,6 @@ private:
 	int m_ResolutionHeight = 480;
 	
 	Dictionary m_EngineSettings;
-
-	// ImGui data members
-	const size_t INPUT_TEXT_BUFFER_SIZE = 128;
-	std::unordered_map<std::string,char*> m_SettingsInputBuffer;
 
 	GameInstance* m_pGameinstance{};
 };

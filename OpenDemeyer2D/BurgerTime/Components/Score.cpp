@@ -54,7 +54,7 @@ void Score::Update(float deltaTime)
 		auto texture = scoreSprite->AddComponent<TextureComponent>();
 
 		texture->SetTexture(m_SheetTexture);
-		texture->SetSourceRect(SDL_FRect{ ScoreTextureMap[score],160.f, 16.f,8.f });
+		GetRenderComponent()->SetSourceRect(SDL_FRect{ScoreTextureMap[score],160.f, 16.f,8.f});
 		
 		render->SetRenderAlignMode(eRenderAlignMode::bottomRight);
 		render->SetRenderLayer(2);
@@ -83,5 +83,5 @@ void Score::Update(float deltaTime)
 
 void Score::BeginPlay()
 {
-	m_SheetTexture = RESOURCES.LoadTexture("Bitmaps/FullSheet.png");
+	m_SheetTexture = RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png");
 }

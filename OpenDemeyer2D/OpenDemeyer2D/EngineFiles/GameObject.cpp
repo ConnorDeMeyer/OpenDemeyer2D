@@ -92,49 +92,6 @@ void GameObject::InitializeComponents()
 	}
 }
 
-void GameObject::RenderImGui()
-{
-	//if (ImGui::TreeNode("Components")) {
-	//
-	//	for (auto comp : m_Components)
-	//	{
-	//		ImGui::PushID(comp.second);
-	//		if (ImGui::TreeNodeEx(comp.second->GetComponentName().c_str(), ImGuiTreeNodeFlags_Leaf)) {
-	//			if (ImGui::IsItemClicked())
-	//				RENDER.SetSelectedComponent(comp.second);
-	//			ImGui::TreePop();
-	//		}
-	//		ImGui::PopID();
-	//	}
-	//	ImGui::TreePop();
-	//}
-
-	//if (ImGui::TreeNodeEx("Children", ImGuiTreeNodeFlags_Leaf * m_Children.empty())) {
-	//ImGuiPopup();
-
-	ImGui::PushID(this);
-
-	bool treeNode = (ImGui::TreeNodeEx(GetName().empty() ?
-		std::string("GameObject" + std::to_string(GetId())).c_str() :
-		GetName().c_str(),
-		ImGuiTreeNodeFlags_Leaf * m_Children.empty()));
-
-	ImGuiPopup();
-	if (ImGui::IsItemClicked())
-		GUI.SetSelectedObject(this);
-
-	if (treeNode)
-	{
-		for (auto& child : m_Children)
-		{
-			child->RenderImGui();
-		}
-		ImGui::TreePop();
-	}
-
-	ImGui::PopID();
-}
-
 void GameObject::Destroy()
 {
 	m_pScene->DestroyObject(this);
@@ -176,6 +133,12 @@ void GameObject::SetParent(GameObject* pObject)
 	{
 		m_Parent->m_Children.SwapRemove(this);
 	}
+	// if we dont have a parent but we do have a scene, that means we are attached to the scenegraph of the scene
+	else if (m_pScene && pObject)
+	{
+		// remove this from the scene's scenegraph
+		m_pScene->RemoveObject(this);
+	}
 
 	// Set as parent
 	m_Parent = pObject;
@@ -190,8 +153,8 @@ void GameObject::SetParent(GameObject* pObject)
 		SetScene(pObject->m_pScene);
 
 		// initialize game object
-		if (pObject->m_HasBeenInitialized) InitializeComponents();
-		if (pObject->m_HasBegunPlay) BeginPlay();
+		if (pObject->m_HasBeenInitialized && !m_HasBeenInitialized) InitializeComponents();
+		if (pObject->m_HasBegunPlay && !m_HasBegunPlay) BeginPlay();
 	}
 	else if (m_pScene)
 	{
@@ -199,6 +162,21 @@ void GameObject::SetParent(GameObject* pObject)
 	}
 
 	// Set transform relative to parent
+	m_pTransform->Move({});
+}
+
+void GameObject::SetParent(Scene* pScene)
+{
+	if (m_Parent)
+	{
+		m_Parent->m_Children.SwapRemove(this);
+	}
+
+	m_Parent = nullptr;
+	SetScene(pScene);
+
+	pScene->AddToSceneTree(this);
+
 	m_pTransform->Move({});
 }
 
@@ -306,81 +284,5 @@ void GameObject::Copy(GameObject* originalObject)
 		auto go = new GameObject();
 		go->Copy(child);
 		go->SetParent(this);
-	}
-}
-
-void GameObject::ImGuiPopup()
-{
-	bool changeName{};
-	bool deleteObj{};
-	static char buffer[32]{};
-
-	//ImGui::OpenPopup("Object settings");
-
-	if (ImGui::BeginPopupContextItem())
-	{
-		if (ImGui::MenuItem("Delete Object"))
-		{
-			deleteObj = true;
-		}
-
-		if (ImGui::MenuItem("Change Name"))
-		{
-			changeName = true;
-			std::memcpy(buffer, m_Name.c_str(), m_Name.size());
-		}
-
-		if (ImGui::MenuItem("Duplicate"))
-		{
-			auto go = new GameObject();
-			go->Copy(this);
-			if (m_Parent)
-				go->SetParent(m_Parent);
-			else
-				m_pScene->Add(go);
-			
-		}
-
-		ImGui::EndPopup();
-	}
-
-	if (changeName)
-		ImGui::OpenPopup("Change Obj Name");
-
-	if (deleteObj)
-		ImGui::OpenPopup("Delete Object");
-
-	if (ImGui::BeginPopupModal("Change Obj Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-	{
-		ImGui::InputText("new name", buffer, 32);
-		if (ImGui::Button("Change Name"))
-		{
-			SetName(std::string(buffer));
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Cancel"))
-		{
-			ImGui::CloseCurrentPopup();
-		}
-
-		ImGui::EndPopup();
-	}
-
-	if (ImGui::BeginPopupModal("Delete Object", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-	{
-		ImGui::Text("Are you sure you want to delete the object?");
-		if (ImGui::Button("Delete"))
-		{
-			Destroy();
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Cancel"))
-		{
-			ImGui::CloseCurrentPopup();
-		}
-
-		ImGui::EndPopup();
 	}
 }
