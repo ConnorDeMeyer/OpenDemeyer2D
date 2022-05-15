@@ -26,11 +26,11 @@ public:
 
 	void Update(float) override;
 
-	void BeginPlay() override;
+	//void Initialize() override;
 
 private:
 
-	TextPixelComponent* m_pTextComp{};
+	std::weak_ptr<TextPixelComponent> m_pTextComp{};
 
 	Uint32 m_Score{};
 

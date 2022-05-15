@@ -17,10 +17,11 @@ Scene::Scene(const std::string& name)
 
 Scene::~Scene()
 {
-	for (size_t i{}; i < m_SceneTree.size(); ++i)
-	{
-		delete m_SceneTree[i];
-	}
+	for (auto obj : m_SceneTree)
+		delete obj;
+
+	for (auto obj : m_UninitializedObject)
+		delete obj;
 
 	delete m_pb2World;
 }

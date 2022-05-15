@@ -9,6 +9,7 @@
 
 #include "EngineFiles/Scene.h"
 #include "Singletons/OpenDemeyer2D.h"
+#include "EngineIO/CustomSerializers.h"
 
 #include "imgui.h"
 
@@ -16,7 +17,7 @@ void PhysicsComponent::DefineUserFields(UserFieldBinder& binder) const
 {
 	binder.Add<b2BodyDef>("Body", offsetof(PhysicsComponent, m_BodyDef));
 	binder.Add<std::vector<b2FixtureDef>>("Fixtures", offsetof(PhysicsComponent, m_FixtureDefs));
-	binder.Add<std::vector<b2Shape*>>("Shapes", offsetof(PhysicsComponent, m_Shapes));
+	binder.Add<std::vector<std::shared_ptr<b2Shape>>>("Shapes", offsetof(PhysicsComponent, m_Shapes));
 }
 
 PhysicsComponent::~PhysicsComponent()
@@ -28,16 +29,16 @@ PhysicsComponent::~PhysicsComponent()
 			scene->GetPhysicsWorld()->DestroyBody(m_pBody);
 		}
 	}
-
-	for (auto shape : m_Shapes)
-	{
-		delete shape;
-	}
 }
 
 void PhysicsComponent::BeginPlay()
 {
-	if (!m_pBody) CreateBody();
+	if (!m_pBody) CreateBody(m_BodyDef);
+	for (size_t i{}; i < m_FixtureDefs.size(); ++i)
+	{
+		m_FixtureDefs[i].shape = m_Shapes[i].get();
+		AddFixture(m_FixtureDefs[i]);
+	}
 }
 
 void PhysicsComponent::Update(float)
@@ -189,29 +190,28 @@ void PhysicsComponent::RenderImGui()
 						{
 							if (i != int(shape->GetType()))
 							{
-								delete shape;
 								switch (b2Shape::Type(i))
 								{
 								case b2Shape::Type::e_circle:
 								{
 									auto circle = new b2CircleShape();
-									shape = circle;
+									shape = std::shared_ptr<b2Shape>(circle);
 									circle->m_radius = 10;
 								}
 								break;
 								case b2Shape::Type::e_edge:
 								{
 									auto edge = new b2EdgeShape();
-									shape = edge;
+									shape = std::shared_ptr<b2Shape>(edge);
 									edge->m_vertex1 = {};
 									edge->m_vertex2 = {};
 								}
 								break;
 								case b2Shape::Type::e_polygon:
-									shape = new b2PolygonShape();
+									shape = std::shared_ptr<b2Shape>(new b2PolygonShape());
 									break;
 								case b2Shape::Type::e_chain:
-									shape = new b2ChainShape();
+									shape = std::shared_ptr<b2Shape>(new b2ChainShape());
 									break;
 								}
 							}
@@ -245,7 +245,7 @@ void PhysicsComponent::RenderImGui()
 				{
 				case b2Shape::Type::e_circle:
 					{
-					if (auto circle{ dynamic_cast<b2CircleShape*>(shape) })
+					if (auto circle{ std::reinterpret_pointer_cast<b2CircleShape>(shape) })
 					{
 						ImGui::InputFloat2("Position", reinterpret_cast<float*>(&circle->m_p));
 						ImGui::InputFloat("Radius", &circle->m_radius);
@@ -254,7 +254,7 @@ void PhysicsComponent::RenderImGui()
 					break;
 				case b2Shape::Type::e_edge:
 					{
-					if (auto edge{ dynamic_cast<b2EdgeShape*>(shape) })
+					if (auto edge{ std::reinterpret_pointer_cast<b2EdgeShape>(shape) })
 					{
 						if (ImGui::Checkbox("One Sided", &edge->m_oneSided))
 						{
@@ -285,7 +285,7 @@ void PhysicsComponent::RenderImGui()
 					break;
 				case b2Shape::Type::e_polygon:
 					{
-					if (auto polygon{ dynamic_cast<b2PolygonShape*>(shape) })
+					if (auto polygon{ std::reinterpret_pointer_cast<b2PolygonShape>(shape) })
 					{
 						if (ImGui::TreeNode("Set As Box"))
 						{
@@ -327,7 +327,7 @@ void PhysicsComponent::RenderImGui()
 					break;
 				case b2Shape::Type::e_chain:
 					{
-					if (auto chain{ dynamic_cast<b2ChainShape*>(shape) })
+					if (auto chain{ std::reinterpret_pointer_cast<b2ChainShape*>(shape) })
 					{
 
 					}
@@ -446,7 +446,7 @@ const glm::vec2& PhysicsComponent::GetLinearVelocity() const
 
 void PhysicsComponent::AddBox(float halfWidth, float halfHeight, bool isSensor, const glm::vec2& center, float rotation)
 {
-	if (!m_pBody) CreateBody();
+	if (!m_pBody) return;
 
 	b2PolygonShape boxShape{};
 	boxShape.SetAsBox(halfWidth, halfHeight, { center.x, center.y }, rotation);
@@ -465,15 +465,18 @@ void PhysicsComponent::AddFixture(b2FixtureDef& fixture)
 	m_pBody->CreateFixture(&fixture);
 }
 
-void PhysicsComponent::CreateBody()
+void PhysicsComponent::CreateBody(b2BodyDef& def)
 {
+	auto scene = GetScene();
+	if (scene && m_pBody)
+	{
+		scene->GetPhysicsWorld()->DestroyBody(m_pBody);
+	}
+
 	auto& position = GetParent()->GetTransform()->GetWorldPosition();
 
-	b2BodyDef bodyDef{};
-	bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(this);
-	bodyDef.position.Set(position.x, position.y);
-	bodyDef.type = b2_dynamicBody;
-	bodyDef.allowSleep = false;
+	def.userData.pointer = reinterpret_cast<uintptr_t>(this);
+	def.position.Set(position.x, position.y);
 
-	m_pBody = GetParent()->GetScene()->GetPhysicsWorld()->CreateBody(&bodyDef);
+	m_pBody = GetScene()->GetPhysicsWorld()->CreateBody(&def);
 }

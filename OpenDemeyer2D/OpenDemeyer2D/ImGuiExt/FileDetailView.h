@@ -7,6 +7,8 @@
 class Texture2D;
 class Sound;
 class Music;
+class GameObject;
+class Scene;
 
 class FileDetailView
 {
@@ -48,6 +50,8 @@ public:
 		: FileDetailView(path)
 	{}
 
+	virtual ~EmptyFileDetailView() = default;
+
 	void RenderDetails() override {}
 	constexpr std::string_view GetFileClass() override { return ""; }
 	void* GetPackage() override { return nullptr; }
@@ -62,6 +66,8 @@ public:
 		: FileDetailView(path)
 		, m_Texture{ texture }
 	{}
+
+	virtual ~ImageDetailView() = default;
 
 	void RenderDetails() override;
 	constexpr std::string_view GetFileClass() override;
@@ -81,6 +87,8 @@ public:
 		: FileDetailView(path)
 		, m_Music{ music }
 	{}
+
+	virtual ~MusicDetailView() = default;
 
 	void RenderDetails() override;
 	constexpr std::string_view GetFileClass() override;
@@ -102,6 +110,8 @@ public:
 		, m_Sound{ sound }
 	{}
 
+	virtual ~SoundDetailView() = default;
+
 	void RenderDetails() override;
 	constexpr std::string_view GetFileClass() override;
 	void* GetPackage() override;
@@ -110,5 +120,43 @@ public:
 private:
 
 	std::shared_ptr<Sound> m_Sound;
+
+};
+
+class ObjectDetailView final : public FileDetailView
+{
+public:
+
+	ObjectDetailView(const std::filesystem::path& path, GameObject* go);
+
+	virtual ~ObjectDetailView() = default;
+
+	void RenderDetails() override;
+	constexpr std::string_view GetFileClass() override;
+	void* GetPackage() override;
+	size_t GetPackageSize() override;
+
+private:
+
+	std::unique_ptr<GameObject> m_Object;
+
+};
+
+class SceneDetailView final : public FileDetailView
+{
+public:
+
+	SceneDetailView(const std::filesystem::path& path, Scene* scene);
+
+	virtual ~SceneDetailView() = default;
+
+	void RenderDetails() override;
+	constexpr std::string_view GetFileClass() override;
+	void* GetPackage() override;
+	size_t GetPackageSize() override;
+
+private:
+
+	std::unique_ptr<Scene> m_Scene;
 
 };

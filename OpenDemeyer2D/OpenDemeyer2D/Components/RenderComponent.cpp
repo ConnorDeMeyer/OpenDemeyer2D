@@ -27,7 +27,8 @@ void RenderComponent::SetTexture(std::shared_ptr<Texture2D> texture)
 {
 	m_Texture = texture;
 
-	m_SourceRect = SDL_FRect{ 0.f,0.f,float(texture->GetWidth()),float(texture->GetHeight()) };
+	if (m_SourceRect.h == 0 && m_SourceRect.w == 0)	
+		m_SourceRect = SDL_FRect{ 0.f,0.f,float(texture->GetWidth()),float(texture->GetHeight()) };
 }
 
 void RenderComponent::SetRenderAlignMode(eRenderAlignMode mode)

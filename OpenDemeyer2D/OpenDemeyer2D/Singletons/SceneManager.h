@@ -3,10 +3,13 @@
 #include "UtilityFiles/Singleton.h"
 #include <string>
 #include <vector>
+#include <memory>
 
 #define SCENES SceneManager::GetInstance()
 
 class Scene;
+class GameObject;
+
 class SceneManager final : public Singleton<SceneManager>
 {
 	friend class Singleton<SceneManager>;
@@ -16,7 +19,7 @@ public:
 	/** Updates all the scenes*/
 	void Update(float deltaTime);
 
-	void PreUpdate(bool isPlaying);
+	void PreUpdate();
 
 	void AfterUpdate();
 
@@ -51,6 +54,16 @@ public:
 
 	void Serialize(std::ostream& os);
 
+	/** 
+	* Start playing the scene.
+	* If pScene is nullptr it will start playing the active scene.
+	*/
+	void PlayScene(Scene* pScene = nullptr);
+
+	void StopPlayingScene();
+
+	const std::unique_ptr<Scene>& GetGameScene() const { return m_GameScene; }
+
 private:
 
 	SceneManager() = default;
@@ -60,6 +73,10 @@ private:
 private:
 
 	std::vector<Scene*> m_Scenes;
+
+	std::unique_ptr<Scene> m_GameScene;
+
+	std::vector<GameObject*> m_Prefabs;
 
 	Scene* m_pActiveScene{};
 

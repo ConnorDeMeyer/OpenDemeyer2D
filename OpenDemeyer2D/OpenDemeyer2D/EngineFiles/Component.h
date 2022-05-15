@@ -33,6 +33,7 @@ public:
 
 	inline Transform* GetTransform() const { return GetParent()->GetTransform(); }
 	inline RenderComponent* GetRenderComponent() const { return GetParent()->GetRenderComponent(); }
+	inline Scene* GetScene() const { return GetParent()->GetScene(); }
 
 	void Serialize(std::ostream& os) const override
 	{

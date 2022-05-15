@@ -27,6 +27,8 @@ class Surface2D;
 class Sound;
 class Music;
 class FileDetailView;
+class GameObject;
+class Scene;
 
 struct Directory
 {
@@ -141,6 +143,13 @@ private:
 public:
 
 	Directory* GetRootDirectory() const { return m_RootDirectory; }
+	void DeleteDirectory(Directory* dir);
+	void AddDirectory(Directory* root, const std::string& dirName);
+
+	void SaveGameObject(GameObject* pGameObject, std::filesystem::path& outPutPath);
+	void SaveScene(Scene* pScene, std::filesystem::path& outPutPath);
+
+	Directory* GetDirectory(const std::filesystem::path& path);
 
 private:
 

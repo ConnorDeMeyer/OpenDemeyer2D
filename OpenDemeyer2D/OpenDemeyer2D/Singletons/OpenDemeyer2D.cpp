@@ -165,9 +165,9 @@ void Engine::Run(GameInstance* pGameInstance)
 
 			input.ProcessInput();
 
-			sceneManager.PreUpdate(m_Playing && !m_Paused);
+			sceneManager.PreUpdate();
 
-			if (m_Playing && !m_Paused)
+			if (!m_Paused)
 			{
 				for (; m_TimeLag >= 0.f; m_TimeLag -= m_PhysicsTimeStep)
 					sceneManager.PhysicsStep(m_PhysicsTimeStep, m_PhysicsVelocityIter, m_PhysicsPositionIterations);
@@ -272,21 +272,6 @@ void Engine::SaveSettings() const
 
 		++it;
 	}
-}
-
-void Engine::PlayGame()
-{
-	m_Playing = true;
-	m_Paused = false;
-	SCENES.GetActiveScene()->BeginPlay();
-}
-
-void Engine::StopGame()
-{
-	SCENES.RemoveAllScenes();
-	Deserializer gameLoader{};
-	auto stream = std::ifstream("BurgerTime");
-	gameLoader.DeserializeGame(stream);
 }
 
 void Engine::SaveGame()

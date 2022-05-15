@@ -182,19 +182,19 @@ void Stage::LoadStageItems()
 
 void Stage::SpawnPlayer()
 {
-	m_pPeterPepper = new GameObject();
-	m_pPeterPepper->AddComponent<PhysicsComponent>();
-	m_pPeterPepper->AddComponent<RenderComponent>();
-	m_pPeterPepper->AddComponent<InputComponent>();
-	m_pPeterPepper->AddComponent<SpriteComponent>();
-	m_pPeterPepper->AddComponent<PPSpriteMovement>();
-	m_pPeterPepper->AddComponent<PeterPepper>();
-	m_pPeterPepper->AddComponent<StageMovement>();
-	auto stageMovement = m_pPeterPepper->GetComponent<StageMovement>();
-	stageMovement->SetStage(this);
-	
-	m_pPeterPepper->SetParent(GetParent());
-	m_pPeterPepper->GetTransform()->SetPosition({ 104,3 });
+	//m_pPeterPepper = new GameObject();
+	//m_pPeterPepper->AddComponent<PhysicsComponent>();
+	//m_pPeterPepper->AddComponent<RenderComponent>();
+	//m_pPeterPepper->AddComponent<InputComponent>();
+	//m_pPeterPepper->AddComponent<SpriteComponent>();
+	//m_pPeterPepper->AddComponent<PPSpriteMovement>();
+	//m_pPeterPepper->AddComponent<PeterPepper>();
+	//m_pPeterPepper->AddComponent<StageMovement>();
+	//auto stageMovement = m_pPeterPepper->GetComponent<StageMovement>();
+	//stageMovement->SetStage(this);
+	//
+	//m_pPeterPepper->SetParent(GetParent());
+	//m_pPeterPepper->GetTransform()->SetPosition({ 104,3 });
 }
 
 constexpr int BigHorizontalTiles = stageWidth / 2;
@@ -336,9 +336,9 @@ void Stage::BeginPlay()
 			m_Tiles[x + y * stageWidth] = tiles(m_LevelLayout[x + y * stageWidth]);
 		}
 
-	LoadStageItems();
+	//LoadStageItems();
 
-	SpawnPlayer();
+	//SpawnPlayer();
 
 }
 

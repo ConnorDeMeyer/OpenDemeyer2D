@@ -5,6 +5,7 @@
 
 #include <stack>
 #include <vector>
+#include <fstream>
 
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -18,6 +19,9 @@
 #include "ResourceWrappers/RenderTarget.h"
 #include "ResourceWrappers/Sound.h"
 #include "ResourceWrappers/Font.h"
+
+#include "EngineFiles/GameObject.h"
+#include "EngineFiles/Scene.h"
 
 #include "ImGuiExt/FileDetailView.h"
 
@@ -338,6 +342,8 @@ void ResourceManager::LoadFilePaths()
 {
 	std::filesystem::recursive_directory_iterator it(m_DataPath);
 
+	m_Directories.clear();
+
 	std::unique_ptr<Directory> topDir{ new Directory(m_DataPath) };
 	m_RootDirectory = topDir.get();
 
@@ -368,6 +374,77 @@ void ResourceManager::LoadFilePaths()
 		else if (entry.is_regular_file())
 			directoryStack.top()->Files.emplace_back(FileDetailView::FileDetailFactory(entry.path()));
 	}
+}
+
+void ResourceManager::DeleteDirectory(Directory* dir)
+{
+	std::filesystem::remove_all(dir->dirPath);
+
+	m_Directories.erase(std::find_if(m_Directories.begin(), m_Directories.end(), [dir](const std::unique_ptr<Directory>& pDir) {return pDir.get() == dir; }));
+}
+
+void ResourceManager::AddDirectory(Directory* root, const std::string& DirName)
+{
+	auto newDir = root->dirPath;
+	newDir /= DirName;
+	std::filesystem::create_directory(newDir);
+
+	m_Directories.emplace_back(new Directory(newDir));
+	Directory* newDirectory = m_Directories.back().get();
+	for (auto& dir : m_Directories)
+	{
+		if (dir.get() == root)
+		{
+			dir->Directories.push_back(newDirectory);
+			newDirectory->previous = dir.get();
+			break;
+		}
+	}
+}
+
+void ResourceManager::SaveGameObject(GameObject* pGameObject, std::filesystem::path& outPutPath)
+{
+	if (outPutPath.extension() != ".gobj")
+		outPutPath.replace_extension("");
+	if (!outPutPath.has_extension())
+		outPutPath += ".gobj";
+
+	auto of = std::ofstream(outPutPath);
+
+	pGameObject->Serialize(of);
+
+	auto dir = GetDirectory(outPutPath);
+	dir->Files.emplace_back(new ObjectDetailView(outPutPath, pGameObject));
+}
+
+void ResourceManager::SaveScene(Scene* pScene, std::filesystem::path& outPutPath)
+{
+	if (outPutPath.extension() != ".scene")
+		outPutPath.replace_extension("");
+	if (!outPutPath.has_extension())
+		outPutPath += ".scene";
+
+	auto of = std::ofstream(outPutPath);
+
+	pScene->Serialize(of);
+
+	auto dir = GetDirectory(outPutPath);
+	dir->Files.emplace_back(new SceneDetailView(outPutPath, pScene));
+}
+
+Directory* ResourceManager::GetDirectory(const std::filesystem::path& path)
+{
+	auto parentPath = path.parent_path();
+
+	for (auto& dir : m_Directories)
+	{
+		if (dir->dirPath == parentPath)
+		{
+			return dir.get();
+		}
+	}
+
+	return nullptr;
 }
 
 std::shared_ptr<Texture2D> ResourceManager::LoadTexture(SDL_Surface* pSurface)

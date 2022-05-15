@@ -5,12 +5,16 @@
 #include "ResourceWrappers/Texture2D.h"
 #include "ResourceWrappers/Sound.h"
 #include "Singletons/ResourceManager.h"
+#include "EngineFiles/GameObject.h"
+#include "EngineFiles/Scene.h"
 
 #include "EngineIO/Reflection.h"
 
 constexpr std::string_view texture2D{ type_name<Texture2D>() };
 constexpr std::string_view sound{ type_name<Sound>() };
 constexpr std::string_view music{ type_name<Music>() };
+constexpr std::string_view gameObject{ "GameObjectFile" };
+constexpr std::string_view scene{ "SceneFile" };
 
 std::string_view GetFileTypeFromExtension(const std::string extention)
 {
@@ -20,6 +24,10 @@ std::string_view GetFileTypeFromExtension(const std::string extention)
 
 	static std::unordered_map<std::string, std::string_view> FileExtentionMap
 	{
+		{".gobj"	,gameObject},
+
+		{".scene"	,scene},
+
 		{".voc"		, music},
 		{".flac"	, music},
 		{".off"		, music},
@@ -91,9 +99,26 @@ FileDetailView* FileDetailView::FileDetailFactory(const std::filesystem::path& p
 	if (file == texture2D)
 		return new ImageDetailView(path, RESOURCES.LoadTexture(path.string(), true));
 
+	if (file == gameObject)
+	{
+		std::ifstream is(path);
+		Deserializer deserializer{};
+		return new ObjectDetailView(path, deserializer.DeserializeObject(is));
+	}
+
+	if (file == scene)
+	{
+		std::ifstream is(path);
+		Deserializer deserializer{};
+		return new SceneDetailView(path, deserializer.DeserializeScene(is));
+	}
+
 	return new EmptyFileDetailView(path);
 }
 
+// ***********************************************
+// IMAGE DETAIL VIEW
+// ***********************************************
 
 void ImageDetailView::RenderDetails()
 {
@@ -125,6 +150,10 @@ size_t ImageDetailView::GetPackageSize()
 {
 	return sizeof(std::shared_ptr<Texture2D>);
 }
+
+// ***********************************************
+// MUSIC DETAIL VIEW
+// ***********************************************
 
 void MusicDetailView::RenderDetails()
 {
@@ -171,6 +200,10 @@ size_t MusicDetailView::GetPackageSize()
 	return sizeof(std::shared_ptr<Music>);
 }
 
+// ***********************************************
+// SOUND DETAIL VIEW
+// ***********************************************
+
 void SoundDetailView::RenderDetails()
 {
 	if (!m_Sound)
@@ -212,3 +245,104 @@ size_t SoundDetailView::GetPackageSize()
 	return sizeof(std::shared_ptr<Sound>);
 }
 
+// ***********************************************
+// GAME OBJECT DETAIL VIEW
+// ***********************************************
+
+ObjectDetailView::ObjectDetailView(const std::filesystem::path& path, GameObject* go)
+	: FileDetailView(path)
+	, m_Object{ std::unique_ptr<GameObject>(go) }
+{
+}
+
+void RenderGameObject(GameObject* go)
+{
+	ImGui::PushID(go);
+
+
+	if (ImGui::TreeNodeEx(go->GetDisplayName().c_str(),
+		ImGuiTreeNodeFlags_Leaf * go->GetChildren().empty() | ImGuiTreeNodeFlags_OpenOnArrow))
+	{
+		// Component display
+		if (ImGui::TreeNode("Components"))
+		{
+			for (auto& comp : go->GetComponents())
+			{
+				std::string name{ comp.second->GetComponentName() };
+				ImGui::Text(name.c_str());
+			}
+			ImGui::TreePop();
+		}
+
+		// children
+		for (auto child : go->GetChildren())
+			RenderGameObject(child);
+
+		ImGui::TreePop();
+	}
+
+	ImGui::PopID();
+}
+
+void ObjectDetailView::RenderDetails()
+{
+	if (m_Object)
+	{
+		RenderGameObject(m_Object.get());
+	}
+}
+
+constexpr std::string_view ObjectDetailView::GetFileClass()
+{
+	return gameObject;
+}
+
+void* ObjectDetailView::GetPackage()
+{
+	return &m_Object;
+}
+
+size_t ObjectDetailView::GetPackageSize()
+{
+	return sizeof(GameObject*);
+}
+
+// ***********************************************
+// SCENE DETAIL VIEW
+// ***********************************************
+
+SceneDetailView::SceneDetailView(const std::filesystem::path& path, Scene* pScene)
+	: FileDetailView(path)
+	, m_Scene{ pScene }
+{
+	m_Scene->PreUpdate(false);
+	m_Scene->AfterUpdate();
+}
+
+void SceneDetailView::RenderDetails()
+{
+	if (m_Scene)
+	{
+		ImGui::Text(m_Scene->GetName().c_str());
+		ImGui::Separator();
+		for (auto object : m_Scene->GetSceneTree())
+		{
+			RenderGameObject(object);
+		}
+	}
+}
+
+constexpr std::string_view SceneDetailView::GetFileClass()
+{
+	return scene;
+}
+
+void* SceneDetailView::GetPackage()
+{
+	return &m_Scene;
+}
+
+size_t SceneDetailView::GetPackageSize()
+{
+	return sizeof(Scene*);
+}

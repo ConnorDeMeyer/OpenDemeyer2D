@@ -41,17 +41,27 @@ public:
 private:
 
 	void RenderImGuiGameWindow();
+
 	void RenderImGuiRenderInfo();
+	
 	void RenderImGuiObjectInfo();
 	void RenderImGuiObjectLocation();
+	
 	void RenderImGuiMainMenu();
+	
 	void RenderImGuiDirView();
 	void RenderImGuiDirViewRecursive(Directory* dir);
+	bool RenderImGuiDirSelector(std::filesystem::path& pathOut);
+	bool RenderImGuiDirSelectorRecursive(Directory* dir, std::filesystem::path& pathOut);
+
 	void RenderImGuiFileView();
 	void RenderImGuiFileDetails();
+	
 	void RenderImGuiEngineStats();
 	void RenderImGuiEngineSettings();
+	
 	void RenderImGuiGameObjectRecursive(GameObject* go);
+	
 	void RenderImGuiSceneGraph();
 	void RenderImGuiScene(Scene* pScene);
 
@@ -68,6 +78,7 @@ private:
 	bool m_bKeepAspectRatio{ true };
 	bool m_bShowHitboxes{ false };
 	bool m_bSceneGraphQuickExit{ };
+	bool m_bDirViewQuickExit{ };
 
 	int m_GameResWidth{};
 	int m_GameResHeight{};

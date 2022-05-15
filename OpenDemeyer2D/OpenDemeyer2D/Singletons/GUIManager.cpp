@@ -1,4 +1,5 @@
 #include "Singletons/GUIManager.h"
+#include <stack>
 
 #include "OpenDemeyer2D.h"
 
@@ -203,41 +204,48 @@ void GUIManager::RenderHitboxes() const
 	}
 	else // editor mode where there are no bodies yet
 	{
-		auto scene = SCENES.GetActiveScene();
-		for (auto go : scene->GetAllObjects())
+		try
 		{
-			if (auto comp = go.second->GetComponent<PhysicsComponent>())
+			auto scene = SCENES.GetActiveScene();
+			for (auto go : scene->GetAllObjects())
 			{
-				Transform* transform = go.second->GetTransform();
-				auto& pos = transform->GetWorldPosition();
-				for (auto& shape : comp->GetShapes())
+				if (auto comp = go.second->GetComponent<PhysicsComponent>())
 				{
-					switch (shape->GetType())
+					Transform* transform = go.second->GetTransform();
+					auto& pos = transform->GetWorldPosition();
+					for (auto& shape : comp->GetShapes())
 					{
-					case b2Shape::Type::e_polygon:
-					{
-						auto polygon = reinterpret_cast<b2PolygonShape*>(shape);
-						glm::vec2 positions[b2_maxPolygonVertices]{};
-						for (int32 i{}; i < polygon->m_count; ++i)
+						switch (shape->GetType())
 						{
-							positions[i] = reinterpret_cast<const glm::vec2&>(polygon->m_vertices[i]) + pos;
+						case b2Shape::Type::e_polygon:
+						{
+							auto polygon = reinterpret_cast<b2PolygonShape*>(shape.get());
+							glm::vec2 positions[b2_maxPolygonVertices]{};
+							for (int32 i{}; i < polygon->m_count; ++i)
+							{
+								positions[i] = reinterpret_cast<const glm::vec2&>(polygon->m_vertices[i]) + pos;
+							}
+							RENDER.RenderPolygon(positions, polygon->m_count, true);
 						}
-						RENDER.RenderPolygon(positions, polygon->m_count, true);
-					}
-					break;
-					case b2Shape::Type::e_circle:
-					{
-						auto circle = reinterpret_cast<b2CircleShape*>(shape);
-						glm::vec2 center = { pos.x + circle->m_p.x,pos.y + circle->m_p.y };
-						RENDER.RenderEllipse(center, { circle->m_radius, circle->m_radius }, true);
-					}
-					break;
-					case b2Shape::Type::e_edge:
-
 						break;
+						case b2Shape::Type::e_circle:
+						{
+							auto circle = reinterpret_cast<b2CircleShape*>(shape.get());
+							glm::vec2 center = { pos.x + circle->m_p.x,pos.y + circle->m_p.y };
+							RENDER.RenderEllipse(center, { circle->m_radius, circle->m_radius }, true);
+						}
+						break;
+						case b2Shape::Type::e_edge:
+
+							break;
+						}
 					}
 				}
 			}
+		}
+		catch (std::exception& e)
+		{
+			std::cout << e.what();
 		}
 	}
 
@@ -354,13 +362,90 @@ void GUIManager::RenderImGuiMainMenu()
 	}
 }
 
+// Returns true if the folder structure has been changed
+bool ImGuiDirPopup(Directory* currentDir)
+{
+	bool returnValue{};
+
+	bool addFolder{};
+	bool DeleteFolder{};
+
+	if (ImGui::BeginPopupContextItem())
+	{
+		if (ImGui::MenuItem("Add Folder"))
+		{
+			addFolder = true;
+		}
+
+		if (ImGui::MenuItem("Delete folder"))
+		{
+			DeleteFolder = true;
+		}
+
+		ImGui::EndPopup();
+	}
+
+	if (addFolder)
+		ImGui::OpenPopup("Add Folder");
+
+	if (DeleteFolder)
+		ImGui::OpenPopup("Delete folder");
+
+	if (ImGui::BeginPopupModal("Add Folder", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		static char buffer[32]{};
+		ImGui::InputText("Name", buffer, 32);
+		
+		if (ImGui::Button("Create"))
+		{
+			RESOURCES.AddDirectory(currentDir, std::string(buffer));
+			ImGui::CloseCurrentPopup();
+			returnValue = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+
+	if (ImGui::BeginPopupModal("Delete folder", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::TextUnformatted("Are you sure you want to delete this folder. This cant be undone");
+
+		if (ImGui::Button("Create"))
+		{
+			RESOURCES.DeleteDirectory(currentDir);
+			ImGui::CloseCurrentPopup();
+			returnValue = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+
+	return returnValue;
+}
+
 void GUIManager::RenderImGuiDirView()
 {
+	m_bDirViewQuickExit = false;
+
 	ImGui::Begin("Directory View");
 
 	auto root = RESOURCES.GetRootDirectory();
 	ImGui::PushID(root);
-	if (ImGui::TreeNodeEx(root->dirPath.string().c_str(), root->Directories.empty() * ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow))
+	bool treeNode = (ImGui::TreeNodeEx(root->dirPath.string().c_str(), root->Directories.empty() * ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow));
+
+	m_bDirViewQuickExit = ImGuiDirPopup(root);
+
+	if (treeNode)
 	{
 		for (auto subDir : root->Directories)
 		{
@@ -375,8 +460,15 @@ void GUIManager::RenderImGuiDirView()
 
 void GUIManager::RenderImGuiDirViewRecursive(Directory* dir)
 {
+	if (m_bDirViewQuickExit)
+		return;
+
 	ImGui::PushID(dir);
-	if (ImGui::TreeNodeEx(dir->dirPath.filename().string().c_str(), dir->Directories.empty() * ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow))
+	bool treeNode = (ImGui::TreeNodeEx(dir->dirPath.filename().string().c_str(), dir->Directories.empty() * ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow));
+
+	m_bDirViewQuickExit = ImGuiDirPopup(dir);
+	
+	if (treeNode)
 	{
 		if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
 			m_pCurrentDirectory = dir;
@@ -392,6 +484,62 @@ void GUIManager::RenderImGuiDirViewRecursive(Directory* dir)
 	ImGui::PopID();
 }
 
+bool GUIManager::RenderImGuiDirSelector(std::filesystem::path& pathOut)
+{
+	auto root = RESOURCES.GetRootDirectory();
+
+	bool returnValue{};
+
+	ImGui::PushID(root);
+
+	bool treeNode = ImGui::TreeNodeEx(root->dirPath.string().c_str(), root->Directories.empty() * ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow);
+
+	if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+	{
+		pathOut = root->dirPath;
+		returnValue = true;
+	}
+
+	if (treeNode)
+	{
+		for (auto pDir : root->Directories)
+		{
+			returnValue = returnValue || RenderImGuiDirSelectorRecursive(pDir, pathOut);
+		}
+		ImGui::TreePop();
+	}
+	ImGui::PopID();
+
+	return returnValue;
+}
+
+bool GUIManager::RenderImGuiDirSelectorRecursive(Directory* dir, std::filesystem::path& pathOut)
+{
+	ImGui::PushID(dir);
+
+	bool returnValue{};
+
+	bool treeNode = ImGui::TreeNodeEx(dir->dirPath.filename().string().c_str(), dir->Directories.empty() * ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_OpenOnArrow);
+
+	if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+	{
+		pathOut = dir->dirPath;
+		returnValue = true;
+	}
+
+	if (treeNode)
+	{
+		for (auto pDir : dir->Directories)
+		{
+			returnValue = returnValue || RenderImGuiDirSelectorRecursive(pDir, pathOut);
+		}
+		ImGui::TreePop();
+	}
+	ImGui::PopID();
+
+	return returnValue;
+}
+
 void GUIManager::RenderImGuiFileView()
 {
 	ImGui::Begin("File View");
@@ -402,18 +550,6 @@ void GUIManager::RenderImGuiFileView()
 	{
 		for (auto& file : m_pCurrentDirectory->Files)
 		{
-			/*if (ImGui::Selectable(file->GetFileName().c_str()))
-			{
-				try
-				{
-					m_FileDetails = file.get();
-				}
-				catch (std::runtime_error& e)
-				{
-					errorMessage = e.what();
-					ImGui::OpenPopup("Error Viewing File");
-				}
-			}*/
 			if (file->RenderImGuiFileName())
 			{
 				m_FileDetails = file.get();
@@ -491,15 +627,14 @@ void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
 	ImGui::PushID(go);
 
 	// Object name in tree
-	bool treeNode = (ImGui::TreeNodeEx(go->GetName().empty() ?
-		std::string("GameObject" + std::to_string(go->GetId())).c_str() :
-		go->GetName().c_str(),
+	bool treeNode = (ImGui::TreeNodeEx(go->GetDisplayName().c_str(),
 		ImGuiTreeNodeFlags_Leaf * go->GetChildren().empty() | ImGuiTreeNodeFlags_OpenOnArrow));
 
 	// POPUP
 	{
 		bool changeName{};
 		bool deleteObj{};
+		bool saveToFile{};
 		static char buffer[32]{};
 
 		if (ImGui::BeginPopupContextItem())
@@ -523,12 +658,18 @@ void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
 					otherGo->SetParent(go->GetParent());
 				else
 					go->GetScene()->Add(otherGo);
+				m_bSceneGraphQuickExit = true;
 			}
 
 			if (ImGui::MenuItem("Add Empty Child"))
 			{
 				auto newGo = new GameObject();
 				newGo->SetParent(go);
+			}
+
+			if (ImGui::MenuItem("Save to File"))
+			{
+				saveToFile = true;
 			}
 
 			ImGui::EndPopup();
@@ -540,7 +681,10 @@ void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
 		if (deleteObj)
 			ImGui::OpenPopup("Delete Object");
 
-		if (ImGui::BeginPopupModal("Change Obj Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		if (saveToFile)
+			ImGui::OpenPopup("Save To File");
+
+		if (ImGui::BeginPopupModal("Change Obj Name", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::InputText("new name", buffer, 32);
 			if (ImGui::Button("Change Name"))
@@ -557,17 +701,52 @@ void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
 			ImGui::EndPopup();
 		}
 
-		if (ImGui::BeginPopupModal("Delete Object", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		if (ImGui::BeginPopupModal("Delete Object", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::Text("Are you sure you want to delete the object?");
 			if (ImGui::Button("Delete"))
 			{
 				go->Destroy();
+				m_bSceneGraphQuickExit = true;
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cancel"))
 			{
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+
+		if (ImGui::BeginPopupModal("Save To File", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Select directory");
+			
+			static std::filesystem::path directory;
+
+			if (ImGui::BeginChild("directory", ImVec2{ 200,200 }, true))
+			{
+				RenderImGuiDirSelector(directory);
+				
+				ImGui::EndChild();
+			}
+
+			ImGui::Text(directory.string().c_str());
+
+			static char fileBuffer[64]{};
+			ImGui::InputText("File Name", fileBuffer, 64);
+
+			if (ImGui::Button("Cancel"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Save"))
+			{
+				std::filesystem::path outputPath = directory;
+				outputPath /= std::string(fileBuffer);
+				RESOURCES.SaveGameObject(go, outputPath);
 				ImGui::CloseCurrentPopup();
 			}
 
@@ -592,9 +771,24 @@ void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
 		{
-			auto goPayload = *static_cast<GameObject**>(payload->Data);
-			goPayload->SetParent(go);
-			m_bSceneGraphQuickExit = true;
+			if (payload->Data)
+			{
+				auto goPayload = *static_cast<GameObject**>(payload->Data);
+				goPayload->SetParent(go);
+				m_bSceneGraphQuickExit = true;
+			}
+		}
+
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjectFile"))
+		{
+			if (payload->Data)
+			{
+				auto& goPayload = *static_cast<std::unique_ptr<GameObject>*>(payload->Data);
+				auto newGo = new GameObject();
+				newGo->Copy(goPayload.get());
+				newGo->SetParent(go);
+				m_bSceneGraphQuickExit = true;
+			}
 		}
 
 		ImGui::EndDragDropTarget();
@@ -605,6 +799,8 @@ void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
 		for (auto& child : go->GetChildren())
 		{
 			RenderImGuiGameObjectRecursive(child);
+			if (m_bSceneGraphQuickExit)
+				break;
 		}
 		ImGui::TreePop();
 	}
@@ -625,6 +821,14 @@ void GUIManager::RenderImGuiSceneGraph()
 
 	if (ImGui::BeginTabBar("Scenes"))
 	{
+		auto& game = SCENES.GetGameScene();
+		if (game)
+		{
+			ImGui::PushID(game.get());
+			RenderImGuiScene(game.get());
+			ImGui::PopID();
+		}
+
 		for (Scene* pScene : SCENES.GetScenes())
 		{
 			ImGui::PushID(pScene);
@@ -662,6 +866,7 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 	// POPUP
 	{
 		bool changeName{};
+		bool saveScene{};
 		static char buffer[32]{};
 
 		if (ImGui::BeginPopupContextItem("Scene settings"))
@@ -691,11 +896,19 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 				ImGui::CloseCurrentPopup();
 			}
 
+			if (ImGui::MenuItem("Save Scene"))
+			{
+				saveScene = true;
+			}
+
 			ImGui::EndPopup();
 		}
 
 		if (changeName)
 			ImGui::OpenPopup("Change Scene Name");
+
+		if (saveScene)
+			ImGui::OpenPopup("Save Scene");
 
 		if (ImGui::BeginPopupModal("Change Scene Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
@@ -711,12 +924,45 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 			}
 			ImGui::EndPopup();
 		}
+
+		if (ImGui::BeginPopupModal("Save Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Select directory");
+
+			static std::filesystem::path directory;
+
+			if (ImGui::BeginChild("directory", ImVec2{ 200,200 }, true))
+			{
+				RenderImGuiDirSelector(directory);
+
+				ImGui::EndChild();
+			}
+
+			ImGui::Text(directory.string().c_str());
+
+			static char fileBuffer[64]{};
+			ImGui::InputText("File Name", fileBuffer, 64);
+
+			if (ImGui::Button("Cancel"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Save"))
+			{
+				std::filesystem::path outputPath = directory;
+				outputPath /= std::string(fileBuffer);
+				RESOURCES.SaveScene(pScene, outputPath);
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
 	}
 
 	// TAB
 	if (beginTab) {
 
-		ImGui::BeginChild("SceneGraph");
 
 		// SCENE GRAPH
 		auto& gameObjects = pScene->GetSceneTree();
@@ -728,14 +974,37 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 			RenderImGuiGameObjectRecursive(pObject);
 		}
 
+		ImVec2 emptySize = ImGui::GetWindowSize();
+		emptySize.y -= 20.f;
+		emptySize.x -= 20.f;
+		emptySize.y -= ImGui::GetCursorPosY();
+
+		emptySize.y = std::max(emptySize.y, 40.f);
+
+		ImGui::BeginChild("SceneGraph", emptySize);
+
 		ImGui::EndChild();
 
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObject"))
 			{
-				auto goPayload = *static_cast<GameObject**>(payload->Data);
-				goPayload->SetParent(pScene);
+				if (payload->Data)
+				{
+					auto goPayload = *static_cast<GameObject**>(payload->Data);
+					goPayload->SetParent(pScene);
+				}
+			}
+
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjectFile"))
+			{
+				if (payload->Data && payload->Delivery)
+				{
+					auto& goPayload = *static_cast<std::unique_ptr<GameObject>*>(payload->Data);
+					auto newGo = new GameObject();
+					newGo->Copy(goPayload.get());
+					newGo->SetParent(pScene);
+				}
 			}
 		
 			ImGui::EndDragDropTarget();
@@ -834,16 +1103,7 @@ void GUIManager::RenderImGuiGameWindow()
 	// play/pause/stop buttons
 	if (ImGui::Button("Play"))
 	{
-		auto& scenes = SCENES;
-		auto activeScene = scenes.GetActiveScene();
-		if (activeScene)
-		{
-			auto& scene = scenes.CreateScene(activeScene->GetName() + std::string("(copy)"));
-			scene.Copy(activeScene);
-			scenes.SetActiveScene(&scene);
-
-			ENGINE.PlayGame();
-		}
+		SCENES.PlayScene();
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Pause"))
@@ -856,7 +1116,10 @@ void GUIManager::RenderImGuiGameWindow()
 		ENGINE.PauseGame(false);
 	}
 	ImGui::SameLine();
-	ImGui::Button("Stop");
+	if (ImGui::Button("Stop"))
+	{
+		SCENES.StopPlayingScene();
+	}
 
 	float aspectRatio = float(m_GameResWidth) / float(m_GameResHeight);
 
@@ -915,6 +1178,7 @@ void GUIManager::RenderImGuiGameWindow()
 	{
 		glm::vec2 mousePos = ImGui::GetMousePos();
 		mousePos -= glm::vec2(pos);
+		mousePos.x -= offsetX;
 		mousePos.x *= m_GameResWidth / imageSize.x;
 		mousePos.y *= m_GameResHeight / imageSize.y;
 		mousePos.y = m_GameResHeight - mousePos.y;

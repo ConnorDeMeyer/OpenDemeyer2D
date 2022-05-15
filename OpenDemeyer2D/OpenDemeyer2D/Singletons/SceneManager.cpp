@@ -7,20 +7,29 @@
 
 void SceneManager::Update(float deltaTime)
 {
-	if (m_pActiveScene)
-		m_pActiveScene->Update(deltaTime);
+	if (m_GameScene)
+		m_GameScene->Update(deltaTime);
+
+	//else if (m_pActiveScene)
+	//	m_pActiveScene->Update(deltaTime);
 }
 
-void SceneManager::PreUpdate(bool isPlaying)
+void SceneManager::PreUpdate()
 {
+	if (m_GameScene)
+		m_GameScene->PreUpdate(true);
+
 	for (Scene* pScene : m_Scenes)
 	{
-		pScene->PreUpdate(isPlaying);
+		pScene->PreUpdate(false);
 	}
 }
 
 void SceneManager::AfterUpdate()
 {
+	if (m_GameScene)
+		m_GameScene->AfterUpdate();
+
 	for (Scene* pScene : m_Scenes)
 	{
 		pScene->AfterUpdate();
@@ -29,7 +38,10 @@ void SceneManager::AfterUpdate()
 
 void SceneManager::Render() const
 {
-	if (m_pActiveScene)
+	if (m_GameScene)
+		m_GameScene->Render();
+
+	else if (m_pActiveScene)
 		m_pActiveScene->Render();
 }
 
@@ -117,10 +129,35 @@ void SceneManager::Serialize(std::ostream& os)
 	}
 }
 
+void SceneManager::PlayScene(Scene* pScene)
+{
+	if (m_GameScene)
+		return;
+
+	Scene* sceneToPlay = pScene ? pScene : m_pActiveScene;
+	if (sceneToPlay)
+	{
+		m_GameScene = std::unique_ptr<Scene>(new Scene("Game"));
+		m_GameScene->Copy(sceneToPlay);
+	}
+
+}
+
+void SceneManager::StopPlayingScene()
+{
+	if (m_GameScene)
+	{
+		delete m_GameScene.release();
+	}
+}
+
 SceneManager::~SceneManager()
 {
 	for (Scene* pScene : m_Scenes)
 	{
 		delete pScene;
 	}
+
+	if (m_GameScene)
+		delete m_GameScene.release();
 }

@@ -289,7 +289,7 @@ std::ostream& operator<<(std::ostream& stream, const b2FixtureDef& fixture)
 		<< fixture.filter.groupIndex;
 }
 
-std::ostream& operator<<(std::ostream& stream, const b2Shape* shape)
+std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<b2Shape>& shape)
 {
 	stream << int(shape->m_type);
 
@@ -297,13 +297,13 @@ std::ostream& operator<<(std::ostream& stream, const b2Shape* shape)
 	{
 	case b2Shape::Type::e_circle:
 	{
-		auto circle = reinterpret_cast<const b2CircleShape*>(shape);
+		auto circle = std::reinterpret_pointer_cast<const b2CircleShape>(shape);
 		return stream << ' ' << circle->m_p << ' ' << circle->m_radius;
 	}
 		break;
 	case b2Shape::Type::e_polygon:
 	{
-		auto polygon = reinterpret_cast<const b2PolygonShape*>(shape);
+		auto polygon = std::reinterpret_pointer_cast<const b2PolygonShape>(shape);
 		stream << ' ' << polygon->m_count << ' ';
 		for (int i{}; i < polygon->m_count; ++i)
 		{
@@ -357,11 +357,8 @@ std::istream& operator>>(std::istream& stream, b2FixtureDef& fixture)
 		>> fixture.filter.groupIndex;
 }
 
-std::istream& operator>>(std::istream& stream, b2Shape*& shape)
+std::istream& operator>>(std::istream& stream, std::shared_ptr<b2Shape>& shape)
 {
-	if (shape)
-		delete shape;
-
 	int shapeType{};
 	stream >> shapeType;
 
@@ -370,14 +367,14 @@ std::istream& operator>>(std::istream& stream, b2Shape*& shape)
 	case b2Shape::Type::e_circle:
 	{
 		auto circle = new b2CircleShape();
-		shape = circle;
+		shape = std::shared_ptr<b2Shape>(circle);
 		return stream >> circle->m_p >> circle->m_radius;
 	}
 	break;
 	case b2Shape::Type::e_polygon:
 	{
 		auto polygon = new b2PolygonShape();
-		shape = polygon;
+		shape = std::shared_ptr<b2Shape>(polygon);
 		stream >> polygon->m_count;
 		for (int i{}; i < polygon->m_count; ++i)
 		{

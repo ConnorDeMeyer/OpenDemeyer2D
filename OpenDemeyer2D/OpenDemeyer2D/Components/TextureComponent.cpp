@@ -45,6 +45,8 @@ void TextureComponent::RenderImGui()
 #pragma warning(disable : 4312)
 		ImGui::Image((ImTextureID)(m_Texture->GetId()), { width,width / aspectRatio });
 #pragma warning(default : 4312)
+
+		UpdateRenderComponent();
 	}
 
 }

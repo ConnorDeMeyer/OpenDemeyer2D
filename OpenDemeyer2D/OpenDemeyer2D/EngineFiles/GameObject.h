@@ -37,7 +37,7 @@ public:
 	GameObject& operator=(const GameObject& other)	= delete;
 	GameObject& operator=(GameObject&& other)		= delete;
 
-private:
+public:
 
 	/** Updates the components attached to this component.*/
 	void Update(float deltaTime);
@@ -45,16 +45,14 @@ private:
 	/** Update the components after the normal update*/
 	void LateUpdate();
 
-	/** Renders the components attached to this component.*/
-	void Render() const;
-
 	/** Calls the BeginPlay method of the components after all components have begun playing.*/
 	void BeginPlay();
 
+	/** Renders the components attached to this component.*/
+	void Render() const;
+
 	/** Initialized all the components*/
 	void InitializeComponents();
-
-public:
 
 	/** Will flag the Game Object for deletion at the end of the frame*/
 	void Destroy();
@@ -232,7 +230,8 @@ T* GameObject::AddComponent()
 
 	comp->m_pParent = this;
 
-	if (m_HasBeenInitialized) comp->BeginPlay();
+	if (m_HasBeenInitialized) comp->Initialize();
+	if (m_HasBegunPlay) comp->BeginPlay();
 
 	if constexpr (std::is_same_v<T, RenderComponent>)
 	{

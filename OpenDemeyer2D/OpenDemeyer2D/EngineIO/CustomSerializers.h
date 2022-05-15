@@ -71,12 +71,12 @@ struct b2Vec2;
 std::ostream& operator<<(std::ostream& stream, const b2Vec2& vec2);
 std::ostream& operator<<(std::ostream& stream, const b2BodyDef& body);
 std::ostream& operator<<(std::ostream& stream, const b2FixtureDef& fixture);
-std::ostream& operator<<(std::ostream& stream, const b2Shape* shape);
+std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<b2Shape>& shape);
 
 std::istream& operator>>(std::istream& stream, b2Vec2& vec2);
 std::istream& operator>>(std::istream& stream, b2BodyDef& body);
 std::istream& operator>>(std::istream& stream, b2FixtureDef& fixture);
-std::istream& operator>>(std::istream& stream, b2Shape*& shape);
+std::istream& operator>>(std::istream& stream, std::shared_ptr<b2Shape>& shape);
 
 // std::vector
 template <typename T>
@@ -124,7 +124,7 @@ std::istream& operator>>(std::istream& is, std::pair<T0, T1>& pair)
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const std::unique_ptr<T>& ptr)
 {
-	return os << ptr->get();
+	return os << ptr.get();
 }
 
 template <typename T>
@@ -134,5 +134,23 @@ std::istream& operator>>(std::istream& is, std::unique_ptr<T>& ptr)
 	return is >> ptr.get();
 }
 
+// std::shared_ptr
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const std::shared_ptr<T>& ptr)
+{
+	return os << ptr.get();
+}
 
-
+template <typename T>
+std::istream& operator>>(std::istream& is, std::shared_ptr<T>& ptr)
+{
+	if constexpr (std::is_abstract_v<T>)
+	{
+		return is >> ptr.get();
+	}
+	else
+	{
+		ptr = std::unique_ptr<T>(new T());
+		return is >> ptr.get();
+	}
+}

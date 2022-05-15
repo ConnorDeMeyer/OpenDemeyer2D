@@ -68,7 +68,7 @@ private:
 
 	std::shared_ptr<Texture2D> m_StageTexture;
 
-	GameObject* m_pPeterPepper{};
+	//GameObject* m_pPeterPepper{};
 
 	Uint8 m_FallenHamburgers[4]{};
 

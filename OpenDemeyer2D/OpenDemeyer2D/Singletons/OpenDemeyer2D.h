@@ -38,11 +38,7 @@ public:
 
 	const Dictionary& GetSettings() const { return m_EngineSettings; }
 
-	void PlayGame();
-
 	void PauseGame(bool isPaused) { m_Paused = isPaused; }
-
-	void StopGame();
 
 	void Quit() { m_Quit = true; }
 
@@ -62,7 +58,6 @@ private:
 
 	bool m_Quit{};
 	bool m_Paused{};
-	bool m_Playing{};
 
 	// Window data members
 	SDL_Window* m_Window{};

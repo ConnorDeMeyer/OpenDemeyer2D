@@ -45,7 +45,7 @@ private:
 
 	SDL_FRect m_SourceRect;
 
-	glm::vec2 m_Pivot{};
+	glm::vec2 m_Pivot{ 0.5,0.5 };
 
 	int m_RenderLayer{};
 

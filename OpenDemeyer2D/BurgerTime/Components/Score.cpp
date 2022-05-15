@@ -81,7 +81,7 @@ void Score::Update(float deltaTime)
 	}
 }
 
-void Score::BeginPlay()
-{
-	m_SheetTexture = RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png");
-}
+//void Score::Initialize()
+//{
+//	m_SheetTexture = RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png");
+//}

@@ -102,13 +102,10 @@ Scene* Deserializer::DeserializeScene(std::istream& iStream)
 	Scene* pScene{};
 	if (iStream.good())
 	{
-		while (CanContinue())
-		{
-			std::string name;
-			iStream >> name;
-			pScene = new Scene(name);
-			pScene->Deserialize(*this);
-		}
+		std::string name;
+		iStream >> name;
+		pScene = new Scene(name);
+		pScene->Deserialize(*this);
 	}
 
 	for (auto& link : m_LinkingInfos)

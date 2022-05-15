@@ -59,7 +59,15 @@ private:
 
 		void Copy(const void* originalAddress, void* copyAddress) const override
 		{
-			*static_cast<T*>(copyAddress) = *static_cast<const T*>(originalAddress);
+			if constexpr (std::is_pointer_v<T>)
+			{
+				*static_cast<T*>(copyAddress) = new std::remove_pointer_t<T>();
+				*static_cast<T*>(copyAddress) = **static_cast<const T*>(originalAddress);
+			}
+			else
+			{
+				*static_cast<T*>(copyAddress) = *static_cast<const T*>(originalAddress);
+			}
 		}
 	};
 
