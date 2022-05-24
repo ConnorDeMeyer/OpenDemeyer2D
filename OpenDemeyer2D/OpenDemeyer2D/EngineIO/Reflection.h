@@ -153,3 +153,21 @@ enum HashTestEnum : uint32_t
 	CrcVal01 = hash("class RenderComponent"),
 	CrcVal02 = hash("class SpriteComponent")
 };
+
+//constexpr std::string_view GetTypeName() const
+//{
+//#ifdef __clang__
+//	constexpr std::string_view functionSig{ __PRETTY_FUNCTION__ };
+//#elif defined(__GNUC__)
+//	constexpr std::string_view functionSig{ __PRETTY_FUNCTION__ };
+//#elif defined(_MSC_VER)
+//	constexpr std::string_view functionSig{ __FUNCSIG__ };
+//#else
+//#error "Unsupported compiler"
+//#endif
+//
+//	constexpr size_t end{ functionSig.find("::GetTypeName(") };
+//	constexpr size_t begin{ functionSig.rfind(" ", end) };
+//	constexpr std::string_view typeName = functionSig.substr(begin, end - begin);
+//	return typeName;
+//}

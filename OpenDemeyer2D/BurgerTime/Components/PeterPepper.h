@@ -1,11 +1,13 @@
 ﻿#pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "glm/glm.hpp"
 #include "UtilityFiles/Delegate.h"
 
 
-class PeterPepper final : public Component<PeterPepper>
+class PeterPepper final : public ComponentBase
 {
+	COMPONENT_BODY(PeterPepper)
+
 public:
 
 	void BeginPlay() override;

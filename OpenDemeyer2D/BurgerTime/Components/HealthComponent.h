@@ -1,10 +1,12 @@
 ﻿#pragma once
 
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "UtilityFiles/Delegate.h"
 
-class HealthComponent : public Component<HealthComponent>
+class HealthComponent : public ComponentBase
 {
+	COMPONENT_BODY(HealthComponent)
+
 public:
 
 	void Damage(float damage);

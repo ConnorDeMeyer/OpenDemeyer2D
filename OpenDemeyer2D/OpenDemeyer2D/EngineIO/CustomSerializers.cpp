@@ -1,6 +1,6 @@
 ﻿#include "CustomSerializers.h"
 #include "EngineFiles/Scene.h"
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "EngineFiles/ComponentBase.h"
 #include "TypeInformation.h"
 #include "EngineFiles/GameObject.h"

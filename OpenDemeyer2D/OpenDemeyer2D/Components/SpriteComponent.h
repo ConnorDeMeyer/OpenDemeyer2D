@@ -1,13 +1,15 @@
 ﻿#pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "ResourceWrappers/Texture2D.h"
 #include <glm/glm.hpp>
 #include "UtilityFiles/Delegate.h"
 
 class RenderComponent;
 
-class SpriteComponent : public Component<SpriteComponent>
+class SpriteComponent : public ComponentBase
 {
+	COMPONENT_BODY(SpriteComponent)
+
 public:
 
 	virtual void DefineUserFields(UserFieldBinder& binder) const;

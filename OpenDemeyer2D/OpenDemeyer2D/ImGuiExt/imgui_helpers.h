@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "imgui.h"
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "EngineFiles/Scene.h"
 
 #include "EngineIO/Reflection.h"

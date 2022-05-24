@@ -6,7 +6,6 @@
 #include <memory>
 #include <cassert>
 
-#include "EngineFiles/ComponentBase.h"
 #include "EngineIO/Deserializer.h"
 
 class Scene;
@@ -219,6 +218,12 @@ T* GameObject::GetComponentByCast() const
 template <typename T>
 T* GameObject::AddComponent()
 {
+	if constexpr (std::is_same_v<T, Transform>)
+	{
+		if (m_pTransform)
+			return m_pTransform;
+	}
+
 	// Make sure the component is not already added
 	if (GetComponent<T>())
 	{

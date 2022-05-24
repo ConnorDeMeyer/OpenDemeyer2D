@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include <string>
 #include <SDL.h>
 
@@ -9,8 +9,10 @@ class Texture2D;
 class RenderComponent;
 class TextureComponent;
 
-class TextPixelComponent final : public Component<TextPixelComponent>
+class TextPixelComponent final : public ComponentBase
 {
+	COMPONENT_BODY(TextPixelComponent)
+
 public:
 	TextPixelComponent() = default;
 	virtual ~TextPixelComponent() = default;

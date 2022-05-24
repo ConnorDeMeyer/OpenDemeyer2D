@@ -1,10 +1,12 @@
 ﻿#pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 
 class PeterPepper;
 
-class PlayerUI final : public Component<PlayerUI>
+class PlayerUI final : public ComponentBase
 {
+	COMPONENT_BODY(PlayerUI)
+
 public:
 
 	void LinkPlayer(PeterPepper* pPeterPepper);

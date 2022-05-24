@@ -1,10 +1,12 @@
 ﻿#pragma once
 
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "Singletons/InputManager.h"
 
-class InputComponent : public Component<InputComponent>
+class InputComponent : public ComponentBase
 {
+	COMPONENT_BODY(InputComponent)
+
 	friend class InputManager;
 
 public:

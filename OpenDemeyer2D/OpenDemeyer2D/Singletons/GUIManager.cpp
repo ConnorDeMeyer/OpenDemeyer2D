@@ -19,7 +19,7 @@
 #include "ResourceWrappers/RenderTarget.h"
 
 #include "EngineFiles/GameObject.h"
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "EngineFiles/Scene.h"
 
 #include "Components/RenderComponent.h"

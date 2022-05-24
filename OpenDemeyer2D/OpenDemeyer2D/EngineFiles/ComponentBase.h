@@ -3,11 +3,13 @@
 #include <string>
 #include <string_view>
 #include "UtilityFiles/Dictionary.h"
-#include "UtilityFiles/Singleton.h"
 #include <unordered_map>
 #include <functional>
-#include <typeindex>
+
 #include "EngineIO/Deserializer.h"
+#include "EngineIO/TypeInformation.h"
+#include "EngineFiles/GameObject.h"
+#include "EngineIO/Reflection.h"
 
 class GameObject;
 
@@ -66,9 +68,23 @@ public:
 	virtual void Deserialize(Deserializer& is) = 0;
 
 	/** Copy values from the original when getting copied*/
-	virtual void Clone(const ComponentBase* pOriginal) = 0;
+	virtual void Clone(const ComponentBase* pOriginal)
+	{
+		uint32_t typeId = GetComponentId();
+		auto typeInfo = TypeInformation::GetInstance().GetTypeInfo(typeId);
+
+		if (typeInfo)
+		{
+			for (auto field : typeInfo->field.GetFields())
+			{
+				field.second.Copy(pOriginal, this);
+			}
+		}
+	}
 
 	virtual ComponentBase* MakeCopy(GameObject* objectToAddto) const = 0;
+
+	virtual void DefineUserFields(UserFieldBinder&) const {};
 
 public:
 
@@ -82,6 +98,12 @@ private:
 
 	/** Sets the parent of this object. gets called by the GameObject it gets added to*/
 	void SetParent(GameObject* pParent) { m_pParent = pParent; }
+
+protected:
+
+	inline Transform* GetTransform() const { return GetParent()->GetTransform(); }
+	inline RenderComponent* GetRenderComponent() const { return GetParent()->GetRenderComponent(); }
+	inline Scene* GetScene() const { return GetParent()->GetScene(); }
 
 private:
 
@@ -122,3 +144,61 @@ Deserializer& operator>>(Deserializer& stream, std::weak_ptr<T>* component)
 
 	return stream;
 }
+
+#define GetComponentNameFuncDef(TypeName) constexpr const std::string_view GetComponentName() const override { return type_name<TypeName>(); }
+#define GetComponentIdFuncDef(TypeName) constexpr uint32_t GetComponentId() const override { return hash(type_name<TypeName>()); }
+#define SerializeFuncDef(TypeName) void Serialize(std::ostream& os) const override\
+{\
+	constexpr uint32_t id{ class_id<TypeName>() };\
+	auto typeInfo = TypeInformation::GetInstance().GetTypeInfo(id);\
+	assert(typeInfo);\
+\
+	for (auto& field : typeInfo->field.GetFields())\
+	{\
+		os << field.first << ' ';\
+		field.second.Serialize(os, this);\
+		os << '\n';\
+	}\
+}
+#define DeserializeFuncDef(TypeName) void Deserialize(Deserializer& is) override\
+{\
+	constexpr uint32_t id{ class_id<TypeName>() };\
+	auto typeInfo = TypeInformation::GetInstance().GetTypeInfo(id);\
+	assert(typeInfo);\
+\
+	if (CanContinue(*is.GetStream()))\
+	{\
+		while (!IsEnd(*is.GetStream()))\
+		{\
+			std::string fieldName;\
+			*is.GetStream() >> fieldName;\
+			auto it = typeInfo->field.GetFields().find(fieldName);\
+			if (it != typeInfo->field.GetFields().end())\
+			{\
+				it->second.Deserialize(is, this);\
+			}\
+		}\
+	}\
+}
+#define MakeCopyFuncDef(TypeName) ComponentBase* MakeCopy(GameObject* objectToAddto) const override\
+{\
+	ComponentBase* comp{};\
+	comp = objectToAddto->AddComponent<TypeName>();\
+	comp->Clone(this);\
+	return comp;\
+}
+#define GetWeakReferenceTypeFuncDef(TypeName) std::weak_ptr<TypeName> GetWeakReferenceType()\
+{\
+	return std::reinterpret_pointer_cast<TypeName>(m_Reference);\
+}
+
+#define COMPONENT_BODY(TypeName)\
+public:\
+GetComponentNameFuncDef(TypeName)\
+GetComponentIdFuncDef(TypeName)\
+SerializeFuncDef(TypeName)\
+DeserializeFuncDef(TypeName)\
+MakeCopyFuncDef(TypeName)\
+GetWeakReferenceTypeFuncDef(TypeName)\
+private:\
+inline static TypeIdentifier<TypeName> TypeIdentifier{};

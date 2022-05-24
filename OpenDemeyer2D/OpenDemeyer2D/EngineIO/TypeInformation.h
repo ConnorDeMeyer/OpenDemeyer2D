@@ -10,7 +10,7 @@
 #include <type_traits>
 
 #include "UtilityFiles/Singleton.h"
-#include "EngineFiles/ComponentBase.h"
+//#include "EngineFiles/ComponentBase.h"
 #include "CustomSerializers.h"
 #include "Deserializer.h"
 #include "EngineFiles/GameObject.h"

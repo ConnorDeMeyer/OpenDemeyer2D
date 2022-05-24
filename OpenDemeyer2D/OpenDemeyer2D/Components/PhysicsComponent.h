@@ -2,13 +2,15 @@
 #include "box2d.h"
 #include <glm/glm.hpp>
 
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "UtilityFiles/Delegate.h"
 
 
 
-class PhysicsComponent : public Component<PhysicsComponent>
+class PhysicsComponent : public ComponentBase
 {
+	COMPONENT_BODY(PhysicsComponent)
+
 public:
 
 	void DefineUserFields(UserFieldBinder& binder) const override;

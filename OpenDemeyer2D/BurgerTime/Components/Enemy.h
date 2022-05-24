@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "glm/glm.hpp"
 
 class StageMovement;
@@ -14,8 +14,10 @@ enum class EnemyType : char
 	egg		= 2
 };
 
-class Enemy final : public Component<Enemy>
+class Enemy final : public ComponentBase
 {
+	COMPONENT_BODY(Enemy)
+
 public:
 
 	void BeginPlay() override;

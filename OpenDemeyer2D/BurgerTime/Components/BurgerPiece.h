@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 
 class PhysicsComponent;
 class BurgerPieceSegment;
@@ -16,8 +16,10 @@ enum class BurgerPieceType : uint8_t
 	lettuce		= 5
 };
 
-class BurgerPiece final : public Component<BurgerPiece>
+class BurgerPiece final : public ComponentBase
 {
+	COMPONENT_BODY(BurgerPiece)
+
 public:
 
 	void BeginPlay() override;

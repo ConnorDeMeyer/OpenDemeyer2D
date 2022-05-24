@@ -1,9 +1,11 @@
 #pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "UtilityFiles/Delegate.h"
 
-class PlayerResources final : public Component<PlayerResources>
+class PlayerResources final : public ComponentBase
 {
+	COMPONENT_BODY(PlayerResources)
+
 public:
 
 	void SetResources(size_t amount);

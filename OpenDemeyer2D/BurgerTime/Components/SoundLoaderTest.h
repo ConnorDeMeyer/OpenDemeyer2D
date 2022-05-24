@@ -1,11 +1,13 @@
 #pragma once
 
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "ResourceWrappers/Sound.h"
 #include <future>
 
-class SoundLoaderTest : public Component<SoundLoaderTest>
+class SoundLoaderTest : public ComponentBase
 {
+	COMPONENT_BODY(SoundLoaderTest)
+
 public:
 
 	void RenderImGui() override;

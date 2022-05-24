@@ -1,12 +1,14 @@
 #pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "ResourceWrappers/Texture2D.h"
 #include <string>
 
 class RenderComponent;
 
-class TextureComponent final : public Component<TextureComponent>
+class TextureComponent final : public ComponentBase
 {
+	COMPONENT_BODY(TextureComponent)
+
 public:
 
 	TextureComponent() = default;

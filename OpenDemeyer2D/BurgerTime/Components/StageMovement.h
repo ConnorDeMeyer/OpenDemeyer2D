@@ -1,9 +1,11 @@
 ﻿#pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "Stage.h"
 
-class StageMovement : public Component<StageMovement>
+class StageMovement : public ComponentBase
 {
+	COMPONENT_BODY(StageMovement)
+
 public:
 
 

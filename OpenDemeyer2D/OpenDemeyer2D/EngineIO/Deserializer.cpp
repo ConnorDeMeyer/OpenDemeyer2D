@@ -4,6 +4,7 @@
 #include "EngineFiles/Scene.h"
 #include "EngineFiles/GameObject.h"
 #include "Singletons/SceneManager.h"
+#include "EngineFiles/ComponentBase.h"
 
 void Deserializer::RegisterGameObject(unsigned int streamId, GameObject* object)
 {

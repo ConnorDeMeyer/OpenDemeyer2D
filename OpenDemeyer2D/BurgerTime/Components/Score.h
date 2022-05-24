@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "UtilityFiles/EventQueue.h"
 
 class TextPixelComponent;
@@ -20,8 +20,10 @@ enum class ScoreEvent
 
 typedef EventQueue<ScoreEvent, glm::vec2> ScoreEventQueue;
 
-class Score final : public Component<Score>
+class Score final : public ComponentBase
 {
+	COMPONENT_BODY(Score)
+
 public:
 
 	void Update(float) override;

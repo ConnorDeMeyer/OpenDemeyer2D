@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include <array>
 #include "ResourceWrappers/Texture2D.h"
 #include "memory"
@@ -28,8 +28,10 @@ constexpr int stageSize = stageWidth * stageHeight;
 
 class Transform;
 
-class Stage final : public Component<Stage>
+class Stage final : public ComponentBase
 {
+	COMPONENT_BODY(Stage)
+
 public:
 
 	void Initialize() override;

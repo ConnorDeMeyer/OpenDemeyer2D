@@ -1,12 +1,14 @@
 ﻿#pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 
 class StageMovement;
 class PeterPepper;
 class SpriteComponent;
 
-class PPSpriteMovement : public Component<PPSpriteMovement>
+class PPSpriteMovement : public ComponentBase
 {
+	COMPONENT_BODY(PPSpriteMovement)
+
 public:
 
 	void BeginPlay() override;

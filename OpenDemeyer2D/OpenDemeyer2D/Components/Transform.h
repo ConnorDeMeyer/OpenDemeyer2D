@@ -1,10 +1,12 @@
 #pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include <glm/vec2.hpp>
 #include <glm/matrix.hpp>
 
-class Transform final : public Component<Transform>
+class Transform final : public ComponentBase
 {
+	COMPONENT_BODY(Transform)
+
 public:
 
 	Transform() = default;

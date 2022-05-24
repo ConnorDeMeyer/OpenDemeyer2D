@@ -1,12 +1,14 @@
 #pragma once
-#include "EngineFiles/Component.h"
+#include "EngineFiles/ComponentBase.h"
 #include "ResourceWrappers/Texture2D.h"
 #include "Singletons/RenderManager.h"
 
 class Transform;
 
-class RenderComponent final : public Component<RenderComponent>
+class RenderComponent final : public ComponentBase
 {
+	COMPONENT_BODY(RenderComponent)
+
 public:
 
 	RenderComponent() = default;

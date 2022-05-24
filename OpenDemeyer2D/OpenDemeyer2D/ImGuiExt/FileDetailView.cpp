@@ -7,6 +7,7 @@
 #include "Singletons/ResourceManager.h"
 #include "EngineFiles/GameObject.h"
 #include "EngineFiles/Scene.h"
+#include "EngineFiles/ComponentBase.h"
 
 #include "EngineIO/Reflection.h"
 
