@@ -8,8 +8,8 @@
 
 void Enemy::BeginPlay()
 {
-	m_pStageMovement = GetParent()->GetComponent<StageMovement>();
-	m_pSpriteComponent = GetParent()->GetComponent<SpriteComponent>();
+	m_pStageMovement = GetObject()->GetComponent<StageMovement>();
+	m_pSpriteComponent = GetObject()->GetComponent<SpriteComponent>();
 	auto renderComp = GetRenderComponent();
 
 	if (m_pSpriteComponent)
@@ -42,7 +42,7 @@ void Enemy::UpdateMovement()
 {
 	if (m_pStage && m_pTarget && m_pStageMovement)
 	{
-		auto& pos = GetParent()->GetTransform()->GetLocalPosition();
+		auto& pos = GetObject()->GetTransform()->GetLocalPosition();
 		auto& targetPos = m_pTarget->GetTransform()->GetLocalPosition();
 
 		bool CanMoveLeft{ m_pStage->CanMoveInDirection(pos, movementDirection::left) };
@@ -111,7 +111,7 @@ void Enemy::UpdateSprite()
 		{
 			m_pSpriteComponent->SetFrameOffset(offset + 2);
 			m_pSpriteComponent->SetTotalFrames(2);
-			GetParent()->GetTransform()->SetScale({ -1,1 });
+			GetObject()->GetTransform()->SetScale({ -1,1 });
 		}
 		else if (movement.x <= -0.05f)
 		{

@@ -165,17 +165,28 @@ void GameObject::SetParent(GameObject* pObject)
 	m_pTransform->Move({});
 }
 
-void GameObject::SetParent(Scene* pScene)
+void GameObject::SetParent(Scene& scene)
 {
+	if (m_pScene)
+	{
+		if (m_pScene == &scene)
+		{
+			return;
+		}
+
+		m_pScene->RemoveObject(this);
+		m_pScene->UnregisterObject(this);
+	}
+
 	if (m_Parent)
 	{
 		m_Parent->m_Children.SwapRemove(this);
 	}
 
 	m_Parent = nullptr;
-	SetScene(pScene);
+	SetScene(&scene);
 
-	pScene->AddToSceneTree(this);
+	scene.AddToSceneTree(this);
 
 	m_pTransform->Move({});
 }
@@ -270,19 +281,78 @@ void GameObject::SetScene(Scene* pScene)
 	}
 }
 
-void GameObject::Copy(GameObject* originalObject)
+void GameObject::Copy(GameObject* originalObject, CopyLinker* copyLinker)
 {
-	for (auto& comp : originalObject->m_Components)
+	if (copyLinker)
 	{
-		comp.second->MakeCopy(this);
-	}
-	SetName(originalObject->m_Name);
-	SetTag(originalObject->m_Tag);
+		copyLinker->RegisterObject(originalObject, this);
 
-	for (auto child : originalObject->m_Children)
-	{
-		auto go = new GameObject();
-		go->Copy(child);
-		go->SetParent(this);
+		for (auto& comp : originalObject->m_Components)
+		{
+			comp.second->MakeCopy(this, copyLinker);
+		}
+		SetName(originalObject->m_Name);
+		SetTag(originalObject->m_Tag);
+
+		for (auto child : originalObject->m_Children)
+		{
+			auto go = new GameObject();
+			go->Copy(child, copyLinker);
+			go->SetParent(this);
+		}
 	}
+	else
+	{
+		CopyLinker linker;
+
+		linker.RegisterObject(originalObject, this);
+
+		for (auto& comp : originalObject->m_Components)
+		{
+			comp.second->MakeCopy(this, &linker);
+		}
+		SetName(originalObject->m_Name);
+		SetTag(originalObject->m_Tag);
+
+		for (auto child : originalObject->m_Children)
+		{
+			auto go = new GameObject();
+			go->Copy(child, &linker);
+			go->SetParent(this);
+		}
+
+		linker.PerformLinkingActions();
+	}
+}
+
+void CopyLinker::LinkWithNewObject(GameObject* originalObject, const std::function<void(GameObject*)>& linkingAction)
+{
+	auto it = m_RegisteredObjects.find(originalObject);
+	if (it != m_RegisteredObjects.end())
+	{
+		linkingAction(it->second);
+	}
+	else
+	{
+		m_LinkingActions.emplace_back(originalObject, linkingAction);
+	}
+}
+
+void CopyLinker::RegisterObject(GameObject* originalObject, GameObject* newObject)
+{
+	m_RegisteredObjects.emplace(originalObject, newObject);
+}
+
+void CopyLinker::PerformLinkingActions()
+{
+	for (auto& actions : m_LinkingActions)
+	{
+		// if the original object has been copied we transfer the reference to the copy
+		auto it = m_RegisteredObjects.find(actions.originalObject);
+		if (it != m_RegisteredObjects.end())
+		{
+			actions.Action(it->second);
+		}
+	}
+	m_LinkingActions.clear();
 }

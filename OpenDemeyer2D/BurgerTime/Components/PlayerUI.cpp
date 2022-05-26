@@ -14,7 +14,7 @@ void PlayerUI::LinkPlayer(PeterPepper* pPeterPepper)
 	if (!pPeterPepper) return;
 
 	// destroy all children
-	for (auto child : GetParent()->GetChildren())
+	for (auto child : GetObject()->GetChildren())
 	{
 		child->Destroy();
 	}
@@ -27,7 +27,7 @@ void PlayerUI::LinkPlayer(PeterPepper* pPeterPepper)
 	lifeResources->SetSourceRect({ 200,0,8,8 });
 	lifeResources->SetResources(pPeterPepper->GetLives());
 	pPeterPepper->OnLifeLost.BindFunction(lifeResources, [lifeResources] {lifeResources->LoseResource(); });
-	livesCounter->SetParent(GetParent());
+	livesCounter->SetParent(GetObject());
 
 	auto font = RESOURCES.LoadFont("Fonts/advanced_pixel-7.ttf", 24);
 
@@ -38,7 +38,7 @@ void PlayerUI::LinkPlayer(PeterPepper* pPeterPepper)
 	scoreTextComp->SetFont(font);
 	scoreTextComp->SetText("Score:");
 	scoreText->GetTransform()->SetPosition({ 0,-10 });
-	scoreText->SetParent(GetParent());
+	scoreText->SetParent(GetObject());
 
 	auto score = new GameObject();
 	score->AddComponent<RenderComponent>();
@@ -46,7 +46,7 @@ void PlayerUI::LinkPlayer(PeterPepper* pPeterPepper)
 	m_pScoreText->SetText(std::to_string(pPeterPepper->GetScore()));
 	m_pScoreText->SetFont(font);
 	score->GetTransform()->SetPosition({ 30, -10 });
-	score->SetParent(GetParent());
+	score->SetParent(GetObject());
 	pPeterPepper->OnScoreGain.BindFunction(this, [this](int) {UpdateScore(); });
 }
 

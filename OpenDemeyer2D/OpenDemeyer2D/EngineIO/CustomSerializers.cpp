@@ -16,7 +16,6 @@
 #include "Singletons/ResourceManager.h"
 #include "box2d.h"
 
-
 std::ostream& operator<<(std::ostream& stream, const glm::vec2& vec)
 {
 	return stream << vec.x << ' ' << vec.y;

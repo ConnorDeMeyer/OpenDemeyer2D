@@ -66,7 +66,7 @@ private:
 
 private:
 
-	std::array<tiles, stageSize> m_Tiles{};
+	//std::array<tiles, stageSize> m_Tiles{};
 
 	std::shared_ptr<Texture2D> m_StageTexture;
 

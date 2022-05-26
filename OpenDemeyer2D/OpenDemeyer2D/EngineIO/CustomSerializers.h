@@ -154,3 +154,17 @@ std::istream& operator>>(std::istream& is, std::shared_ptr<T>& ptr)
 		return is >> ptr.get();
 	}
 }
+
+// ENUMS
+#define ENUM_ENABLE_STREAMING(enum_class)\
+std::ostream& operator<<(std::ostream& os, enum_class _enum)\
+{\
+	return os << int(_enum);\
+}\
+std::istream& operator>>(std::istream& is, enum_class& _enum)\
+{\
+	int enumInt{};\
+	is >> enumInt;\
+	_enum = enum_class(enumInt);\
+	return is;\
+}

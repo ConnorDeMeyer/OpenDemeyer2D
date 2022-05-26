@@ -46,7 +46,7 @@ void PlayerResources::AddResource()
 		go->GetTransform()->SetPosition({ 0, (m_Resources.size() + 1) * m_pTexture->GetHeight() });
 	}
 
-	go->SetParent(GetParent());
+	go->SetParent(GetObject());
 	m_Resources.emplace_back(go);
 	UpdateResources();
 }

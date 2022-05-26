@@ -3,14 +3,14 @@
 #include "EngineFiles/ComponentBase.h"
 #include "Singletons/InputManager.h"
 
-class InputComponent : public ComponentBase
+class InputComponent final : public ComponentBase
 {
 	COMPONENT_BODY(InputComponent)
 
 	friend class InputManager;
 
 public:
-	virtual ~InputComponent();
+	~InputComponent() override;
 
 	void SetActive(bool bActive) { m_bIsActive = bActive; }
 

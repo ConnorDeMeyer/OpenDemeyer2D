@@ -129,7 +129,7 @@ void RenderComponent::RenderImGui()
 
 glm::vec2* RenderComponent::GetWorldRect(glm::vec2* vertices) const
 {
-	Transform* pTransform = GetParent()->GetTransform();
+	Transform* pTransform = GetObject()->GetTransform();
 
 	auto& pos = pTransform->GetWorldPosition();
 	auto& scale = pTransform->GetWorldScale();

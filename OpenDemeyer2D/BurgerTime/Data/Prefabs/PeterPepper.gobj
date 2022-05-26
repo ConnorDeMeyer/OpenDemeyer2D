@@ -1,0 +1,51 @@
+6 peterPepper
+class StageMovement
+{
+Stage 5
+}
+class Transform
+{
+position 104 3
+scale 1 1
+rotation 0
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 1
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -6 1 6 1 6 13 -6 13 
+}
+}
+class PeterPepper
+{
+}
+class SpriteComponent
+{
+frameDimension 16 16
+frameOffset 0
+totalFrames 1
+frameTime 0.25
+loop 1
+paused 0
+}
+class RenderComponent
+{
+renderLayer 2
+sourceRect 16 0 16 16
+pivot 0.5 1
+}
+class InputComponent
+{
+}
+class PPSpriteMovement
+{
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps\FullSheet.png
+}
+{
+}

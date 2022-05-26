@@ -251,7 +251,6 @@
     <ClInclude Include="Components\TextPixelComponent.h" />
     <ClInclude Include="Components\TextureComponent.h" />
     <ClInclude Include="Components\Transform.h" />
-    <ClInclude Include="EngineFiles\Component.h" />
     <ClInclude Include="EngineFiles\ComponentBase.h" />
     <ClInclude Include="EngineFiles\GameInstance.h" />
     <ClInclude Include="EngineFiles\GameObject.h" />

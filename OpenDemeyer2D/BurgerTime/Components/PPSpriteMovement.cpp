@@ -12,15 +12,15 @@
 
 void PPSpriteMovement::BeginPlay()
 {
-	m_pStageMovement = GetParent()->GetComponent<StageMovement>();
+	m_pStageMovement = GetObject()->GetComponent<StageMovement>();
 
-	m_pPeterPepper = GetParent()->GetComponent<PeterPepper>();
+	m_pPeterPepper = GetObject()->GetComponent<PeterPepper>();
 	if (m_pPeterPepper)
 	{
 		m_pPeterPepper->OnLifeLost.BindFunction(this, [this] {this->StartDieAnimation(); });
 	}
 
-	m_pSpriteComponent = GetParent()->GetComponent<SpriteComponent>();
+	m_pSpriteComponent = GetObject()->GetComponent<SpriteComponent>();
 	if (m_pSpriteComponent)
 	{
 		m_pSpriteComponent->SetFrameDimension({ 16,16 });
@@ -40,8 +40,8 @@ void PPSpriteMovement::Update(float)
 	{
 		auto& direction = m_pStageMovement->GetMovementInput();
 
-		if (GetParent()->GetTransform()->GetLocalScale().x != 1.f)
-			GetParent()->GetTransform()->SetScale({ 1,1 });
+		if (GetObject()->GetTransform()->GetLocalScale().x != 1.f)
+			GetObject()->GetTransform()->SetScale({ 1,1 });
 
 		if (abs(direction.x) <= 0.05f)
 		{
@@ -52,7 +52,7 @@ void PPSpriteMovement::Update(float)
 		{
 			m_pSpriteComponent->SetFrameOffset(3);
 			m_pSpriteComponent->SetTotalFrames(3);
-			GetParent()->GetTransform()->SetScale({ -1,1 });
+			GetObject()->GetTransform()->SetScale({ -1,1 });
 		}
 		else if (direction.x <= -0.05f)
 		{

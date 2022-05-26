@@ -68,7 +68,7 @@ public:
 	virtual void Deserialize(Deserializer& is) = 0;
 
 	/** Copy values from the original when getting copied*/
-	virtual void Clone(const ComponentBase* pOriginal)
+	virtual void Clone(const ComponentBase* pOriginal, CopyLinker* copyLinker = nullptr)
 	{
 		uint32_t typeId = GetComponentId();
 		auto typeInfo = TypeInformation::GetInstance().GetTypeInfo(typeId);
@@ -77,12 +77,12 @@ public:
 		{
 			for (auto field : typeInfo->field.GetFields())
 			{
-				field.second.Copy(pOriginal, this);
+				field.second.Copy(pOriginal, this, copyLinker);
 			}
 		}
 	}
 
-	virtual ComponentBase* MakeCopy(GameObject* objectToAddto) const = 0;
+	virtual ComponentBase* MakeCopy(GameObject* objectToAddto, CopyLinker* copyLinker = nullptr) const = 0;
 
 	virtual void DefineUserFields(UserFieldBinder&) const {};
 
@@ -91,8 +91,8 @@ public:
 	/** Returns weak reference of this component that will be invalidated once this component goes out of scope*/
 	std::weak_ptr<ComponentBase> GetWeakReference() const { return m_Reference; }
 
-	/** Returns the parent of this component*/
-	inline GameObject* GetParent() const { return m_pParent; }
+	/** Returns the Gameobject that this component is attached to*/
+	inline GameObject* GetObject() const { return m_pParent; }
 
 private:
 
@@ -101,9 +101,9 @@ private:
 
 protected:
 
-	inline Transform* GetTransform() const { return GetParent()->GetTransform(); }
-	inline RenderComponent* GetRenderComponent() const { return GetParent()->GetRenderComponent(); }
-	inline Scene* GetScene() const { return GetParent()->GetScene(); }
+	inline Transform* GetTransform() const { return GetObject()->GetTransform(); }
+	inline RenderComponent* GetRenderComponent() const { return GetObject()->GetRenderComponent(); }
+	inline Scene* GetScene() const { return GetObject()->GetScene(); }
 
 private:
 
@@ -116,15 +116,16 @@ protected:
 
 };
 
-template<typename T> struct is_weak_ptr : std::false_type {};
-template<typename T> struct is_weak_ptr<std::weak_ptr<T>> : std::true_type {};
+/**
+* SERIALIZING AND DESERIALIZING weak_ptr containing Components
+*/
 
 template <typename T,
 	typename = std::enable_if_t<std::is_base_of_v<ComponentBase, T>>>
 std::ostream& operator<<(std::ostream& stream, const std::weak_ptr<T> component)
 {
 	if (component.expired()) return stream << 0;
-	return stream << component.lock()->GetParent()->GetId();
+	return stream << component.lock()->GetObject()->GetId();
 }
 
 template <typename T,
@@ -144,6 +145,33 @@ Deserializer& operator>>(Deserializer& stream, std::weak_ptr<T>* component)
 
 	return stream;
 }
+
+/**
+* COPYING weak_ptr containing Components
+*/
+
+template <typename T>
+void CopyWeakPtr(const std::weak_ptr<T>& original, std::weak_ptr<T>& copy, CopyLinker* copyLinker = nullptr)
+{
+	if constexpr (std::is_base_of_v<ComponentBase, T>)
+	{
+		if (copyLinker)
+		{
+			copyLinker->LinkWithNewObject(original.lock()->GetObject(), [&copy, &original](GameObject* obj)
+				{
+					copy = std::reinterpret_pointer_cast<T>(obj->GetComponentById(original.lock()->GetComponentId())->GetWeakReference().lock());
+				});
+		}
+	}
+	else
+	{
+		copy = original;
+	}
+}
+
+/**
+* MACROS FOR CREATING COMPONENT TYPE INFORMATION
+*/
 
 #define GetComponentNameFuncDef(TypeName) constexpr const std::string_view GetComponentName() const override { return type_name<TypeName>(); }
 #define GetComponentIdFuncDef(TypeName) constexpr uint32_t GetComponentId() const override { return hash(type_name<TypeName>()); }
@@ -180,11 +208,11 @@ Deserializer& operator>>(Deserializer& stream, std::weak_ptr<T>* component)
 		}\
 	}\
 }
-#define MakeCopyFuncDef(TypeName) ComponentBase* MakeCopy(GameObject* objectToAddto) const override\
+#define MakeCopyFuncDef(TypeName) ComponentBase* MakeCopy(GameObject* objectToAddto, CopyLinker* copyLinker = nullptr) const override\
 {\
 	ComponentBase* comp{};\
 	comp = objectToAddto->AddComponent<TypeName>();\
-	comp->Clone(this);\
+	comp->Clone(this, copyLinker);\
 	return comp;\
 }
 #define GetWeakReferenceTypeFuncDef(TypeName) std::weak_ptr<TypeName> GetWeakReferenceType()\

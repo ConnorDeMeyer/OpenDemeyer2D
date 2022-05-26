@@ -8,37 +8,35 @@
 #include "Components/RenderComponent.h"
 #include "PeterPepper.h"
 #include "Score.h"
+#include "ImGuiExt/imgui_helpers.h"
 
 #include <functional>
 
 #include "Stage.h"
 
+void BurgerPiece::Initialize()
+{
+	int i{};
+	for (auto child : GetObject()->GetChildren())
+	{
+		m_pSegments[i++] = child;
+	}
+}
+
 void BurgerPiece::BeginPlay()
 {
-	auto sheetTexture = RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png");
-
 	for (int i{}; i < 4; ++i)
 	{
-		auto pSegment{ new GameObject() };
-		auto render = pSegment->AddComponent<RenderComponent>();
-		auto texture = pSegment->AddComponent<TextureComponent>();
-		auto collision = pSegment->AddComponent<PhysicsComponent>();
+		if (!m_pSegments[i])
+			continue;
 
-		pSegment->GetTransform()->SetPosition({ -12.f + 8.f * float(i), 0 });
+		auto collision = m_pSegments[i]->GetComponent<PhysicsComponent>();
 
-		pSegment->SetParent(GetParent());
-		render->SetRenderLayer(1);
-		render->SetPivot({ 0.5f,0.5f });
-		texture->SetTexture(sheetTexture);
-
-		collision->AddBox(3, 3, true);
 		collision->OnOverlap.BindFunction(this, 
-			std::bind(&BurgerPiece::SegmentOverlap, this, pSegment, std::placeholders::_1));
+			std::bind(&BurgerPiece::SegmentOverlap, this, m_pSegments[i], std::placeholders::_1));
 
-		m_pSegments[i] = pSegment;
-
-		m_RestHeight = GetParent()->GetTransform()->GetLocalPosition().y;
 	}
+	m_RestHeight = GetObject()->GetTransform()->GetLocalPosition().y;
 
 	SetType(m_Type);
 }
@@ -50,8 +48,11 @@ void BurgerPiece::SetType(BurgerPieceType type)
 
 	for (int i{}; i < 4; ++i)
 	{
-		auto texture = m_pSegments[i]->GetRenderComponent();
-		texture->SetSourceRect({ 112.f + float(i) * 8.f, 48.f + int(type) * 8.f, 8.f, 8.f });
+		if (m_pSegments[i])
+		{
+			auto texture = m_pSegments[i]->GetRenderComponent();
+			texture->SetSourceRect({ 112.f + float(i) * 8.f, 48.f + int(type) * 8.f, 8.f, 8.f });
+		}
 	}
 }
 
@@ -64,11 +65,11 @@ void BurgerPiece::Update(float deltaTime)
 	}
 	if (m_IsFalling)
 	{
-		GetParent()->GetTransform()->Move({ 0,-48.f * deltaTime });
-		auto pos = GetParent()->GetTransform()->GetLocalPosition();
+		GetObject()->GetTransform()->Move({ 0,-48.f * deltaTime });
+		auto pos = GetObject()->GetTransform()->GetLocalPosition();
 		if (pos.y <= m_RestHeight)
 		{
-			GetParent()->GetTransform()->SetPosition({pos.x, m_RestHeight});
+			GetObject()->GetTransform()->SetPosition({pos.x, m_RestHeight});
 			m_IsFalling = false;
 			m_FallDelay = 0.5f;
 			for (int i{}; i < 4; ++i)
@@ -81,26 +82,26 @@ void BurgerPiece::Update(float deltaTime)
 
 void BurgerPiece::FallDown()
 {
-	if (auto pStage = GetParent()->GetParent()->GetComponent<Stage>())
+	if (!m_Stage.expired())
 	{
-		GetParent()->GetTransform()->Move({ 0,-2.f });
+		GetObject()->GetTransform()->Move({ 0,-2.f });
 
 		for (int i{}; i < 4; ++i)
 			m_pSegments[i]->GetTransform()->Move({ 0,2 });
 
-		m_RestHeight = pStage->GetNextPlatformDown(GetParent()->GetTransform()->GetLocalPosition());
+		m_RestHeight = m_Stage.lock()->GetNextPlatformDown(GetObject()->GetTransform()->GetLocalPosition());
 		m_IsFalling = true;
 
 		//Add score
-		ScoreEventQueue::AddMessage(ScoreEvent::drop_Burger, GetParent()->GetTransform()->GetWorldPosition());
+		ScoreEventQueue::AddMessage(ScoreEvent::drop_Burger, GetObject()->GetTransform()->GetWorldPosition());
 	}
 }
 
 
 void BurgerPiece::SegmentOverlap(GameObject* pSegment, PhysicsComponent* other)
 {
-	if (!other->GetParent()->GetComponent<PeterPepper>() && !m_IsFalling && m_FallDelay < 0.f &&
-		!other->GetParent()->GetParent()->GetComponent<BurgerPiece>()) return;
+	if (!other->GetObject()->GetComponent<PeterPepper>() && !m_IsFalling && m_FallDelay < 0.f &&
+		!other->GetObject()->GetParent()->GetComponent<BurgerPiece>()) return;
 
 	for (int i{}; i < 4; ++i)
 	{
@@ -116,4 +117,38 @@ void BurgerPiece::SegmentOverlap(GameObject* pSegment, PhysicsComponent* other)
 			return;
 		}
 	}
+}
+
+constexpr size_t amountOfPieces{ 6 };
+constexpr const char* PiecesNames[amountOfPieces]
+{
+	"topBun",
+	"bottomBun",
+	"cheese",
+	"meat",
+	"tomato",
+	"lettuce"
+};
+
+void BurgerPiece::RenderImGui()
+{
+	if (ImGui::BeginCombo("Burger Piece Type", PiecesNames[int(m_Type)]))
+	{
+		for (int i{}; i < amountOfPieces; ++i)
+			if (ImGui::Selectable(PiecesNames[i], i == int(m_Type)))
+			{
+				SetType(BurgerPieceType(i));
+			}
+		ImGui::EndCombo();
+	}
+
+	ImGui::ComponentSelect("Stage", this, m_Stage);
+}
+
+ENUM_ENABLE_STREAMING(BurgerPieceType)
+
+void BurgerPiece::DefineUserFields(UserFieldBinder& binder) const
+{
+	binder.Add<std::weak_ptr<Stage>>("Stage", offsetof(BurgerPiece, m_Stage));
+	binder.Add<BurgerPieceType>("type", offsetof(BurgerPiece, m_Type));
 }

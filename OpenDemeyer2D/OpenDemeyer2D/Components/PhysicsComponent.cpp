@@ -22,8 +22,8 @@ void PhysicsComponent::DefineUserFields(UserFieldBinder& binder) const
 
 PhysicsComponent::~PhysicsComponent()
 {
-	if (GetParent()) {
-		auto scene = GetParent()->GetScene();
+	if (GetObject()) {
+		auto scene = GetObject()->GetScene();
 		if (scene && m_pBody)
 		{
 			scene->GetPhysicsWorld()->DestroyBody(m_pBody);
@@ -43,7 +43,7 @@ void PhysicsComponent::BeginPlay()
 
 void PhysicsComponent::Update(float)
 {
-	auto transform = GetParent()->GetTransform();
+	auto transform = GetObject()->GetTransform();
 	m_pBody->SetTransform(reinterpret_cast<const b2Vec2&>(transform->GetWorldPosition()), transform->GetWorldRotation());
 }
 
@@ -473,7 +473,7 @@ void PhysicsComponent::CreateBody(b2BodyDef& def)
 		scene->GetPhysicsWorld()->DestroyBody(m_pBody);
 	}
 
-	auto& position = GetParent()->GetTransform()->GetWorldPosition();
+	auto& position = GetObject()->GetTransform()->GetWorldPosition();
 
 	def.userData.pointer = reinterpret_cast<uintptr_t>(this);
 	def.position.Set(position.x, position.y);

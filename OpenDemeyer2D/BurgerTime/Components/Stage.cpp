@@ -160,7 +160,7 @@ void Stage::LoadStageItems()
 		burgerPiece->SetType(info.type);
 		piece->GetTransform()->SetPosition({ 32.f + 48.f * float(info.posX), 4.f + 16.f * float(info.posY) });
 
-		piece->SetParent(GetParent());
+		piece->SetParent(GetObject());
 	}
 
 
@@ -176,7 +176,7 @@ void Stage::LoadStageItems()
 		render->SetRenderAlignMode(eRenderAlignMode::left);
 
 		go->GetTransform()->SetPosition({ 8.f + 48.f * i, -32.f });
-		go->SetParent(GetParent());
+		go->SetParent(GetObject());
 	}
 }
 
@@ -235,29 +235,29 @@ bool Stage::CanMoveInDirection(const glm::vec2& position, movementDirection dire
 	{
 	case movementDirection::right:
 	{
-		bool isOnGround{ fabsf(yTilePos - 3.f) <= .5f && int(m_Tiles[arrayPos]) & 0b1 };
+		bool isOnGround{ fabsf(yTilePos - 3.f) <= .5f && m_LevelLayout[arrayPos] & 0b1 };
 		if (isOnGround) {
 			if (xTilePos <= 7.5f || // go until the center of a tile
 					(xPos < stageWidth - 1 && 
-					(int(m_Tiles[arrayPos + 1]) & 0b1))) // go right if the tile next to it is not empty 
+					(m_LevelLayout[arrayPos + 1] & 0b1))) // go right if the tile next to it is not empty 
 				return true;
 		}
 		break;
 	}
 	case movementDirection::left:
 	{
-		bool isOnGround{ fabsf(yTilePos - 3.f) <= .5f && int(m_Tiles[arrayPos]) & 0b1 };
+		bool isOnGround{ fabsf(yTilePos - 3.f) <= .5f && m_LevelLayout[arrayPos] & 0b1 };
 		if (isOnGround) {
 			if (xTilePos >= 8.5f || // go until the center of a tile
-				(xPos > 0 && (int(m_Tiles[arrayPos - 1]) & 0b1)))
+				(xPos > 0 && (m_LevelLayout[arrayPos - 1] & 0b1)))
 				return true;
 		}
 		break;
 	}
 	case movementDirection::up:
 	{
-		bool isOnLadder{ bool(int(m_Tiles[arrayPos]) & 0b10) };
-		bool isLadderDown{ yPos < stageHeight - 1 && bool(int(m_Tiles[arrayPos + stageWidth]) & 0b10) };
+		bool isOnLadder{ bool(m_LevelLayout[arrayPos] & 0b10) };
+		bool isLadderDown{ yPos < stageHeight - 1 && bool(m_LevelLayout[arrayPos + stageWidth] & 0b10) };
 		bool isAboveGround{ yTilePos >= 2.5f };
 		auto ladderPos = ladderPositionMap[xPos];
 		if (fabsf(ladderPos - position.x) <= 1.f && (isOnLadder || (!isAboveGround && isLadderDown)))
@@ -266,8 +266,8 @@ bool Stage::CanMoveInDirection(const glm::vec2& position, movementDirection dire
 	}
 	case movementDirection::down:
 	{
-		bool isOnLadder{ bool(int(m_Tiles[arrayPos]) & 0b10) };
-		bool isLadderDown{yPos < stageHeight - 1 && bool(int(m_Tiles[arrayPos + stageWidth]) & 0b10)};
+		bool isOnLadder{ bool(m_LevelLayout[arrayPos] & 0b10) };
+		bool isLadderDown{yPos < stageHeight - 1 && bool(m_LevelLayout[arrayPos + stageWidth] & 0b10)};
 		bool isAboveGround{ yTilePos >= 3.5f };
 		auto ladderPos = ladderPositionMap[xPos];
 		if (fabsf(ladderPos - position.x) <= 1.f && 
@@ -307,7 +307,7 @@ float Stage::GetNextPlatformDown(const glm::vec2& pos)
 	while (yPos < stageHeight)
 	{
 		int arrayPos{ xPos + yPos * stageWidth };
-		if (int(m_Tiles[arrayPos]) & 0b1)
+		if (m_LevelLayout[arrayPos] & 0b1)
 		{
 			return (stageHeight - yPos -  1) * 16.f + 5.f;
 		}
@@ -321,7 +321,7 @@ void Stage::Initialize()
 {
 	LoadStageTexture();
 
-	if (auto renderComp{ GetParent()->GetRenderComponent() }) {
+	if (auto renderComp{ GetObject()->GetRenderComponent() }) {
 		renderComp->SetTexture(m_StageTexture);
 		renderComp->SetRenderAlignMode(eRenderAlignMode::bottomLeft);
 	}
@@ -330,11 +330,11 @@ void Stage::Initialize()
 
 void Stage::BeginPlay()
 {
-	for (int y{}; y < stageHeight; ++y)
-		for (int x{}; x < stageWidth; ++x)
-		{
-			m_Tiles[x + y * stageWidth] = tiles(m_LevelLayout[x + y * stageWidth]);
-		}
+	//for (int y{}; y < stageHeight; ++y)
+	//	for (int x{}; x < stageWidth; ++x)
+	//	{
+	//		m_Tiles[x + y * stageWidth] = tiles(m_LevelLayout[x + y * stageWidth]);
+	//	}
 
 	//LoadStageItems();
 
@@ -404,7 +404,7 @@ void Stage::UpdateStageTexture(const std::shared_ptr<Texture2D>& texture)
 {
 	m_StageTexture = texture;
 
-	if (auto renderComp{ GetParent()->GetRenderComponent() }) {
+	if (auto renderComp{ GetObject()->GetRenderComponent() }) {
 		renderComp->SetTexture(m_StageTexture);
 		renderComp->SetRenderAlignMode(eRenderAlignMode::bottomLeft);
 	}

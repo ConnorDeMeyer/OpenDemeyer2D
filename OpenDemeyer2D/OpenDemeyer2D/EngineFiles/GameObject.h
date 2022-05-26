@@ -12,6 +12,27 @@ class Scene;
 class Transform;
 class RenderComponent;
 
+/**
+* Class for helping linking fields that need a reference to the copied game object when being copied
+*/
+class CopyLinker final
+{
+	struct LinkingAction
+	{
+		GameObject* originalObject{};
+		std::function<void(GameObject*)> Action;
+	};
+
+public:
+	void LinkWithNewObject(GameObject* originalObject, const std::function<void(GameObject*)>& linkingAction);
+	void RegisterObject(GameObject* originalObject, GameObject* newObject);
+	/**Only call at the end of copying*/
+	void PerformLinkingActions();
+private:
+	std::unordered_map<GameObject*, GameObject*> m_RegisteredObjects;
+	std::vector<LinkingAction> m_LinkingActions;
+};
+
 /** 
 * This class is a container for components and is responsible for updating, rendering and managing them.
 * It is part of the scene tree and is capable of having child Game objects who will maintain relative location to its parent.
@@ -115,7 +136,7 @@ public:
 	 */
 	void SetParent(GameObject* pObject);
 
-	void SetParent(Scene* pScene);
+	void SetParent(Scene& scene);
 
 	/**
 	* Get the scene it is currently in.
@@ -154,7 +175,7 @@ public:
 
 	void SetScene(Scene* pScene);
 
-	void Copy(GameObject* originalObject);
+	void Copy(GameObject* originalObject, CopyLinker* copyLinker = nullptr);
 
 private:
 

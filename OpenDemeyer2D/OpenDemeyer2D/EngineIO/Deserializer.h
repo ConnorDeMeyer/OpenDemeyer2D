@@ -42,7 +42,6 @@ private:
 	struct LinkingInfo
 	{
 		uint32_t objectId; // the object id from the object that contains the component
-		//std::weak_ptr<ComponentBase>* addressOfReference; // the address of where the reference to the component will be stored
 		uint32_t typeId; //type id of the component its supposed to get
 		std::function<void(std::weak_ptr<ComponentBase>*)> pointerLinker;
 	};

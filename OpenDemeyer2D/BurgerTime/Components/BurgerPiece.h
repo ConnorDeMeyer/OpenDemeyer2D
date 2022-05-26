@@ -5,6 +5,7 @@ class PhysicsComponent;
 class BurgerPieceSegment;
 class TextureComponent;
 class RenderComponent;
+class Stage;
 
 enum class BurgerPieceType : uint8_t
 {
@@ -22,13 +23,17 @@ class BurgerPiece final : public ComponentBase
 
 public:
 
+	void Initialize() override;
+
 	void BeginPlay() override;
 
 	void SetType(BurgerPieceType type);
 
 	void Update(float) override;
 
-	//const std::string GetComponentName() override { return "BurgerPiece"; }
+	void RenderImGui() override;
+
+	void DefineUserFields(UserFieldBinder& binder) const override;
 
 private:
 
@@ -39,6 +44,8 @@ private:
 private:
 
 	GameObject* m_pSegments[4]{};
+
+	std::weak_ptr<Stage> m_Stage;
 
 	bool m_HitSegments[4]{};
 

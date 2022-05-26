@@ -10,8 +10,8 @@
 
 void PeterPepper::BeginPlay()
 {
-	auto input = GetParent()->GetComponent<InputComponent>();
-	auto movement = GetParent()->GetComponent<StageMovement>();
+	auto input = GetObject()->GetComponent<InputComponent>();
+	auto movement = GetObject()->GetComponent<StageMovement>();
 
 	input->BindKeyPressed(SDLK_d, [movement] {movement->Move(movementDirection::right); });
 	input->BindKeyPressed(SDLK_a, [movement] {movement->Move(movementDirection::left); });

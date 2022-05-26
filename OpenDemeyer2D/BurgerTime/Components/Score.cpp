@@ -60,14 +60,14 @@ void Score::Update(float deltaTime)
 		render->SetRenderLayer(2);
 
 		scoreSprite->GetTransform()->SetPosition(std::get<1>(message) + glm::vec2{8.f, 20.f});
-		GetParent()->GetScene()->Add(scoreSprite);
+		GetObject()->GetScene()->Add(scoreSprite);
 
 		m_ScoreDisplays.emplace_back(std::pair{ scoreSprite, 2.f });
 	}
 
 	if (changed)
 	{
-		GetParent()->GetComponent<TextPixelComponent>()->SetText(std::to_string(m_Score));
+		GetObject()->GetComponent<TextPixelComponent>()->SetText(std::to_string(m_Score));
 	}
 
 	for (auto& scoreDisplays : m_ScoreDisplays)

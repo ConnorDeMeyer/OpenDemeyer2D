@@ -413,8 +413,11 @@ void ResourceManager::SaveGameObject(GameObject* pGameObject, std::filesystem::p
 
 	pGameObject->Serialize(of);
 
+	auto newGo = new GameObject();
+	newGo->Copy(pGameObject);
+
 	auto dir = GetDirectory(outPutPath);
-	dir->Files.emplace_back(new ObjectDetailView(outPutPath, pGameObject));
+	dir->Files.emplace_back(new ObjectDetailView(outPutPath, newGo));
 }
 
 void ResourceManager::SaveScene(Scene* pScene, std::filesystem::path& outPutPath)

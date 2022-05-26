@@ -128,7 +128,7 @@ class PeterPepper
 }
 class PhysicsComponent
 {
-Body 0 0 0 0 1 0 1
+Body 0 0 0 0 1 0 2
 Fixtures {
 1 0.2 0 1 0 1 65535 0 
 }
@@ -163,8 +163,2088 @@ Texture2D Data/Bitmaps\FullSheet.png
 }
 {
 }
+7 BurgerPiece
+class Transform
+{
+position 32 117
+scale 1 1
+rotation 0
 }
-7 Audio tester
+class BurgerPiece
+{
+type 0
+Stage 5
+}
+{
+8 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+9 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+10 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+11 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+12 BurgerPiece
+class Transform
+{
+position 32 85
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 5
+Stage 5
+}
+{
+13 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+14 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+15 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+16 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+17 BurgerPiece
+class Transform
+{
+position 32 37
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 3
+Stage 5
+}
+{
+18 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+19 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+20 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+21 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+22 BurgerPiece
+class Transform
+{
+position 32 5
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 1
+Stage 5
+}
+{
+23 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+24 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+25 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+26 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+28 BurgerPiece
+class Transform
+{
+position 80 5
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 1
+Stage 5
+}
+{
+29 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+30 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+31 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+32 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+33 BurgerPiece
+class Transform
+{
+position 128 5
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 1
+Stage 5
+}
+{
+34 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+35 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+36 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+37 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+38 BurgerPiece
+class Transform
+{
+position 176 53
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 1
+Stage 5
+}
+{
+39 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+40 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+41 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+42 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 56 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+43 BurgerPiece
+class Transform
+{
+position 80 149
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 0
+Stage 5
+}
+{
+44 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+45 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+46 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+47 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+48 BurgerPiece
+class Transform
+{
+position 128 149
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 0
+Stage 5
+}
+{
+49 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+50 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+51 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+52 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+53 BurgerPiece
+class Transform
+{
+position 176 149
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 0
+Stage 5
+}
+{
+54 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+55 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+56 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+57 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+58 BurgerPiece
+class Transform
+{
+position 176 117
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 5
+Stage 5
+}
+{
+59 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+60 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+61 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+62 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+63 BurgerPiece
+class Transform
+{
+position 176 85
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 3
+Stage 5
+}
+{
+64 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+65 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+66 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+67 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+68 BurgerPiece
+class Transform
+{
+position 128 117
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 5
+Stage 5
+}
+{
+69 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+70 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+71 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+72 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+73 BurgerPiece
+class Transform
+{
+position 80 69
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 5
+Stage 5
+}
+{
+74 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+75 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+76 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+77 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 88 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+78 BurgerPiece
+class Transform
+{
+position 128 69
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 3
+Stage 5
+}
+{
+79 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+80 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+81 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+82 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+83 BurgerPiece
+class Transform
+{
+position 80 37
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+type 3
+Stage 5
+}
+{
+84 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+85 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+86 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+87 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 72 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}
+}
+27 Audio tester
 class StageMovement
 {
 Stage 5

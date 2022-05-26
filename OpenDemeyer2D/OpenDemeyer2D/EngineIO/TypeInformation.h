@@ -20,6 +20,9 @@ class ComponentBase;
 class TypeInformation;
 class GameObject;
 
+template<typename T> struct is_weak_ptr : std::false_type {};
+template<typename T> struct is_weak_ptr<std::weak_ptr<T>> : std::true_type {};
+
 class UserFieldBinder final
 {
 private:
@@ -30,7 +33,7 @@ private:
 
 		virtual void Serialize(std::ostream& os, const void* address) const = 0;
 		virtual void DeSerialize(Deserializer& is, void* address) const = 0;
-		virtual void Copy(const void* originalAddress, void* copyAddress) const = 0;
+		virtual void Copy(const void* originalAddress, void* copyAddress, CopyLinker* copyLinker = nullptr) const = 0;
 	};
 
 	template <typename T>
@@ -57,9 +60,13 @@ private:
 				(*is.GetStream()) >> *static_cast<T*>(address);
 		}
 
-		void Copy(const void* originalAddress, void* copyAddress) const override
+		void Copy(const void* originalAddress, void* copyAddress, CopyLinker* copyLinker = nullptr) const override
 		{
-			if constexpr (std::is_pointer_v<T>)
+			if constexpr (is_weak_ptr<T>::value)
+			{
+				CopyWeakPtr(*static_cast<const T*>(originalAddress), *static_cast<T*>(copyAddress), copyLinker);
+			}
+			else if constexpr (std::is_pointer_v<T>)
 			{
 				*static_cast<T*>(copyAddress) = new std::remove_pointer_t<T>();
 				*static_cast<T*>(copyAddress) = **static_cast<const T*>(originalAddress);
@@ -89,11 +96,11 @@ private:
 			pSerializer->DeSerialize(is, reinterpret_cast<void*>(address));
 		}
 
-		void Copy(const ComponentBase* originalComponent, ComponentBase* copyComponent) const
+		void Copy(const ComponentBase* originalComponent, ComponentBase* copyComponent, CopyLinker* copyLinker = nullptr) const
 		{
 			size_t Originaladdress = reinterpret_cast<size_t>(originalComponent) + offset;
 			size_t Copyaddress = reinterpret_cast<size_t>(copyComponent) + offset;
-			pSerializer->Copy(reinterpret_cast<void*>(Originaladdress), reinterpret_cast<void*>(Copyaddress));
+			pSerializer->Copy(reinterpret_cast<void*>(Originaladdress), reinterpret_cast<void*>(Copyaddress), copyLinker);
 		}
 	};
 

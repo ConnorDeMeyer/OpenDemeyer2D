@@ -1,0 +1,128 @@
+7 BurgerPiece
+class Transform
+{
+position 32 118
+scale 1 1
+rotation 0
+}
+class BurgerPiece
+{
+}
+{
+8 
+class Transform
+{
+position -12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 112 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 1
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+9 
+class Transform
+{
+position -4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 120 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 1
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+10 
+class Transform
+{
+position 4 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 128 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 1
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+11 
+class Transform
+{
+position 12 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 1
+sourceRect 136 48 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Data/Bitmaps/FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 1
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -3 -3 3 -3 3 3 -3 3 
+}
+}
+{
+}
+}

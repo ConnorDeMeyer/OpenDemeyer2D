@@ -992,7 +992,7 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 				if (payload->Data)
 				{
 					auto goPayload = *static_cast<GameObject**>(payload->Data);
-					goPayload->SetParent(pScene);
+					goPayload->SetParent(*pScene);
 				}
 			}
 
@@ -1003,7 +1003,7 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 					auto& goPayload = *static_cast<std::unique_ptr<GameObject>*>(payload->Data);
 					auto newGo = new GameObject();
 					newGo->Copy(goPayload.get());
-					newGo->SetParent(pScene);
+					newGo->SetParent(*pScene);
 				}
 			}
 		

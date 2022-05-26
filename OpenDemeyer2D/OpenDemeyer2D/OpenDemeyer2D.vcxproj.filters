@@ -157,7 +157,6 @@
     <ClInclude Include="Singletons\RenderManager.h" />
     <ClInclude Include="Singletons\ResourceManager.h" />
     <ClInclude Include="Singletons\SceneManager.h" />
-    <ClInclude Include="EngineFiles\Component.h" />
     <ClInclude Include="EngineFiles\ComponentBase.h" />
     <ClInclude Include="EngineFiles\GameInstance.h" />
     <ClInclude Include="EngineFiles\GameObject.h" />

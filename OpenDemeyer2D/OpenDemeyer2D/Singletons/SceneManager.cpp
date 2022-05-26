@@ -80,10 +80,15 @@ void SceneManager::SetActiveScene(Scene* pScene)
 	m_pActiveScene = pScene;
 }
 
+Scene* SceneManager::GetActiveScene() const
+{
+	return (m_GameScene) ? m_GameScene.get() : m_pActiveScene;
+}
+
 void SceneManager::PhysicsStep(float timeStep, int velocityIterations, int positionIterations)
 {
-	if (m_pActiveScene) {
-		b2World* physicsWorld = m_pActiveScene->GetPhysicsWorld();
+	if (auto scene{(m_GameScene ? m_GameScene.get() : m_pActiveScene)}) {
+		b2World* physicsWorld = scene->GetPhysicsWorld();
 		physicsWorld->Step(timeStep, velocityIterations, positionIterations);
 		physicsWorld->ClearForces();
 	}

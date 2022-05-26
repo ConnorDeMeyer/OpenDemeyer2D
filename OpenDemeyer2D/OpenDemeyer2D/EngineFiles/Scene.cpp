@@ -78,6 +78,8 @@ void Scene::PreUpdate(bool IsPlaying)
 
 	if (IsPlaying)
 	{
+		m_HasBegunPlay = true;
+
 		for (GameObject* pObject : m_NotBegunObjects)
 		{
 			pObject->BeginPlay();
@@ -92,7 +94,7 @@ void Scene::AfterUpdate()
 	// Delete the destroyed Objects
 	for (GameObject* object : m_DestroyableObjects)
 	{
-		object->SetParent(static_cast<GameObject*>(nullptr));
+		object->SetParent(nullptr);
 		DestroyObjectImmediately(object);
 	}
 	m_DestroyableObjects.clear();
@@ -149,12 +151,16 @@ void Scene::Copy(Scene* originalScene)
 {
 	m_SceneTree.reserve(originalScene->m_SceneTree.size());
 
+	CopyLinker linker{};
+
 	for (auto pObject : originalScene->m_SceneTree)
 	{
 		auto go = new GameObject();
-		go->Copy(pObject);
+		go->Copy(pObject, &linker);
 		Add(go);
 	}
+
+	linker.PerformLinkingActions();
 }
 
 void Scene::AddToSceneTree(GameObject* go)
@@ -179,6 +185,11 @@ void Scene::UnregisterObject(GameObject* pObject)
 {
 	m_RegisteredObjects.erase(pObject->m_ObjectId);
 	pObject->m_ObjectId = 0;
+
+	for (auto child : pObject->GetChildren())
+	{
+		UnregisterObject(child);
+	}
 }
 
 void Scene::BeginContact(b2Contact* contact)

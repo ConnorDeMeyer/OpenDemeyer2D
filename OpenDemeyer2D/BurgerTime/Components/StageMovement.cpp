@@ -8,7 +8,7 @@
 
 bool StageMovement::Move(movementDirection direction)
 {
-	if (!m_pStage.expired() && m_pStage.lock()->CanMoveInDirection(GetParent()->GetTransform()->GetLocalPosition(), direction))
+	if (!m_pStage.expired() && m_pStage.lock()->CanMoveInDirection(GetObject()->GetTransform()->GetLocalPosition(), direction))
 	{
 		MoveUnsafe(direction);
 		return true;
@@ -47,15 +47,15 @@ void StageMovement::Update(float deltaTime)
 	movement.x *= m_HorizontalMovementSpeed;
 	movement.y *= m_VerticalMovementSpeed;
 	movement *= deltaTime;
-	GetParent()->GetTransform()->Move(movement);
+	GetObject()->GetTransform()->Move(movement);
 
 	if (!m_pStage.expired())
 	{
 		if (m_MovementInput.x != 0.f)
-			m_pStage.lock()->SnapToGridY(GetParent()->GetTransform());
+			m_pStage.lock()->SnapToGridY(GetObject()->GetTransform());
 
 		if (m_MovementInput.y != 0.f)
-			m_pStage.lock()->SnapToGridX(GetParent()->GetTransform());
+			m_pStage.lock()->SnapToGridX(GetObject()->GetTransform());
 	}
 }
 
