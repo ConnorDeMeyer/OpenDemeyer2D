@@ -105,6 +105,9 @@ protected:
 	inline RenderComponent* GetRenderComponent() const { return GetObject()->GetRenderComponent(); }
 	inline Scene* GetScene() const { return GetObject()->GetScene(); }
 
+	template <typename T>
+	inline T* GetComponent() const { return GetObject()->GetComponent<T>(); }
+
 private:
 
 	GameObject* m_pParent{};
@@ -155,7 +158,7 @@ void CopyWeakPtr(const std::weak_ptr<T>& original, std::weak_ptr<T>& copy, CopyL
 {
 	if constexpr (std::is_base_of_v<ComponentBase, T>)
 	{
-		if (copyLinker)
+		if (copyLinker && !original.expired())
 		{
 			copyLinker->LinkWithNewObject(original.lock()->GetObject(), [&copy, &original](GameObject* obj)
 				{

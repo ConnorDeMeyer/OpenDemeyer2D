@@ -11,8 +11,6 @@ public:
 
 	void LinkPlayer(PeterPepper* pPeterPepper);
 
-	//const std::string GetComponentName() override { return "Player UI"; }
-
 private:
 
 	void UpdateScore();

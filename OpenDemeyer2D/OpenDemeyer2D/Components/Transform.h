@@ -18,7 +18,7 @@ public:
 
 	void RenderImGui() override;
 
-	virtual void DefineUserFields(UserFieldBinder&) const;
+	void DefineUserFields(UserFieldBinder&) const override;
 
 	const glm::vec2& GetWorldPosition() const { return m_Position; }
 

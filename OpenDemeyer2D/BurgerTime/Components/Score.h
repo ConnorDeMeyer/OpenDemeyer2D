@@ -26,9 +26,11 @@ class Score final : public ComponentBase
 
 public:
 
+	virtual void DefineUserFields(UserFieldBinder& binder) const;
+
 	void Update(float) override;
 
-	//void Initialize() override;
+	void RenderImGui() override;
 
 private:
 

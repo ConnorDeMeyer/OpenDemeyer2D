@@ -199,6 +199,9 @@ void Stage::SpawnPlayer()
 
 constexpr int BigHorizontalTiles = stageWidth / 2;
 constexpr int smallHorizontalTiles = stageWidth - BigHorizontalTiles;
+constexpr float tileDim = 16.f;
+constexpr float worldHor = smallHorizontalTiles * tileDim + BigHorizontalTiles * tileDim * 2;
+constexpr float worldVer = stageHeight * tileDim;
 constexpr int PositionMap[stageWidth + BigHorizontalTiles]
 {
 	0,1,1,2,3,3,4,5,5,6,7,7,8
@@ -211,25 +214,25 @@ constexpr float ladderPositionMap[stageWidth]
 bool Stage::CanMoveInDirection(const glm::vec2& position, movementDirection direction)
 {
 
-	assert(position.x >= 0.f && position.x < smallHorizontalTiles * 16.f + BigHorizontalTiles * 32.f);
-	assert(position.y >= 0.f && position.y < stageHeight * 16.f);
+	//assert(position.x >= 0.f && position.x < smallHorizontalTiles * 16.f + BigHorizontalTiles * 32.f);
+	//assert(position.y >= 0.f && position.y < stageHeight * 16.f);
 
 	int xPos = PositionMap[int(position.x / 16.f)];
 	int yPos = stageHeight - 1 - int((position.y) / 16.f);
 	int arrayPos{ xPos + yPos * stageWidth };
 
 	// If outside of the level
-	if (xPos < 0 || xPos >= stageWidth || yPos < 0 || yPos > stageHeight)
+	if (position.x < 0 || position.x >= worldHor || position.y < 0 || position.y > worldVer)
 	{
 		return (
-			(direction == movementDirection::up		&& yPos > stageHeight)	||
-			(direction == movementDirection::down	&& yPos < 0)			||
-			(direction == movementDirection::left	&& xPos > stageWidth)	||
-			(direction == movementDirection::right	&& xPos < 0));
+			(direction == movementDirection::up		&& position.y > worldVer)||
+			(direction == movementDirection::down	&& position.y < 0)			||
+			(direction == movementDirection::left	&& position.x > worldHor)	||
+			(direction == movementDirection::right	&& position.x < 0));
 	}
 
-	float xTilePos = fmod(position.x, 16.f);
-	float yTilePos = fmod(position.y, 16.f);
+	float xTilePos = fmod(position.x, tileDim);
+	float yTilePos = fmod(position.y, tileDim);
 
 	switch (direction)
 	{

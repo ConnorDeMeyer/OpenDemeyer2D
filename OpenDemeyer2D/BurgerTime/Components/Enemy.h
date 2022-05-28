@@ -2,6 +2,7 @@
 
 #include "EngineFiles/ComponentBase.h"
 #include "glm/glm.hpp"
+#include "UtilityFiles/StateMachine.h"
 
 class StageMovement;
 class SpriteComponent;
@@ -20,40 +21,44 @@ class Enemy final : public ComponentBase
 
 public:
 
+	void DefineUserFields(UserFieldBinder&) const override;
+
+	void Initialize() override;
+
 	void BeginPlay() override;
 
 	void Update(float deltaTime) override;
-
-	//const std::string GetComponentName() override { return "Enemy"; };
 
 	void RenderImGui() override;
 
 	void SetEnemyType(EnemyType type);
 
-	void SetStage(Stage* pStage) { m_pStage = pStage; }
-
-	void SetTarget(GameObject* pTarget) { m_pTarget = pTarget; }
-
 private:
-
-	void UpdateMovement();
 
 	void UpdateSprite();
 
 private:
 
-	StageMovement* m_pStageMovement{};
+	bool Trans_GoUp();
+	bool Trans_GoDown();
+	bool Trans_GoRight();
+	bool Trans_GoLeft();
 
-	SpriteComponent* m_pSpriteComponent{};
+	void Update_GoDown(float);
+	void Update_GoUp(float);
+	void Update_GoRight(float);
+	void Update_GoLeft(float);
 
-	Stage* m_pStage{};
+private:
 
-	GameObject* m_pTarget{};
+	std::weak_ptr<SpriteComponent> m_pSpriteComponent{};
+	std::weak_ptr<StageMovement> m_pStageMovement{};
 
-	glm::vec2 m_PreviousMovement{};
+	std::weak_ptr<Transform> m_pTarget{};
 
 	EnemyType m_EnemyType{};
 
-	bool m_ClimbingLadder{};
+	StateMachine m_MovementStateMachine;
+
 };
 

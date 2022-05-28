@@ -7,6 +7,8 @@
 #include "Components/RenderComponent.h"
 #include "Components/Transform.h"
 
+#include "ImGuiExt/imgui_helpers.h"
+
 std::unordered_map<int, float> Score::ScoreTextureMap{
 	{50,0.f},
 	{100,16.f},
@@ -19,6 +21,11 @@ std::unordered_map<int, float> Score::ScoreTextureMap{
 	{8000,128.f},
 	{16000,144.f}
 };
+
+void Score::DefineUserFields(UserFieldBinder& binder) const
+{
+	binder.Add<std::shared_ptr<Texture2D>>("SheetTexture", offsetof(Score, m_SheetTexture));
+}
 
 void Score::Update(float deltaTime)
 {
@@ -54,12 +61,12 @@ void Score::Update(float deltaTime)
 		auto texture = scoreSprite->AddComponent<TextureComponent>();
 
 		texture->SetTexture(m_SheetTexture);
-		GetRenderComponent()->SetSourceRect(SDL_FRect{ScoreTextureMap[score],160.f, 16.f,8.f});
-		
+
+		render->SetSourceRect(SDL_FRect{ ScoreTextureMap[score],160.f, 16.f,8.f });
 		render->SetRenderAlignMode(eRenderAlignMode::bottomRight);
 		render->SetRenderLayer(2);
 
-		scoreSprite->GetTransform()->SetPosition(std::get<1>(message) + glm::vec2{8.f, 20.f});
+		scoreSprite->GetTransform()->SetPosition(std::get<1>(message) + glm::vec2{ 8.f, 20.f });
 		GetObject()->GetScene()->Add(scoreSprite);
 
 		m_ScoreDisplays.emplace_back(std::pair{ scoreSprite, 2.f });
@@ -81,7 +88,7 @@ void Score::Update(float deltaTime)
 	}
 }
 
-//void Score::Initialize()
-//{
-//	m_SheetTexture = RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png");
-//}
+void Score::RenderImGui()
+{
+	ImGui::ResourceSelect("SheetTexture", m_SheetTexture);
+}

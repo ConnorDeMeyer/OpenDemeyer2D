@@ -57,12 +57,15 @@ void StageMovement::Update(float deltaTime)
 		if (m_MovementInput.y != 0.f)
 			m_pStage.lock()->SnapToGridX(GetObject()->GetTransform());
 	}
-}
 
-void StageMovement::LateUpdate()
-{
+	m_LastMovementInput = m_MovementInput;
 	m_MovementInput = {};
 }
+//
+//void StageMovement::LateUpdate()
+//{
+//	m_MovementInput = {};
+//}
 
 void StageMovement::RenderImGui()
 {
@@ -75,4 +78,6 @@ void StageMovement::RenderImGui()
 void StageMovement::DefineUserFields(UserFieldBinder& binder) const
 {
 	binder.Add<std::weak_ptr<Stage>>("Stage", offsetof(StageMovement,m_pStage));
+	binder.Add<float>("HorSpeed", offsetof(StageMovement,m_HorizontalMovementSpeed));
+	binder.Add<float>("VerSpeed", offsetof(StageMovement,m_VerticalMovementSpeed));
 }

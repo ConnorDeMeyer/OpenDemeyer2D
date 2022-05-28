@@ -30,6 +30,8 @@ public:
 
 	void SetSourceRect(const SDL_FRect& srcRect);
 
+	void ResetSourceRect();
+
 	void RenderImGui() override;
 
 	void SetPivot(const glm::vec2& pivot) { m_Pivot = pivot; }

@@ -8,8 +8,7 @@ class StageMovement : public ComponentBase
 
 public:
 
-
-	void SetStage(Stage* pStage) { m_pStage = pStage->GetWeakReferenceType(); }
+	//void SetStage(Stage* pStage) { m_pStage = pStage->GetWeakReferenceType(); }
 
 	bool Move(movementDirection direction);
 
@@ -18,13 +17,11 @@ public:
 
 	void Update(float) override;
 
-	void LateUpdate() override;
-
 	void RenderImGui() override;
 
-	const glm::vec2& GetMovementInput() const { return m_MovementInput; }
+	const glm::vec2& GetMovementInput() const { return m_LastMovementInput; }
 
-	virtual void DefineUserFields(UserFieldBinder&) const;
+	void DefineUserFields(UserFieldBinder&) const override;
 
 protected:
 
@@ -35,5 +32,6 @@ protected:
 	float m_VerticalMovementSpeed{32.f};
 
 	glm::vec2 m_MovementInput{};
+	glm::vec2 m_LastMovementInput{};
 
 };

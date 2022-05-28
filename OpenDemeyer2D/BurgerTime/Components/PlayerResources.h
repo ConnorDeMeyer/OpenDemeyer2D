@@ -8,6 +8,12 @@ class PlayerResources final : public ComponentBase
 
 public:
 
+	//void DefineUserFields(UserFieldBinder& binder) const override;
+	//
+	//void RenderImGui() override;
+	//
+	//void BeginPlay() override;
+
 	void SetResources(size_t amount);
 
 	size_t GetAmountOfResources() const { return m_Resources.size(); }

@@ -143,7 +143,10 @@ void TextPixelComponent::UpdateFontTexture()
 		}
 	}
 
-	GetRenderComponent()->SetTexture(RESOURCES.LoadTexture(pSurface));
+	auto render = GetRenderComponent();
+	render->SetTexture(RESOURCES.LoadTexture(pSurface));
+	render->ResetSourceRect();
+
 	SDL_FreeSurface(pSurface);
 
 	m_NeedsUpdate = false;
