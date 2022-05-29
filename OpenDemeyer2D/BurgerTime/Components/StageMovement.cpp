@@ -18,6 +18,9 @@ bool StageMovement::Move(movementDirection direction)
 
 void StageMovement::MoveUnsafe(movementDirection direction)
 {
+	if (!m_IsEnabled)
+		return;
+
 	switch (direction)
 	{
 	case movementDirection::right:

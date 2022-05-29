@@ -35,6 +35,8 @@ public:
 
 	void DefineUserFields(UserFieldBinder& binder) const override;
 
+	inline bool IsFalling() const { return m_IsFalling; }
+
 private:
 
 	void FallDown();

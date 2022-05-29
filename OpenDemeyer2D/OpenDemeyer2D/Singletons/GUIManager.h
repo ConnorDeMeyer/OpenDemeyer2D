@@ -37,6 +37,7 @@ public:
 	void RenderGUIOnGame();
 
 	void SetSelectedObject(GameObject* pObject);
+	void KeepAspectRatio(bool val) { m_bKeepAspectRatio = val; }
 
 private:
 

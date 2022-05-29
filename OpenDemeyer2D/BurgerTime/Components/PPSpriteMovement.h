@@ -29,6 +29,8 @@ protected:
 
 	StageMovement* m_pStageMovement{};
 
+	float m_OriginalAnimationSpeed{ 1 };
+
 	bool m_isDying{};
 
 };

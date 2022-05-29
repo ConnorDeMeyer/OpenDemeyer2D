@@ -225,14 +225,12 @@ xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
     <ClCompile Include="Components\HealthComponent.cpp" />
     <ClCompile Include="Components\PeterPepper.cpp" />
     <ClCompile Include="Components\PlayerResources.cpp" />
-    <ClCompile Include="Components\PlayerUI.cpp" />
     <ClCompile Include="Components\PPSpriteMovement.cpp" />
     <ClCompile Include="Components\Score.cpp" />
     <ClCompile Include="Components\SoundLoaderTest.cpp" />
     <ClCompile Include="Components\Stage.cpp" />
     <ClCompile Include="Components\StageMovement.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="GameplayPrefabs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimeGI.h" />
@@ -241,13 +239,11 @@ xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
     <ClInclude Include="Components\HealthComponent.h" />
     <ClInclude Include="Components\PeterPepper.h" />
     <ClInclude Include="Components\PlayerResources.h" />
-    <ClInclude Include="Components\PlayerUI.h" />
     <ClInclude Include="Components\PPSpriteMovement.h" />
     <ClInclude Include="Components\Score.h" />
     <ClInclude Include="Components\SoundLoaderTest.h" />
     <ClInclude Include="Components\Stage.h" />
     <ClInclude Include="Components\StageMovement.h" />
-    <ClInclude Include="GameplayPrefabs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

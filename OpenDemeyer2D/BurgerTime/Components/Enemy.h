@@ -7,6 +7,7 @@
 class StageMovement;
 class SpriteComponent;
 class Stage;
+class PhysicsComponent;
 
 enum class EnemyType : char
 {
@@ -33,9 +34,16 @@ public:
 
 	void SetEnemyType(EnemyType type);
 
+	void Die();
+
 private:
 
 	void UpdateSprite();
+
+	void OverlapWithPlayer(PhysicsComponent* other);
+	void OverlapWithBurgerPiece(PhysicsComponent* other);
+
+	void EndOfDyingAnimation();
 
 private:
 
@@ -59,6 +67,12 @@ private:
 	EnemyType m_EnemyType{};
 
 	StateMachine m_MovementStateMachine;
+
+	glm::vec2 m_StartPos{};
+	float m_InitialAnimationSpeed{};
+
+	bool m_IsStunned{};
+	bool m_IsDying{};
 
 };
 

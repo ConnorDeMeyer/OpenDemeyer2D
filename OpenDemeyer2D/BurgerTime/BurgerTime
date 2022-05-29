@@ -68,16 +68,16 @@ pivot 1 0
 {
 }
 4 score
-class Score
-{
-SheetTexture Data/Bitmaps/FullSheet.png
-}
 class TextPixelComponent
 {
 FontSurface Data/Bitmaps/Text.png
 FontColor 255 255 255 255
 CharSize 8
 Text 0
+}
+class Score
+{
+SheetTexture Data/Bitmaps/FullSheet.png
 }
 class Transform
 {
@@ -116,7 +116,7 @@ LevelLayout {
 6 peterPepper
 class StageMovement
 {
-VerSpeed 32
+VerSpeed 24
 Stage 5
 HorSpeed 32
 }
@@ -125,9 +125,6 @@ class Transform
 position 104 3
 scale 1 1
 rotation 0
-}
-class PeterPepper
-{
 }
 class PhysicsComponent
 {
@@ -139,20 +136,23 @@ Shapes {
 2 4 -6 1 6 1 6 13 -6 13 
 }
 }
-class RenderComponent
+class PeterPepper
 {
-renderLayer 2
-sourceRect 16 0 16 16
-pivot 0.5 1
 }
 class SpriteComponent
 {
 frameDimension 16 16
 frameOffset 0
-totalFrames 1
-frameTime 0.25
+totalFrames 3
+frameTime 0.125
 loop 1
 paused 0
+}
+class RenderComponent
+{
+renderLayer 2
+sourceRect 16 0 16 16
+pivot 0.5 1
 }
 class InputComponent
 {
@@ -2325,7 +2325,7 @@ Texture2D Data/Bitmaps\FullSheet.png
 91 Enemy
 class StageMovement
 {
-VerSpeed 24
+VerSpeed 12
 Stage 5
 HorSpeed 24
 }
@@ -2335,12 +2335,6 @@ position -16 3
 scale 1 1
 rotation 0
 }
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 32 16 16
-pivot 0.5 1
-}
 class SpriteComponent
 {
 frameDimension 16 16
@@ -2349,6 +2343,12 @@ totalFrames 1
 frameTime 0.15
 loop 1
 paused 0
+}
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 32 16 16
+pivot 0.5 1
 }
 class TextureComponent
 {
@@ -2359,20 +2359,36 @@ class Enemy
 Type 0
 Target 6
 }
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -6 -1 6 -1 6 15 -6 15 
+}
+}
 {
 }
 92 Enemy
 class StageMovement
 {
-VerSpeed 24
+VerSpeed 14
 Stage 5
-HorSpeed 24
+HorSpeed 28
 }
 class Transform
 {
 position 224 3
 scale 1 1
 rotation 0
+}
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 64 16 16
+pivot 0.5 1
 }
 class SpriteComponent
 {
@@ -2382,12 +2398,6 @@ totalFrames 1
 frameTime 0.15
 loop 1
 paused 0
-}
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 64 16 16
-pivot 0.5 1
 }
 class TextureComponent
 {
@@ -2398,12 +2408,22 @@ class Enemy
 Type 1
 Target 6
 }
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -6 -1 6 -1 6 15 -6 15 
+}
+}
 {
 }
 93 Enemy
 class StageMovement
 {
-VerSpeed 24
+VerSpeed 12
 Stage 5
 HorSpeed 24
 }
@@ -2413,6 +2433,12 @@ position 224 147
 scale 1 1
 rotation 0
 }
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 32 16 16
+pivot 0.5 1
+}
 class SpriteComponent
 {
 frameDimension 16 16
@@ -2421,12 +2447,6 @@ totalFrames 1
 frameTime 0.15
 loop 1
 paused 0
-}
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 32 16 16
-pivot 0.5 1
 }
 class TextureComponent
 {
@@ -2437,26 +2457,30 @@ class Enemy
 Type 0
 Target 6
 }
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+1 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -6 -1 6 -1 6 15 -6 15 
+}
+}
 {
 }
 94 Enemy
 class StageMovement
 {
-VerSpeed 24
+VerSpeed 14
 Stage 5
-HorSpeed 24
+HorSpeed 28
 }
 class Transform
 {
 position -16 147
 scale 1 1
 rotation 0
-}
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 96 16 16
-pivot 0.5 1
 }
 class SpriteComponent
 {
@@ -2467,6 +2491,12 @@ frameTime 0.15
 loop 1
 paused 0
 }
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 96 16 16
+pivot 0.5 1
+}
 class TextureComponent
 {
 Texture2D Data/Bitmaps\FullSheet.png
@@ -2476,16 +2506,20 @@ class Enemy
 Type 2
 Target 6
 }
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+0 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -6 -1 6 -1 6 15 -6 15 
+}
+}
 {
 }
 }
 95 Audio tester
-class StageMovement
-{
-VerSpeed 32
-Stage 5
-HorSpeed 32
-}
 class SoundLoaderTest
 {
 }

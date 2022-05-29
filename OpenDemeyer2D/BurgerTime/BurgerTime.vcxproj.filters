@@ -10,16 +10,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BurgerTimeGI.cpp" />
-    <ClCompile Include="GameplayPrefabs.cpp">
-      <Filter>Prefabs</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Components\BurgerPiece.cpp" />
     <ClCompile Include="Components\Enemy.cpp" />
     <ClCompile Include="Components\HealthComponent.cpp" />
     <ClCompile Include="Components\PeterPepper.cpp" />
     <ClCompile Include="Components\PlayerResources.cpp" />
-    <ClCompile Include="Components\PlayerUI.cpp" />
     <ClCompile Include="Components\PPSpriteMovement.cpp" />
     <ClCompile Include="Components\Score.cpp" />
     <ClCompile Include="Components\SoundLoaderTest.cpp" />
@@ -28,15 +24,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimeGI.h" />
-    <ClInclude Include="GameplayPrefabs.h">
-      <Filter>Prefabs</Filter>
-    </ClInclude>
     <ClInclude Include="Components\BurgerPiece.h" />
     <ClInclude Include="Components\Enemy.h" />
     <ClInclude Include="Components\HealthComponent.h" />
     <ClInclude Include="Components\PeterPepper.h" />
     <ClInclude Include="Components\PlayerResources.h" />
-    <ClInclude Include="Components\PlayerUI.h" />
     <ClInclude Include="Components\PPSpriteMovement.h" />
     <ClInclude Include="Components\Score.h" />
     <ClInclude Include="Components\SoundLoaderTest.h" />

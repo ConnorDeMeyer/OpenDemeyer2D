@@ -8,8 +8,6 @@ class StageMovement : public ComponentBase
 
 public:
 
-	//void SetStage(Stage* pStage) { m_pStage = pStage->GetWeakReferenceType(); }
-
 	bool Move(movementDirection direction);
 
 	// Moves the object without bounds checking
@@ -23,6 +21,8 @@ public:
 
 	void DefineUserFields(UserFieldBinder&) const override;
 
+	void SetEnabled(bool enabled) { m_IsEnabled = enabled; }
+
 protected:
 
 	std::weak_ptr<Stage> m_pStage;
@@ -33,5 +33,7 @@ protected:
 
 	glm::vec2 m_MovementInput{};
 	glm::vec2 m_LastMovementInput{};
+
+	bool m_IsEnabled{ true };
 
 };

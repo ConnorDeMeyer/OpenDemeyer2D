@@ -17,16 +17,39 @@ void PeterPepper::BeginPlay()
 	input->BindKeyPressed(SDLK_a, [movement] {movement->Move(movementDirection::left); });
 	input->BindKeyPressed(SDLK_w, [movement] {movement->Move(movementDirection::up); });
 	input->BindKeyPressed(SDLK_s, [movement] {movement->Move(movementDirection::down); });
+
+	if (auto sprite = GetObject()->GetComponent<SpriteComponent>())
+	{
+		sprite->OnAnimationEnd.BindFunction(this, std::bind(&PeterPepper::StunEnd, this));
+	}
 }
 
 void PeterPepper::LoseLife()
 {
-	--m_Lives;
-	OnLifeLost.BroadCast();
+	if (!m_isStunned)
+	{
+		m_isStunned = true;
+
+		--m_Lives;
+		OnLifeLost.BroadCast();
+
+		if (auto movement = GetComponent<StageMovement>())
+			movement->SetEnabled(false);
+
+		if (auto spriteMovement = GetComponent<PPSpriteMovement>())
+		{
+			spriteMovement->StartDieAnimation();
+		}
+	}
 }
 
-void PeterPepper::GainScore(int amount)
+void PeterPepper::StunEnd()
 {
-	m_Score += amount;
-	OnScoreGain.BroadCast(amount);
+	if (m_isStunned)
+	{
+		m_isStunned = false;
+
+		if (auto movement = GetComponent<StageMovement>())
+			movement->SetEnabled(true);
+	}
 }

@@ -118,7 +118,7 @@ void GUIManager::RenderGUI()
 	RenderImGuiFileDetails();
 	RenderImGuiSceneGraph();
 	RenderImGuiEngineStats();
-	RenderImGuiEngineSettings();
+	//RenderImGuiEngineSettings();
 	RenderImGuiGameWindow();
 	RenderImGuiRenderInfo();
 	RenderImGuiObjectInfo();

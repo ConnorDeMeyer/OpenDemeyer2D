@@ -59,6 +59,7 @@ void SpriteComponent::RenderImGui()
 	// frame offset
 	ImGui::InputInt("Frame Offset", &m_FrameOffset);
 	ImGui::InputInt("Current Frame", &m_CurrentFrame);
+	ImGui::InputInt("Total Frames", &m_TotalFrames);
 	ImGui::Checkbox("Pause", &m_bPauseTime);
 	ImGui::Checkbox("Loop", &m_bLoop);
 
@@ -134,7 +135,10 @@ void SpriteComponent::UpdateSourceRect()
 		if (m_bLoop)
 			m_CurrentFrame = 0;
 		else
+		{
 			m_bPauseTime = true;
+			--m_CurrentFrame; // go back to previous frame
+		}
 
 		OnAnimationEnd.BroadCast();
 	}

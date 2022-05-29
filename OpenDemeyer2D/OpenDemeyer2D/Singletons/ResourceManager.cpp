@@ -211,7 +211,7 @@ std::future<std::shared_ptr<Surface2D>> ResourceManager::LoadSurfaceAsync(const 
 {
 	std::scoped_lock<std::mutex> lock(m_SurfaceQueueLock);
 
-	m_SurfaceLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Surface2D>>(), keepLoaded);
+	m_SurfaceLoaderQueue.emplace_back(m_DataPath + file, new std::promise<std::shared_ptr<Surface2D>>(), keepLoaded);
 	return std::get<1>(m_SurfaceLoaderQueue.back())->get_future();
 }
 
@@ -219,7 +219,7 @@ std::future<std::shared_ptr<Sound>> ResourceManager::LoadSoundAsync(const std::s
 {
 	std::scoped_lock<std::mutex> lock(m_SoundQueueLock);
 
-	m_SoundLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Sound>>(), keepLoaded);
+	m_SoundLoaderQueue.emplace_back(m_DataPath + file, new std::promise<std::shared_ptr<Sound>>(), keepLoaded);
 	return std::get<1>(m_SoundLoaderQueue.back())->get_future();
 }
 
@@ -227,7 +227,7 @@ std::future<std::shared_ptr<Music>> ResourceManager::LoadMusicAsync(const std::s
 {
 	std::scoped_lock<std::mutex> lock(m_MusicQueueLock);
 
-	m_MusicLoaderQueue.emplace_back(file, new std::promise<std::shared_ptr<Music>>(), keepLoaded);
+	m_MusicLoaderQueue.emplace_back(m_DataPath + file, new std::promise<std::shared_ptr<Music>>(), keepLoaded);
 	return std::get<1>(m_MusicLoaderQueue.back())->get_future();
 }
 

@@ -8,11 +8,11 @@ class PlayerResources final : public ComponentBase
 
 public:
 
-	//void DefineUserFields(UserFieldBinder& binder) const override;
-	//
-	//void RenderImGui() override;
-	//
-	//void BeginPlay() override;
+	void DefineUserFields(UserFieldBinder& binder) const override;
+	
+	void RenderImGui() override;
+	
+	void BeginPlay() override;
 
 	void SetResources(size_t amount);
 
@@ -29,8 +29,6 @@ public:
 	Delegate<> OnLoseResource;
 
 	Delegate<> OnLostAllResources;
-
-	//const std::string GetComponentName() override { return "PlayerResource"; }
 
 private:
 

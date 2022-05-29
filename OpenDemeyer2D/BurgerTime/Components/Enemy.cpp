@@ -5,6 +5,10 @@
 #include "Components/SpriteComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/Transform.h"
+#include "Components/PhysicsComponent.h"
+#include "PeterPepper.h"
+#include "BurgerPiece.h"
+#include "Score.h"
 
 #include "Singletons/ResourceManager.h"
 
@@ -32,12 +36,25 @@ void Enemy::Initialize()
 
 void Enemy::BeginPlay()
 {
+	m_StartPos = GetTransform()->GetLocalPosition();
+
 	if (!m_pSpriteComponent.expired())
 	{
-		m_pSpriteComponent.lock()->SetTotalFrames(2);
+		auto sprite = m_pSpriteComponent.lock();
+
+		sprite->SetTotalFrames(2);
+		sprite->OnAnimationEnd.BindFunction(std::bind(&Enemy::EndOfDyingAnimation, this));
+		m_InitialAnimationSpeed = sprite->GetTimePerFrame();
 	}
 
 	SetEnemyType(m_EnemyType);
+
+	auto collision = GetComponent<PhysicsComponent>();
+	if (collision)
+	{
+		collision->OnOverlap.BindFunction(this, std::bind(&Enemy::OverlapWithPlayer, this, _1));
+		collision->OnOverlap.BindFunction(this, std::bind(&Enemy::OverlapWithBurgerPiece, this, _1));
+	}
 
 	// Create the states
 	auto State_MoveLeft		= new State();
@@ -146,8 +163,11 @@ void Enemy::Update_GoLeft(float)
 
 void Enemy::Update(float dt)
 {
-	m_MovementStateMachine.Update(dt);
-	UpdateSprite();
+	if (!m_IsDying)
+	{
+		m_MovementStateMachine.Update(dt);
+		UpdateSprite();
+	}
 }
 
 constexpr const char* enemyTypes[]
@@ -212,6 +232,73 @@ void Enemy::UpdateSprite()
 		{
 			sprite->SetTotalFrames(2);
 			sprite->SetFrameOffset(offset);
+		}
+	}
+}
+
+void Enemy::OverlapWithPlayer(PhysicsComponent* other)
+{
+	if (!m_IsDying && !m_IsStunned)
+		if (auto peterPepper{ other->GetObject()->GetComponent<PeterPepper>() })
+		{
+			peterPepper->LoseLife();
+		}
+}
+
+void Enemy::OverlapWithBurgerPiece(PhysicsComponent* other)
+{
+	if (auto parentObject{ other->GetObject()->GetParent() })
+		if (auto burgerPiece{ parentObject->GetComponent<BurgerPiece>() })
+			if (burgerPiece->IsFalling())
+				Die();
+}
+
+void Enemy::EndOfDyingAnimation()
+{
+	if (m_IsDying)
+	{
+		m_IsDying = false;
+
+		GetTransform()->SetPosition(m_StartPos);
+
+		if (auto sprite = m_pSpriteComponent.lock())
+		{
+			sprite->SetLooping(true);
+			sprite->SetPaused(false);
+			sprite->SetTimePerFrame(m_InitialAnimationSpeed);
+		}
+
+	}
+}
+
+void Enemy::Die()
+{
+	if (!m_IsDying)
+	{
+		m_IsDying = true;
+
+		if (!m_pSpriteComponent.expired())
+		{
+			auto sprite = m_pSpriteComponent.lock();
+
+			sprite->SetFrameOffset(int(m_EnemyType) * 30 + 45);
+			sprite->SetTotalFrames(4);
+			sprite->SetLooping(false);
+			sprite->SetTimePerFrame(m_InitialAnimationSpeed * 2.f);
+			sprite->Reset();
+		}
+
+		switch (m_EnemyType)
+		{
+		case EnemyType::hotDog:
+			ScoreEventQueue::AddMessage(ScoreEvent::kill_hotDog, GetObject()->GetTransform()->GetWorldPosition());
+			break;
+		case EnemyType::pickle:
+			ScoreEventQueue::AddMessage(ScoreEvent::kill_pickle, GetObject()->GetTransform()->GetWorldPosition());
+			break;
+		case EnemyType::egg:
+			ScoreEventQueue::AddMessage(ScoreEvent::kill_egg, GetObject()->GetTransform()->GetWorldPosition());
+			break;
 		}
 	}
 }

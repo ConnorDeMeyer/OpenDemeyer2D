@@ -16,22 +16,17 @@ public:
 
 	Delegate<> OnLifeLost;
 
-	Delegate<int> OnScoreGain;
-
-	int GetScore() const { return m_Score; }
-
 	void LoseLife();
 
-	void GainScore(int amount);
+private:
 
-	//const std::string GetComponentName() override { return "PeterPepper"; }
+	void StunEnd();
 
-protected:
+private:
 
 	int m_Lives{ 5 };
 
-	int m_Score{};
-
+	bool m_isStunned{};
 
 
 };

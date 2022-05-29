@@ -23,10 +23,20 @@ class GameObject;
 template<typename T> struct is_weak_ptr : std::false_type {};
 template<typename T> struct is_weak_ptr<std::weak_ptr<T>> : std::true_type {};
 
+/**
+* Class responsible for keeping field information of a particular component
+*/
 class UserFieldBinder final
 {
 private:
 
+	/**
+	* Base class that defines functions that a Serializer should have.
+	* It should be able to copy a field from one class to another
+	* It should be able to give its value to a stream
+	* It should be able to receive a value from a stream and intepret it.
+	* Overload the stream operators of a custom type for it to be serializable (have a look at CustomSerializers.h)
+	*/
 	struct FieldSerializerBase
 	{
 		virtual ~FieldSerializerBase() = default;
@@ -78,10 +88,16 @@ private:
 		}
 	};
 
+	/**
+	* Class responsible for keeping field info.
+	*/
 	struct FieldInfo final
 	{
+		/** Offset of the field's address relative to the class's address*/
 		size_t offset{};
+		/** Size of the field*/
 		size_t size{};
+		/** Serializer containing functions for serializing, deserializing and copying fields*/
 		std::shared_ptr<FieldSerializerBase> pSerializer{};
 
 		void Serialize(std::ostream& os, const ComponentBase* pComponent) const
@@ -158,6 +174,7 @@ public:
 
 };
 
+/** Singleton that keeps all the type information*/
 class TypeInformation : public Singleton<TypeInformation>
 {
 public:

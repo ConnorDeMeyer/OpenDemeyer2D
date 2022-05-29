@@ -13,30 +13,23 @@
 void PPSpriteMovement::BeginPlay()
 {
 	m_pStageMovement = GetObject()->GetComponent<StageMovement>();
-
-	m_pPeterPepper = GetObject()->GetComponent<PeterPepper>();
-	if (m_pPeterPepper)
-	{
-		m_pPeterPepper->OnLifeLost.BindFunction(this, [this] {this->StartDieAnimation(); });
-	}
+	m_pPeterPepper = GetComponent<PeterPepper>();
 
 	m_pSpriteComponent = GetObject()->GetComponent<SpriteComponent>();
 	if (m_pSpriteComponent)
 	{
-		m_pSpriteComponent->SetFrameDimension({ 16,16 });
-		m_pSpriteComponent->SetTotalFrames(3);
-		m_pSpriteComponent->SetTimePerFrame(1.f/8.f);
+		//m_pSpriteComponent->SetFrameDimension({ 16,16 });
+		//m_pSpriteComponent->SetTotalFrames(3);
+		//m_pSpriteComponent->SetTimePerFrame(1.f/8.f);
 		m_pSpriteComponent->OnAnimationEnd.BindFunction(this, [this] { this->ResetAnimation(); });
+		m_OriginalAnimationSpeed = m_pSpriteComponent->GetTimePerFrame();
 	}
 	
-	auto pRender = GetRenderComponent();
-	pRender->SetPivot({ 0.5f,1.f });
-	pRender->SetTexture(RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png"));
 }
 
 void PPSpriteMovement::Update(float)
 {
-	if (m_pPeterPepper && m_pSpriteComponent && m_pStageMovement)
+	if (m_pPeterPepper && m_pSpriteComponent && m_pStageMovement && !m_isDying)
 	{
 		auto& direction = m_pStageMovement->GetMovementInput();
 
@@ -77,10 +70,11 @@ void PPSpriteMovement::StartDieAnimation()
 {
 	if (m_pSpriteComponent)
 	{
-		m_pSpriteComponent->SetFrameOffset(17);
+		m_pSpriteComponent->SetFrameOffset(18);
 		m_pSpriteComponent->SetTotalFrames(6);
 		m_pSpriteComponent->SetLooping(false);
 		m_pSpriteComponent->SetCurrentFrame(0);
+		m_pSpriteComponent->SetTimePerFrame(m_OriginalAnimationSpeed * 3.f);
 		m_isDying = true;
 	}
 }
@@ -93,6 +87,7 @@ void PPSpriteMovement::ResetAnimation()
 		m_pSpriteComponent->SetLooping(true);
 		m_pSpriteComponent->SetFrameOffset(0);
 		m_pSpriteComponent->Reset();
+		m_pSpriteComponent->SetTimePerFrame(m_OriginalAnimationSpeed);
 		m_isDying = false;
 	}
 }
