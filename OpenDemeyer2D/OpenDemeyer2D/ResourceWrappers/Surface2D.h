@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <gl/glew.h>
 #include <string>
+#include <filesystem>
 
 /** Simple RAII container for the sdl texture*/
 class Surface2D final
@@ -23,11 +24,11 @@ public:
 
 	SDL_Surface* GetSurface() const { return m_pSurface; }
 
-	const std::string& GetFilePath() const { return m_sourceFile; }
+	const std::filesystem::path& GetFilePath() const { return m_sourceFile; }
 
 
 private:
 	SDL_Surface* m_pSurface{};
 
-	std::string m_sourceFile{};
+	std::filesystem::path m_sourceFile{};
 };

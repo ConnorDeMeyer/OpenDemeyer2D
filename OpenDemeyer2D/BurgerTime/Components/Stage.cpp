@@ -4,7 +4,6 @@
 #include "SDL.h"
 #include "Singletons/ResourceManager.h"
 #include "BurgerPiece.h"
-#include "BurgerPiece.h"
 #include "Components/TextureComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/Transform.h"
@@ -221,13 +220,17 @@ bool Stage::CanMoveInDirection(const glm::vec2& position, movementDirection dire
 	int arrayPos{ xPos + yPos * stageWidth };
 
 	// If outside of the level
-	if (position.x < 0 || position.x >= worldHor || position.y < 0 || position.y > worldVer)
+	if (position.x < 0 || position.x >= worldHor)
 	{
 		return (
-			(direction == movementDirection::up		&& position.y > worldVer)||
-			(direction == movementDirection::down	&& position.y < 0)			||
-			(direction == movementDirection::left	&& position.x > worldHor)	||
+			(direction == movementDirection::left	&& position.x > worldHor) ||
 			(direction == movementDirection::right	&& position.x < 0));
+	}
+	if (position.y < 3.f || position.y > worldVer - 13.f)
+	{
+		return (
+			(direction == movementDirection::up && position.y < 3.f) ||
+			(direction == movementDirection::down && position.y > worldVer - 13.f));
 	}
 
 	float xTilePos = fmod(position.x, tileDim);
@@ -302,7 +305,17 @@ void Stage::SnapToGridY(Transform* transform)
 		transform->SetPosition({ pos.x, yTilePos + float(yPos) * 16.f });
 }
 
-float Stage::GetNextPlatformDown(const glm::vec2& pos)
+void Stage::TeleportToNearestGridY(Transform* transform)
+{
+	auto localPos = transform->GetLocalPosition();
+	if (localPos.y > 0 && localPos.y < worldVer)
+	{
+		int yPos = int(localPos.y / 16.f);
+		transform->SetPosition({ localPos.x, 3.f + float(yPos) * 16.f });
+	}
+}
+
+float Stage::GetNextPlatformDown(const glm::vec2& pos, int levels, BurgerPiece* pBurger)
 {
 	int xPos = PositionMap[int(pos.x / 16.f)];
 	int yPos = stageHeight - 0 - int((pos.y) / 16.f);
@@ -311,12 +324,13 @@ float Stage::GetNextPlatformDown(const glm::vec2& pos)
 		int arrayPos{ xPos + yPos * stageWidth };
 		if (m_LevelLayout[arrayPos] & 0b1)
 		{
-			return (stageHeight - yPos -  1) * 16.f + 5.f;
+			if (--levels == 0)
+				return (stageHeight - yPos -  1) * 16.f + 5.f;
 		}
 		++yPos;
 	}
 
-	return -36.f + float(m_FallenHamburgers[xPos / 2]++) * 8.f;
+	return -36.f + ((pBurger) ? pBurger->GetPositionInStack() * 8.f : 0.f); // float(m_FallenHamburgers[xPos / 2]++) * 8.f;
 }
 
 void Stage::Initialize()

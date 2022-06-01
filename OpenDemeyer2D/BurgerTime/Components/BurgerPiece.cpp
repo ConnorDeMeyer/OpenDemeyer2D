@@ -6,6 +6,7 @@
 #include "Components/PhysicsComponent.h"
 #include "Components/Transform.h"
 #include "Components/RenderComponent.h"
+#include "Enemy.h"
 #include "PeterPepper.h"
 #include "Score.h"
 #include "ImGuiExt/imgui_helpers.h"
@@ -32,7 +33,7 @@ void BurgerPiece::BeginPlay()
 
 		auto collision = m_pSegments[i]->GetComponent<PhysicsComponent>();
 
-		collision->OnOverlap.BindFunction(this, 
+		collision->OnOverlap.BindFunction(this,
 			std::bind(&BurgerPiece::SegmentOverlap, this, m_pSegments[i], std::placeholders::_1));
 
 	}
@@ -69,7 +70,7 @@ void BurgerPiece::Update(float deltaTime)
 		auto pos = GetObject()->GetTransform()->GetLocalPosition();
 		if (pos.y <= m_RestHeight)
 		{
-			GetObject()->GetTransform()->SetPosition({pos.x, m_RestHeight});
+			GetObject()->GetTransform()->SetPosition({ pos.x, m_RestHeight });
 			m_IsFalling = false;
 			m_FallDelay = 0.5f;
 			for (int i{}; i < 4; ++i)
@@ -80,41 +81,102 @@ void BurgerPiece::Update(float deltaTime)
 	}
 }
 
-void BurgerPiece::FallDown()
+void BurgerPiece::FallDown(const glm::vec2& location)
 {
 	if (!m_Stage.expired())
 	{
 		GetObject()->GetTransform()->Move({ 0,-2.f });
 
+		std::vector<Enemy*> OverlappingEnemies{};
+
 		for (int i{}; i < 4; ++i)
+		{
 			m_pSegments[i]->GetTransform()->Move({ 0,2 });
 
-		m_RestHeight = m_Stage.lock()->GetNextPlatformDown(GetObject()->GetTransform()->GetLocalPosition());
+			// Get overlapping enemies
+			if (auto physics{ m_pSegments[i]->GetComponent<PhysicsComponent>() })
+			{
+				auto components = physics->GetOverlappingComponents();
+
+				for (auto comp : components)
+				{
+					auto Object = comp->GetObject();
+					if (auto enemy = Object->GetComponent<Enemy>())
+					{
+						if (std::find(OverlappingEnemies.begin(), OverlappingEnemies.end(), enemy) == OverlappingEnemies.end())
+						{
+							OverlappingEnemies.emplace_back(enemy);
+						}
+					}
+				}
+			}
+		}
+
+		m_RestHeight = m_Stage.lock()->GetNextPlatformDown(location, OverlappingEnemies.size() + 1, this);
 		m_IsFalling = true;
 
+		for (auto enemy : OverlappingEnemies)
+		{
+			enemy->FallDown(m_RestHeight);
+		}
+
 		//Add score
-		ScoreEventQueue::AddMessage(ScoreEvent::drop_Burger, GetObject()->GetTransform()->GetWorldPosition());
+		switch (OverlappingEnemies.size())
+		{
+		case 0:
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_Burger, GetObject()->GetTransform()->GetWorldPosition());
+			break;
+		case 1:
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_1enemy, GetObject()->GetTransform()->GetWorldPosition());
+			break;
+		case 2:
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_2enemy, GetObject()->GetTransform()->GetWorldPosition());
+			break;
+		case 3:
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_3enemy, GetObject()->GetTransform()->GetWorldPosition());
+			break;
+		case 4:
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_4enemy, GetObject()->GetTransform()->GetWorldPosition());
+			break;
+		case 5:
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_5enemy, GetObject()->GetTransform()->GetWorldPosition());
+			break;
+		case 6:
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_6enemy, GetObject()->GetTransform()->GetWorldPosition());
+			break;
+		}		
 	}
+}
+
+void BurgerPiece::FallDown()
+{
+	FallDown(GetObject()->GetTransform()->GetLocalPosition());
 }
 
 
 void BurgerPiece::SegmentOverlap(GameObject* pSegment, PhysicsComponent* other)
 {
-	if (!other->GetObject()->GetComponent<PeterPepper>() && !m_IsFalling && m_FallDelay < 0.f &&
-		!other->GetObject()->GetParent()->GetComponent<BurgerPiece>()) return;
+	auto otherBurgerPiece = other->GetObject()->GetParent()->GetComponent<BurgerPiece>();
+	auto otherPeterPepper = other->GetObject()->GetComponent<PeterPepper>();
 
-	for (int i{}; i < 4; ++i)
+	if ((otherPeterPepper || otherBurgerPiece) && (!m_IsFalling && m_FallDelay <= 0.f))
 	{
-		if (pSegment == m_pSegments[i] && !m_HitSegments[i])
+		for (int i{}; i < 4; ++i)
 		{
-			m_HitSegments[i] = true;
-			m_pSegments[i]->GetTransform()->Move({ 0,-2.f });
+			if (pSegment == m_pSegments[i] && !m_HitSegments[i])
+			{
+				m_HitSegments[i] = true;
+				m_pSegments[i]->GetTransform()->Move({ 0,-2.f });
 
-			for (int j{}; j < 4; ++j)
-				if (m_HitSegments[j] != true) return;
+				for (int j{}; j < 4; ++j)
+					if (m_HitSegments[j] != true) return;
 
-			FallDown();
-			return;
+				if (otherBurgerPiece)
+					return FallDown({ otherBurgerPiece->GetTransform()->GetLocalPosition().x, otherBurgerPiece->m_RestHeight - 2.f });
+
+				FallDown();
+				return;
+			}
 		}
 	}
 }
@@ -143,6 +205,8 @@ void BurgerPiece::RenderImGui()
 	}
 
 	ImGui::ComponentSelect("Stage", this, m_Stage);
+
+	ImGui::InputInt("Burger Stack Pos", &m_PositionInStack, 1, 2);
 }
 
 ENUM_ENABLE_STREAMING(BurgerPieceType)
@@ -151,4 +215,5 @@ void BurgerPiece::DefineUserFields(UserFieldBinder& binder) const
 {
 	binder.Add<std::weak_ptr<Stage>>("Stage", offsetof(BurgerPiece, m_Stage));
 	binder.Add<BurgerPieceType>("type", offsetof(BurgerPiece, m_Type));
+	binder.Add<int>("stackPos", offsetof(BurgerPiece, m_PositionInStack));
 }

@@ -37,9 +37,12 @@ public:
 
 	inline bool IsFalling() const { return m_IsFalling; }
 
+	inline int GetPositionInStack() const { return m_PositionInStack; }
+
 private:
 
 	void FallDown();
+	void FallDown(const glm::vec2& location);
 
 	void SegmentOverlap(GameObject* pSegment, PhysicsComponent* other);
 
@@ -52,9 +55,10 @@ private:
 	bool m_HitSegments[4]{};
 
 	float m_RestHeight{};
-
 	float m_FallDelay{};
-
+	
+	int m_PositionInStack{};
+	
 	BurgerPieceType m_Type{};
 
 	bool m_IsFalling{};

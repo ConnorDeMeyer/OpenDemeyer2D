@@ -60,7 +60,8 @@ void TextComponent::SetSize(unsigned size)
 {
 	if (m_Font->GetSize() != size)
 	{
-		m_Font = RESOURCES.LoadFont(m_Font->GetPath(), size);
+		//TODO
+		//m_Font = RESOURCES.LoadFont(m_Font->GetPath(), size);
 		m_NeedsUpdate = true;
 	}
 }

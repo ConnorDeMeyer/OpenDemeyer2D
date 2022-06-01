@@ -8,6 +8,8 @@
 #include "PPSpriteMovement.h"
 #include "StageMovement.h"
 
+#include "ImGuiExt/imgui_helpers.h"
+
 void PeterPepper::BeginPlay()
 {
 	auto input = GetObject()->GetComponent<InputComponent>();
@@ -41,6 +43,11 @@ void PeterPepper::LoseLife()
 			spriteMovement->StartDieAnimation();
 		}
 	}
+}
+
+void PeterPepper::RenderImGui()
+{
+	ImGui::ResourceSelect("Pepper Prefab", m_PepperPrefab);
 }
 
 void PeterPepper::StunEnd()

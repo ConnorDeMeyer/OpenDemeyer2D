@@ -69,7 +69,7 @@ void SetImGuiStyle()
 	colors[ImGuiCol_Button]                 = ImVec4(0.22f, 0.15f, 0.54f, 0.27f);
 	colors[ImGuiCol_ButtonHovered]          = ImVec4(0.73f, 0.73f, 0.73f, 0.31f);
 	colors[ImGuiCol_ButtonActive]           = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-	colors[ImGuiCol_Header]                 = ImVec4(0.18f, 0.22f, 0.26f, 0.35f);
+	colors[ImGuiCol_Header]                 = ImVec4(0.30f, 0.40f, 0.64f, 0.45f);///
 	colors[ImGuiCol_HeaderHovered]          = ImVec4(0.16f, 0.26f, 0.38f, 0.80f);
 	colors[ImGuiCol_HeaderActive]           = ImVec4(0.16f, 0.26f, 0.38f, 0.60f);
 	colors[ImGuiCol_Separator]              = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
@@ -79,7 +79,7 @@ void SetImGuiStyle()
 	colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.20f, 0.32f, 0.47f, 0.67f);
 	colors[ImGuiCol_ResizeGripActive]       = ImVec4(1.00f, 1.00f, 1.00f, 0.95f);
 	colors[ImGuiCol_Tab]                    = ImVec4(0.19f, 0.22f, 0.26f, 0.86f);
-	colors[ImGuiCol_TabHovered]             = ImVec4(0.23f, 0.23f, 0.23f, 0.80f);
+	colors[ImGuiCol_TabHovered]             = ImVec4(0.55f, 0.55f, 0.55f, 0.80f);///
 	colors[ImGuiCol_TabActive]              = ImVec4(0.34f, 0.29f, 0.64f, 0.42f);
 	colors[ImGuiCol_TabUnfocused]           = ImVec4(0.07f, 0.10f, 0.15f, 0.97f);
 	colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.20f, 0.21f, 0.22f, 1.00f);

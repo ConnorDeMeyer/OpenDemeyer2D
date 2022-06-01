@@ -228,7 +228,7 @@ std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Surface2D>&
 
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Sound>& sound)
 {
-	std::string file;
+	std::filesystem::path file;
 	stream >> file;
 	sound = RESOURCES.LoadSound(file);
 	return stream;
@@ -236,7 +236,7 @@ std::istream& operator>>(std::istream& stream, std::shared_ptr<Sound>& sound)
 
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Music>& music)
 {
-	std::string file;
+	std::filesystem::path file;
 	stream >> file;
 	music = RESOURCES.LoadMusic(file);
 	return stream;
@@ -244,7 +244,7 @@ std::istream& operator>>(std::istream& stream, std::shared_ptr<Music>& music)
 
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Texture2D>& texture)
 {
-	std::string file;
+	std::filesystem::path file;
 	stream >> file;
 	texture = RESOURCES.LoadTexture(file);
 	return stream;
@@ -252,7 +252,7 @@ std::istream& operator>>(std::istream& stream, std::shared_ptr<Texture2D>& textu
 
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Surface2D>& surface)
 {
-	std::string file;
+	std::filesystem::path file;
 	stream >> file;
 	surface = RESOURCES.LoadSurface(file);
 	return stream;

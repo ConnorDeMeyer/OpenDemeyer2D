@@ -22,8 +22,6 @@ public:
 
 	void SetTexture(const std::shared_ptr<Texture2D>& texture);
 
-	void SetTexture(const std::string& filePath);
-
 	void RenderImGui() override;
 
 	const std::shared_ptr<Texture2D>& GetTexture() const { return m_Texture; }

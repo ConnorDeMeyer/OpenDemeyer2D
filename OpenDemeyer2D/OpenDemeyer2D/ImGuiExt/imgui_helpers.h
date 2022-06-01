@@ -56,5 +56,7 @@ namespace ImGui
 	void ResourceSelect(const char* label, std::shared_ptr<Surface2D>& Resource);
 	void ResourceSelect(const char* label, std::shared_ptr<Sound>& Resource);
 	void ResourceSelect(const char* label, std::shared_ptr<Music>& Resource);
+	void ResourceSelect(const char* label, std::shared_ptr<GameObject>& Resource);
+	//void ResourceSelect(const char* label, std::shared_ptr<Scene>& Resource);
 
 }

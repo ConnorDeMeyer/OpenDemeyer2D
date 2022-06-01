@@ -1,18 +1,21 @@
 ﻿#pragma once
-#include <b2_world.h>
 
 #include "Singletons/SceneManager.h"
+
 #include <vector>
-#include "UtilityFiles/ODArray.h"
 #include <memory>
 #include <functional>
+
+#include "UtilityFiles/ODArray.h"
+
 #include "EngineIO/Deserializer.h"
+#include "PhysicsInterface.h"
 
 class GameObject;
 class b2World;
 
 /** Class responsible for managing GameObjects and the GameObject tree.*/
-class Scene final : public b2ContactListener
+class Scene final
 {
 	friend Scene& SceneManager::CreateScene(const std::string& name);
 
@@ -20,7 +23,7 @@ class Scene final : public b2ContactListener
 
 public:
 
-	explicit Scene(const std::string& name);
+	Scene(const std::string& name);
 
 	/** Deletes every object in the scene tree.*/
 	virtual ~Scene();
@@ -52,9 +55,6 @@ public:
 	/** Returns the name of this scene.*/
 	const std::string& GetName() { return m_Name; }
 
-	/** Returns the Box2D physics world.*/
-	b2World* GetPhysicsWorld() const { return m_pb2World; }
-
 	void ChangeName(const std::string& name);
 
 	const std::vector<GameObject*>& GetSceneTree() const { return m_SceneTree; }
@@ -73,19 +73,13 @@ public:
 
 	void AddToSceneTree(GameObject* go);
 
+	inline PhysicsInterface* GetPhysicsInterface() const { return m_PhysicsInterface.get(); }
+
 private:
 
 	void RegisterObject(GameObject* pObject);
 
 	void UnregisterObject(GameObject* pObject);
-
-	void BeginContact(b2Contact* contact) override;
-
-	void EndContact(b2Contact* contact) override;
-
-	void PreSolve(b2Contact* contact, const b2Manifold* oldManifold) override;
-
-	void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse) override;
 
 private:
 
@@ -104,9 +98,9 @@ private:
 
 	std::vector<GameObject*> m_NotBegunObjects;
 
-	b2World* m_pb2World{};
-
 	std::unordered_map<uint32, GameObject*> m_RegisteredObjects;
+
+	std::unique_ptr<PhysicsInterface> m_PhysicsInterface;
 
 	bool m_HasBegunPlay{};
 

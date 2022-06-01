@@ -4,7 +4,7 @@ Test_Scene
 1 1up
 class TextPixelComponent
 {
-FontSurface Data/Bitmaps/Text.png
+FontSurface Bitmaps/Text.png
 FontColor 255 0 0 255
 CharSize 8
 Text 1UP
@@ -26,7 +26,7 @@ pivot 1 0
 2 hi score
 class TextPixelComponent
 {
-FontSurface Data/Bitmaps/Text.png
+FontSurface Bitmaps/Text.png
 FontColor 255 0 0 255
 CharSize 8
 Text HI-SCORE
@@ -48,7 +48,7 @@ pivot 1 0
 3 pepper
 class TextPixelComponent
 {
-FontSurface Data/Bitmaps/Text.png
+FontSurface Bitmaps/Text.png
 FontColor 0 255 0 255
 CharSize 8
 Text PEPPER
@@ -70,14 +70,14 @@ pivot 1 0
 4 score
 class TextPixelComponent
 {
-FontSurface Data/Bitmaps/Text.png
+FontSurface Bitmaps/Text.png
 FontColor 255 255 255 255
 CharSize 8
 Text 0
 }
 class Score
 {
-SheetTexture Data/Bitmaps/FullSheet.png
+SheetTexture Bitmaps\FullSheet.png
 }
 class Transform
 {
@@ -162,7 +162,7 @@ class PPSpriteMovement
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps\FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 {
 }
@@ -177,6 +177,7 @@ class BurgerPiece
 {
 type 0
 Stage 5
+stackPos 3
 }
 {
 8 
@@ -194,7 +195,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -223,7 +224,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -252,7 +253,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -281,7 +282,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -307,6 +308,7 @@ class BurgerPiece
 {
 type 5
 Stage 5
+stackPos 2
 }
 {
 13 
@@ -324,7 +326,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -353,7 +355,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -382,7 +384,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -411,7 +413,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -437,6 +439,7 @@ class BurgerPiece
 {
 type 3
 Stage 5
+stackPos 1
 }
 {
 18 
@@ -454,7 +457,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -483,7 +486,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -512,7 +515,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -541,7 +544,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -567,6 +570,7 @@ class BurgerPiece
 {
 type 1
 Stage 5
+stackPos 0
 }
 {
 23 
@@ -584,7 +588,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -613,7 +617,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -642,7 +646,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -671,7 +675,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -697,6 +701,7 @@ class BurgerPiece
 {
 type 1
 Stage 5
+stackPos 0
 }
 {
 28 
@@ -714,7 +719,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -743,7 +748,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -772,7 +777,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -801,7 +806,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -827,6 +832,7 @@ class BurgerPiece
 {
 type 1
 Stage 5
+stackPos 0
 }
 {
 33 
@@ -844,7 +850,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -873,7 +879,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -902,7 +908,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -931,7 +937,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -957,6 +963,7 @@ class BurgerPiece
 {
 type 1
 Stage 5
+stackPos 0
 }
 {
 38 
@@ -974,7 +981,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1003,7 +1010,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1032,7 +1039,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1061,7 +1068,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1087,6 +1094,7 @@ class BurgerPiece
 {
 type 0
 Stage 5
+stackPos 3
 }
 {
 43 
@@ -1104,7 +1112,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1133,7 +1141,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1162,7 +1170,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1191,7 +1199,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1217,6 +1225,7 @@ class BurgerPiece
 {
 type 0
 Stage 5
+stackPos 3
 }
 {
 48 
@@ -1234,7 +1243,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1263,7 +1272,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1292,7 +1301,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1321,7 +1330,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1347,6 +1356,7 @@ class BurgerPiece
 {
 type 0
 Stage 5
+stackPos 3
 }
 {
 53 
@@ -1364,7 +1374,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1393,7 +1403,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1422,7 +1432,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1451,7 +1461,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1477,6 +1487,7 @@ class BurgerPiece
 {
 type 5
 Stage 5
+stackPos 2
 }
 {
 58 
@@ -1494,7 +1505,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1523,7 +1534,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1552,7 +1563,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1581,7 +1592,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1607,6 +1618,7 @@ class BurgerPiece
 {
 type 3
 Stage 5
+stackPos 1
 }
 {
 63 
@@ -1624,7 +1636,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1653,7 +1665,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1682,7 +1694,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1711,7 +1723,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1737,6 +1749,7 @@ class BurgerPiece
 {
 type 5
 Stage 5
+stackPos 2
 }
 {
 68 
@@ -1754,7 +1767,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1783,7 +1796,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1812,7 +1825,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1841,7 +1854,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1867,6 +1880,7 @@ class BurgerPiece
 {
 type 5
 Stage 5
+stackPos 2
 }
 {
 73 
@@ -1884,7 +1898,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1913,7 +1927,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1942,7 +1956,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1971,7 +1985,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -1997,6 +2011,7 @@ class BurgerPiece
 {
 type 3
 Stage 5
+stackPos 1
 }
 {
 78 
@@ -2014,7 +2029,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -2043,7 +2058,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -2072,7 +2087,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -2101,7 +2116,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -2127,6 +2142,7 @@ class BurgerPiece
 {
 type 3
 Stage 5
+stackPos 1
 }
 {
 83 
@@ -2144,7 +2160,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -2173,7 +2189,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -2202,7 +2218,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -2231,7 +2247,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -2261,7 +2277,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps\FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 {
 }
@@ -2280,7 +2296,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps\FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 {
 }
@@ -2299,7 +2315,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps\FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 {
 }
@@ -2318,7 +2334,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps\FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 {
 }
@@ -2352,7 +2368,7 @@ pivot 0.5 1
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps\FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class Enemy
 {
@@ -2401,7 +2417,7 @@ paused 0
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps\FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class Enemy
 {
@@ -2450,7 +2466,7 @@ paused 0
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps\FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class Enemy
 {
@@ -2499,7 +2515,7 @@ pivot 0.5 1
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps\FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class Enemy
 {
@@ -2528,6 +2544,101 @@ class Transform
 position 0 0
 scale 1 1
 rotation 0
+}
+{
+}
+96 PlayerLifes
+class Transform
+{
+position 8 8
+scale 1 1
+rotation 0
+}
+class PlayerResources
+{
+Texture Bitmaps\FullSheet.png
+Player 6
+PepperText 100
+SourceRect 200 0 8 8
+}
+{
+97 
+class Transform
+{
+position 0 16
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 0
+sourceRect 200 0 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Bitmaps\FullSheet.png
+}
+{
+}
+98 
+class Transform
+{
+position 0 8
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 0
+sourceRect 200 0 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Bitmaps\FullSheet.png
+}
+{
+}
+99 
+class Transform
+{
+position 0 0
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 0
+sourceRect 200 0 8 8
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Bitmaps\FullSheet.png
+}
+{
+}
+}
+100 PlayerPepper
+class TextPixelComponent
+{
+FontSurface Bitmaps\Text.png
+FontColor 255 255 255 255
+CharSize 8
+Text 5
+}
+class Transform
+{
+position 232 240
+scale 1 1
+rotation 0
+}
+class RenderComponent
+{
+renderLayer 0
+sourceRect 0 0 8 8
+pivot 0 0
 }
 {
 }

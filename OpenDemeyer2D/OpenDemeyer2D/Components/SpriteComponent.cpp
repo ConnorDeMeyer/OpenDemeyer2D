@@ -40,6 +40,8 @@ void SpriteComponent::Update(float deltaTime)
 
 void SpriteComponent::RenderImGui()
 {
+	bool changed{};
+
 	// Time per frame
 	float tpf{ m_TimePerFrame };
 	ImGui::InputFloat("Seconds Per Frame", &tpf);
@@ -51,22 +53,27 @@ void SpriteComponent::RenderImGui()
 
 	// frame dimensions
 	float dims[2]{ m_FrameDimension.x, m_FrameDimension.y };
-	ImGui::InputFloat2("Frame Dimensions", dims);
+	changed = changed || ImGui::InputFloat2("Frame Dimensions", dims);
 
 	m_FrameDimension.x = dims[0];
 	m_FrameDimension.y = dims[1];
 
 	// frame offset
-	ImGui::InputInt("Frame Offset", &m_FrameOffset);
-	ImGui::InputInt("Current Frame", &m_CurrentFrame);
-	ImGui::InputInt("Total Frames", &m_TotalFrames);
-	ImGui::Checkbox("Pause", &m_bPauseTime);
-	ImGui::Checkbox("Loop", &m_bLoop);
+	changed = changed || ImGui::InputInt("Frame Offset", &m_FrameOffset);
+	changed = changed || ImGui::InputInt("Current Frame", &m_CurrentFrame);
+	changed = changed || ImGui::InputInt("Total Frames", &m_TotalFrames);
+	changed = changed || ImGui::Checkbox("Pause", &m_bPauseTime);
+	changed = changed || ImGui::Checkbox("Loop", &m_bLoop);
 
 	// Reset button
 	if (ImGui::Button("Reset"))
 	{
 		Reset();
+	}
+
+	if (changed)
+	{
+		UpdateSourceRect();
 	}
 }
 

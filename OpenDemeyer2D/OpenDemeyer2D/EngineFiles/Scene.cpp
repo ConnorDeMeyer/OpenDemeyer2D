@@ -3,16 +3,14 @@
 #include "EngineFiles/GameObject.h"
 #include "imgui.h"
 #include "Components/PhysicsComponent.h"
+#include "PhysicsInterface.h"
 
-#include <box2d.h>
 #include "Singletons/GUIManager.h"
 
 Scene::Scene(const std::string& name)
 	: m_Name{ name }
+	, m_PhysicsInterface{new PhysicsInterface()}
 {
-	m_pb2World = new b2World(b2Vec2{0, 0});
-	m_pb2World->SetContactListener(this);
-
 }
 
 Scene::~Scene()
@@ -22,8 +20,6 @@ Scene::~Scene()
 
 	for (auto obj : m_UninitializedObject)
 		delete obj;
-
-	delete m_pb2World;
 }
 
 GameObject* Scene::Add(GameObject* pObject)
@@ -189,45 +185,6 @@ void Scene::UnregisterObject(GameObject* pObject)
 	for (auto child : pObject->GetChildren())
 	{
 		UnregisterObject(child);
-	}
-}
-
-void Scene::BeginContact(b2Contact* contact)
-{
-	PhysicsComponent* compA = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureA()->GetUserData().pointer);
-	PhysicsComponent* compB = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureB()->GetUserData().pointer);
-
-	if (compA && compB) {
-		compA->OnOverlap.BroadCast(compB);
-		compB->OnOverlap.BroadCast(compA);
-	}
-}
-
-void Scene::EndContact(b2Contact* contact)
-{
-	PhysicsComponent* compA = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureA()->GetUserData().pointer);
-	PhysicsComponent* compB = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureB()->GetUserData().pointer);
-
-	if (compA && compB) {
-		compA->OnEndOverlap.BroadCast(compB);
-		compB->OnEndOverlap.BroadCast(compA);
-	}
-}
-
-void Scene::PreSolve(b2Contact*, const b2Manifold*)
-{
-
-}
-
-void Scene::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
-{
-	PhysicsComponent* compA = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureA()->GetUserData().pointer);
-	PhysicsComponent* compB = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureB()->GetUserData().pointer);
-
-	if (compA && compB) {
-		compA->OnHit.BroadCast(compB,
-			reinterpret_cast<const glm::vec2&>(impulse->normalImpulses),
-			reinterpret_cast<const glm::vec2&>(impulse->tangentImpulses));
 	}
 }
 

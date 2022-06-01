@@ -45,7 +45,7 @@ class PPSpriteMovement
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps\FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 {
 }

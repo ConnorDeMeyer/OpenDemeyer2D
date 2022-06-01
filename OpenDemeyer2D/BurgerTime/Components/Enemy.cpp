@@ -87,8 +87,10 @@ void Enemy::BeginPlay()
 	m_MovementStateMachine.AddState(State_MoveUp);
 	m_MovementStateMachine.AddState(State_MoveDown);
 
+
 	// set the first state
-	m_MovementStateMachine.SetCurrentState(State_MoveUp);
+	m_DefaultState = State_MoveUp;
+	m_MovementStateMachine.SetCurrentState(m_DefaultState);
 
 	m_MovementStateMachine.SetTransitionDelay(0.1f);
 }
@@ -163,7 +165,31 @@ void Enemy::Update_GoLeft(float)
 
 void Enemy::Update(float dt)
 {
-	if (!m_IsDying)
+	m_StunTime -= dt;
+
+	if (m_IsFalling)
+	{
+		GetTransform()->Move({ 0,-48.f * dt });
+		auto pos = GetObject()->GetTransform()->GetLocalPosition();
+		if (pos.y <= m_RestLocation)
+		{
+			GetObject()->GetTransform()->SetPosition({ pos.x, m_RestLocation });
+			m_IsFalling = false;
+			if (auto stageMovement = m_pStageMovement.lock())
+			{
+				stageMovement->SnapToGridY();
+				m_MovementStateMachine.SetCurrentState(m_DefaultState);
+			}
+		}
+	}
+	else if (m_IsStunned)
+	{
+		if (m_StunTime <= 0.f)
+		{
+			m_IsStunned = false;
+		}
+	}
+	else if (!m_IsDying)
 	{
 		m_MovementStateMachine.Update(dt);
 		UpdateSprite();
@@ -249,7 +275,7 @@ void Enemy::OverlapWithBurgerPiece(PhysicsComponent* other)
 {
 	if (auto parentObject{ other->GetObject()->GetParent() })
 		if (auto burgerPiece{ parentObject->GetComponent<BurgerPiece>() })
-			if (burgerPiece->IsFalling())
+			if (burgerPiece->IsFalling() && !m_IsFalling)
 				Die();
 }
 
@@ -267,6 +293,8 @@ void Enemy::EndOfDyingAnimation()
 			sprite->SetPaused(false);
 			sprite->SetTimePerFrame(m_InitialAnimationSpeed);
 		}
+
+		m_MovementStateMachine.SetCurrentState(m_DefaultState);
 
 	}
 }
@@ -299,6 +327,32 @@ void Enemy::Die()
 		case EnemyType::egg:
 			ScoreEventQueue::AddMessage(ScoreEvent::kill_egg, GetObject()->GetTransform()->GetWorldPosition());
 			break;
+		}
+	}
+}
+
+void Enemy::FallDown(float location)
+{
+	m_IsFalling = true;
+	m_IsDying = false;
+	m_RestLocation = location;
+}
+
+void Enemy::Stun(float time)
+{
+	if (!m_IsDying && !m_IsStunned)
+	{
+		m_IsStunned = true;
+		m_StunTime = time;
+
+		if (!m_pSpriteComponent.expired())
+		{
+			auto sprite = m_pSpriteComponent.lock();
+
+			sprite->SetFrameOffset(int(m_EnemyType) * 30 + 49);
+			sprite->SetTotalFrames(2);
+			sprite->SetLooping(true);
+			sprite->Reset();
 		}
 	}
 }

@@ -26,7 +26,7 @@ PhysicsComponent::~PhysicsComponent()
 		auto scene = GetObject()->GetScene();
 		if (scene && m_pBody)
 		{
-			scene->GetPhysicsWorld()->DestroyBody(m_pBody);
+			scene->GetPhysicsInterface()->DestroyBody(m_pBody);
 		}
 	}
 }
@@ -470,7 +470,7 @@ void PhysicsComponent::CreateBody(b2BodyDef& def)
 	auto scene = GetScene();
 	if (scene && m_pBody)
 	{
-		scene->GetPhysicsWorld()->DestroyBody(m_pBody);
+		scene->GetPhysicsInterface()->DestroyBody(m_pBody);
 	}
 
 	auto& position = GetObject()->GetTransform()->GetWorldPosition();
@@ -478,5 +478,53 @@ void PhysicsComponent::CreateBody(b2BodyDef& def)
 	def.userData.pointer = reinterpret_cast<uintptr_t>(this);
 	def.position.Set(position.x, position.y);
 
-	m_pBody = GetScene()->GetPhysicsWorld()->CreateBody(&def);
+	m_pBody = GetScene()->GetPhysicsInterface()->CreateBody(def);
+}
+
+std::vector<PhysicsComponent*> PhysicsComponent::GetOverlappingComponents()
+{
+	if (m_pBody)
+	{
+		return GetScene()->GetPhysicsInterface()->GetOverlappingComponents(this);
+
+		/*b2AABB aabb{};
+		aabb.lowerBound = { b2_maxFloat, b2_maxFloat };
+		aabb.upperBound = { -b2_maxFloat, -b2_maxFloat };
+
+		for (auto it{ m_pBody->GetFixtureList() }; it; it = it->GetNext())
+		{
+			if (it->IsSensor())
+			{
+				aabb.Combine(it->GetAABB(0));
+			}
+		}
+
+		std::vector<b2Fixture*> overlappingFixtures;
+
+		class AABBQueryOverride : public b2QueryCallback
+		{
+		public:
+			AABBQueryOverride(std::vector<b2Fixture*>* Fixtures, b2Fixture* queryFixtures)
+				: m_Fixtures{Fixtures}
+				, m_queryFixtures{queryFixtures}
+			{}
+
+			bool ReportFixture(b2Fixture* fixture) override
+			{
+				m_Fixtures->emplace_back(fixture);
+				return true;
+			}
+		private:
+			std::vector<b2Fixture*>* m_Fixtures{};
+			b2Fixture* m_queryFixtures{};
+		};
+
+		AABBQueryOverride query{ &overlappingFixtures, m_pBody->GetFixtureList() };
+
+		m_pBody->GetWorld()->QueryAABB(&query, aabb);
+
+		return overlappingFixtures;*/
+	}
+
+	return std::vector<PhysicsComponent*>();
 }

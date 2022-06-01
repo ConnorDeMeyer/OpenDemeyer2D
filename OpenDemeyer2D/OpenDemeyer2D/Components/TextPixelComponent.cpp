@@ -5,7 +5,7 @@
 #include "Singletons/RenderManager.h"
 #include "ResourceWrappers/Surface2D.h"
 
-#include "imgui.h"
+#include "ImGuiExt/imgui_helpers.h"
 
 void TextPixelComponent::DefineUserFields(UserFieldBinder& binder) const
 {
@@ -84,11 +84,19 @@ void TextPixelComponent::RenderImGui()
 		m_CharSize = charSize;
 		UpdateFontTexture();
 	}
+
+	// Change Font Surface
+	ImGui::ResourceSelect("FontSurface", m_FontSurface);
+
+	if (ImGui::Button("Refresh"))
+	{
+		UpdateFontTexture();
+	}
 }
 
 void TextPixelComponent::UpdateFontTexture()
 {
-	if (!GetRenderComponent())
+	if (!GetRenderComponent() || !m_FontSurface)
 		return;
 
 

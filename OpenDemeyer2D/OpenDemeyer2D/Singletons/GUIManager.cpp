@@ -170,7 +170,7 @@ void GUIManager::RenderHitboxes() const
 	// when the game is running and bodies are initialized
 	if (SCENES.GetActiveScene()->HasBegunPlay())
 	{
-		auto pWorld = SCENES.GetActiveScene()->GetPhysicsWorld();
+		auto pWorld = SCENES.GetActiveScene()->GetPhysicsInterface()->GetPhysicsWorld();
 
 		for (auto pBody{ pWorld->GetBodyList() }; pBody; pBody = pBody->GetNext())
 		{
@@ -628,7 +628,9 @@ void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
 
 	// Object name in tree
 	bool treeNode = (ImGui::TreeNodeEx(go->GetDisplayName().c_str(),
-		ImGuiTreeNodeFlags_Leaf * go->GetChildren().empty() | ImGuiTreeNodeFlags_OpenOnArrow));
+		(ImGuiTreeNodeFlags_Leaf * go->GetChildren().empty()) |
+		ImGuiTreeNodeFlags_OpenOnArrow |
+		(ImGuiTreeNodeFlags_Selected * (m_pSelectedObject.lock() ? (m_pSelectedObject.lock().get() == go) : false))));
 
 	// POPUP
 	{
@@ -1125,7 +1127,7 @@ void GUIManager::RenderImGuiGameWindow()
 
 	auto pos = glm::vec2(ImGui::GetCursorPos()) + glm::vec2(ImGui::GetWindowPos());
 	auto imageSize = ImGui::GetWindowSize();
-	imageSize.y -= 30; // add offset
+	imageSize.y -= ImGui::GetCursorPosY() + 10; // add offset
 
 	if (m_bKeepAspectRatio)
 	{

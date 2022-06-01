@@ -138,6 +138,8 @@ public:
 
 	void SetParent(Scene& scene);
 
+	void AddChild(GameObject* pObject);
+
 	/**
 	* Get the scene it is currently in.
 	* Returns nullptr if it is not in a scene.

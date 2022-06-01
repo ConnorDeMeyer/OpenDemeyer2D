@@ -2,6 +2,7 @@
 #include "Font.h"
 #include <SDL_ttf.h>
 #include <stdexcept>
+#include <filesystem>
 
 struct _TTF_Font;
 
@@ -26,7 +27,7 @@ public:
 
 	unsigned int GetSize() const { return m_Size; }
 
-	const std::string& GetPath() const { return m_Path; }
+	const std::filesystem::path& GetPath() const { return m_Path; }
 
 	~Font()
 	{
@@ -40,5 +41,5 @@ public:
 private:
 	_TTF_Font* m_Font;
 	unsigned int m_Size;
-	std::string m_Path;
+	std::filesystem::path m_Path;
 };

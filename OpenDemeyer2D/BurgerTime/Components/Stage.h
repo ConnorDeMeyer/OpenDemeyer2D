@@ -27,6 +27,7 @@ constexpr int stageHeight = 10;
 constexpr int stageSize = stageWidth * stageHeight;
 
 class Transform;
+class BurgerPiece;
 
 class Stage final : public ComponentBase
 {
@@ -46,7 +47,9 @@ public:
 
 	void SnapToGridY(Transform* transform);
 
-	float GetNextPlatformDown(const glm::vec2& pos);
+	void TeleportToNearestGridY(Transform* transform);
+
+	float GetNextPlatformDown(const glm::vec2& pos, int levels = 1, BurgerPiece* pBurger = nullptr);
 
 	void RenderImGui() override;
 
@@ -66,11 +69,7 @@ private:
 
 private:
 
-	//std::array<tiles, stageSize> m_Tiles{};
-
 	std::shared_ptr<Texture2D> m_StageTexture;
-
-	//GameObject* m_pPeterPepper{};
 
 	Uint8 m_FallenHamburgers[4]{};
 

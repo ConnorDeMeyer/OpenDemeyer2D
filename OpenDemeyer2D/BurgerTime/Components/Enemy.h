@@ -36,6 +36,10 @@ public:
 
 	void Die();
 
+	void FallDown(float location);
+
+	void Stun(float time);
+
 private:
 
 	void UpdateSprite();
@@ -67,12 +71,18 @@ private:
 	EnemyType m_EnemyType{};
 
 	StateMachine m_MovementStateMachine;
+	State* m_DefaultState{};
 
 	glm::vec2 m_StartPos{};
 	float m_InitialAnimationSpeed{};
 
+	float m_RestLocation{};
+
+	float m_StunTime{};
+
 	bool m_IsStunned{};
 	bool m_IsDying{};
+	bool m_IsFalling{};
 
 };
 

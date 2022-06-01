@@ -222,10 +222,12 @@
     <ClCompile Include="EngineFiles\GameObject.cpp" />
     <ClCompile Include="EngineFiles\Scene.cpp" />
     <ClCompile Include="EngineIO\CustomSerializers.cpp" />
+    <ClCompile Include="ImGuiExt\CustomImGuiFields.cpp" />
     <ClCompile Include="ImGuiExt\FileDetailView.cpp" />
     <ClCompile Include="ImGuiExt\imgui_helpers.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="EngineIO\Deserializer.cpp" />
+    <ClCompile Include="EngineFiles\PhysicsInterface.cpp" />
     <ClCompile Include="Singletons\GUIManager.cpp" />
     <ClCompile Include="Singletons\InputManager.cpp" />
     <ClCompile Include="Singletons\OpenDemeyer2D.cpp" />
@@ -264,7 +266,9 @@
     <ClInclude Include="ImGuiExt\EngineStyle.h" />
     <ClInclude Include="ImGuiExt\FileDetailView.h" />
     <ClInclude Include="ImGuiExt\imgui_helpers.h" />
+    <ClInclude Include="EngineFiles\PhysicsInterface.h" />
     <ClInclude Include="ResourceWrappers\Font.h" />
+    <ClInclude Include="ResourceWrappers\Prefab.h" />
     <ClInclude Include="ResourceWrappers\RenderTarget.h" />
     <ClInclude Include="ResourceWrappers\Sound.h" />
     <ClInclude Include="ResourceWrappers\Surface2D.h" />

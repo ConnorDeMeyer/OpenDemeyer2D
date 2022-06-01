@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL_mixer.h>
-#include <unordered_map>
+#include <filesystem>
 
 class Sound final
 {
@@ -71,7 +71,7 @@ public:
 		return m_channel != -1;
 	}
 
-	const std::string& GetFilePath() const { return m_sourceFile; }
+	const std::filesystem::path& GetFilePath() const { return m_sourceFile; }
 
 
 private:
@@ -80,7 +80,7 @@ private:
 	int m_channel{ -1 };
 	float m_volume{ 1.f };
 
-	std::string m_sourceFile{};
+	std::filesystem::path m_sourceFile{};
 
 };
 
@@ -161,7 +161,7 @@ public:
 		return m_Music == CurrentlyPlayingMusic;
 	}
 
-	const std::string& GetFilePath() const { return m_sourceFile; }
+	const std::filesystem::path& GetFilePath() const { return m_sourceFile; }
 
 
 private:
@@ -169,7 +169,7 @@ private:
 	Mix_Music* m_Music{};
 	float m_volume{1.f};
 
-	std::string m_sourceFile{};
+	std::filesystem::path m_sourceFile{};
 	
 	inline static Mix_Music* CurrentlyPlayingMusic{};
 

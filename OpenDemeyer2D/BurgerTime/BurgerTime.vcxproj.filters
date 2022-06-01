@@ -21,6 +21,7 @@
     <ClCompile Include="Components\SoundLoaderTest.cpp" />
     <ClCompile Include="Components\Stage.cpp" />
     <ClCompile Include="Components\StageMovement.cpp" />
+    <ClCompile Include="Components\PepperSpray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimeGI.h" />
@@ -34,5 +35,6 @@
     <ClInclude Include="Components\SoundLoaderTest.h" />
     <ClInclude Include="Components\Stage.h" />
     <ClInclude Include="Components\StageMovement.h" />
+    <ClInclude Include="Components\PepperSpray.h" />
   </ItemGroup>
 </Project>

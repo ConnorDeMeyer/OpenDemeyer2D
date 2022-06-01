@@ -1,0 +1,41 @@
+101 Pepper
+class Transform
+{
+position 50 50
+scale 1 1
+rotation 0
+}
+class SpriteComponent
+{
+frameDimension 16 16
+frameOffset 26
+totalFrames 4
+frameTime 0.25
+loop 1
+paused 0
+}
+class RenderComponent
+{
+renderLayer 0
+sourceRect 176 16 16 16
+pivot 0.5 0.5
+}
+class TextureComponent
+{
+Texture2D Bitmaps\FullSheet.png
+}
+class PhysicsComponent
+{
+Body 0 0 0 0 1 0 2
+Fixtures {
+0 0.2 0 1 0 1 65535 0 
+}
+Shapes {
+2 4 -8 -8 8 -8 8 8 -8 8 
+}
+}
+class PepperSpray
+{
+}
+{
+}

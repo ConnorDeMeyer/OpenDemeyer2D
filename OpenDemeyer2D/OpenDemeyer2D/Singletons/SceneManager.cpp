@@ -88,7 +88,7 @@ Scene* SceneManager::GetActiveScene() const
 void SceneManager::PhysicsStep(float timeStep, int velocityIterations, int positionIterations)
 {
 	if (auto scene{(m_GameScene ? m_GameScene.get() : m_pActiveScene)}) {
-		b2World* physicsWorld = scene->GetPhysicsWorld();
+		b2World* physicsWorld = scene->GetPhysicsInterface()->GetPhysicsWorld();
 		physicsWorld->Step(timeStep, velocityIterations, positionIterations);
 		physicsWorld->ClearForces();
 	}

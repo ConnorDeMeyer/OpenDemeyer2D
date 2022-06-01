@@ -4,6 +4,7 @@
 
 #include "ResourceWrappers/Texture2D.h"
 #include "ResourceWrappers/Sound.h"
+#include "ResourceWrappers/Prefab.h"
 #include "Singletons/ResourceManager.h"
 #include "EngineFiles/GameObject.h"
 #include "EngineFiles/Scene.h"
@@ -92,19 +93,19 @@ FileDetailView* FileDetailView::FileDetailFactory(const std::filesystem::path& p
 	std::string_view file = GetFileTypeFromExtension(extension);
 
 	if (file == music)
-		return new MusicDetailView(path, RESOURCES.LoadMusic(path.string(), true));
+		return new MusicDetailView(path, RESOURCES.LoadMusic(path, true));
 
 	if (file == sound)
-		return new SoundDetailView(path, RESOURCES.LoadSound(path.string(), true));
+		return new SoundDetailView(path, RESOURCES.LoadSound(path, true));
 
 	if (file == texture2D)
-		return new ImageDetailView(path, RESOURCES.LoadTexture(path.string(), true));
+		return new ImageDetailView(path, RESOURCES.LoadTexture(path, true));
 
 	if (file == gameObject)
 	{
 		std::ifstream is(path);
 		Deserializer deserializer{};
-		return new ObjectDetailView(path, deserializer.DeserializeObject(is));
+		return new PrefabDetailView(path, std::shared_ptr<Prefab>(new Prefab(deserializer.DeserializeObject(is))));
 	}
 
 	if (file == scene)
@@ -247,14 +248,8 @@ size_t SoundDetailView::GetPackageSize()
 }
 
 // ***********************************************
-// GAME OBJECT DETAIL VIEW
+// PREFAB DETAIL VIEW
 // ***********************************************
-
-ObjectDetailView::ObjectDetailView(const std::filesystem::path& path, GameObject* go)
-	: FileDetailView(path)
-	, m_Object{ std::unique_ptr<GameObject>(go) }
-{
-}
 
 void RenderGameObject(GameObject* go)
 {
@@ -285,25 +280,25 @@ void RenderGameObject(GameObject* go)
 	ImGui::PopID();
 }
 
-void ObjectDetailView::RenderDetails()
+void PrefabDetailView::RenderDetails()
 {
-	if (m_Object)
+	if (m_Prefab)
 	{
-		RenderGameObject(m_Object.get());
+		RenderGameObject(m_Prefab->GetGameObject());
 	}
 }
 
-constexpr std::string_view ObjectDetailView::GetFileClass()
+constexpr std::string_view PrefabDetailView::GetFileClass()
 {
 	return gameObject;
 }
 
-void* ObjectDetailView::GetPackage()
+void* PrefabDetailView::GetPackage()
 {
-	return &m_Object;
+	return &m_Prefab;
 }
 
-size_t ObjectDetailView::GetPackageSize()
+size_t PrefabDetailView::GetPackageSize()
 {
 	return sizeof(GameObject*);
 }

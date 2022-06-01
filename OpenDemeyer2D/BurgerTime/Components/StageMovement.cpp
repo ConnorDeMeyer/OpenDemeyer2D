@@ -64,11 +64,6 @@ void StageMovement::Update(float deltaTime)
 	m_LastMovementInput = m_MovementInput;
 	m_MovementInput = {};
 }
-//
-//void StageMovement::LateUpdate()
-//{
-//	m_MovementInput = {};
-//}
 
 void StageMovement::RenderImGui()
 {
@@ -83,4 +78,12 @@ void StageMovement::DefineUserFields(UserFieldBinder& binder) const
 	binder.Add<std::weak_ptr<Stage>>("Stage", offsetof(StageMovement,m_pStage));
 	binder.Add<float>("HorSpeed", offsetof(StageMovement,m_HorizontalMovementSpeed));
 	binder.Add<float>("VerSpeed", offsetof(StageMovement,m_VerticalMovementSpeed));
+}
+
+void StageMovement::SnapToGridY()
+{
+	if (auto stage = m_pStage.lock())
+	{
+		stage->TeleportToNearestGridY(GetTransform());
+	}
 }

@@ -60,6 +60,8 @@ public:
 
 	void CreateBody(b2BodyDef& def);
 
+	std::vector<PhysicsComponent*> GetOverlappingComponents();
+
 private:
 
 	b2Body* m_pBody{};

@@ -191,6 +191,11 @@ void GameObject::SetParent(Scene& scene)
 	m_pTransform->Move({});
 }
 
+void GameObject::AddChild(GameObject* pObject)
+{
+	pObject->SetParent(this);
+}
+
 void GameObject::Serialize(std::ostream& os)
 {
 	os << m_ObjectId << ' ' << m_Name << "\n";

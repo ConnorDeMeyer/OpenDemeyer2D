@@ -231,6 +231,7 @@ xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
     <ClCompile Include="Components\Stage.cpp" />
     <ClCompile Include="Components\StageMovement.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Components\PepperSpray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BurgerTimeGI.h" />
@@ -244,6 +245,7 @@ xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
     <ClInclude Include="Components\SoundLoaderTest.h" />
     <ClInclude Include="Components\Stage.h" />
     <ClInclude Include="Components\StageMovement.h" />
+    <ClInclude Include="Components\PepperSpray.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

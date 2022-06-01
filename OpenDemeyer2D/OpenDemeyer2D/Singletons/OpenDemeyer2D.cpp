@@ -124,7 +124,7 @@ void Engine::Initialize()
 	// tell the resource manager where he can find the game data
 	std::string dataPath;
 	m_EngineSettings.GetData(OD_RESOURCES_PATH, dataPath);
-	ResourceManager::GetInstance().Init(dataPath);
+	RESOURCES.Init(dataPath);
 
 	GUI.Init(m_Window);
 }

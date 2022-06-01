@@ -26,12 +26,6 @@ void TextureComponent::SetTexture(const std::shared_ptr<Texture2D>& texture)
 	UpdateRenderComponent();
 }
 
-void TextureComponent::SetTexture(const std::string& filePath)
-{
-	m_Texture = RESOURCES.LoadTexture(filePath);
-	UpdateRenderComponent();
-}
-
 void TextureComponent::RenderImGui()
 {
 	

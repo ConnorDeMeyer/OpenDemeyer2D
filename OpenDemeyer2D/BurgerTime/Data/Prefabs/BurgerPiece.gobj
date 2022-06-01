@@ -24,7 +24,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -53,7 +53,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -82,7 +82,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {
@@ -111,7 +111,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Data/Bitmaps/FullSheet.png
+Texture2D Bitmaps\FullSheet.png
 }
 class PhysicsComponent
 {

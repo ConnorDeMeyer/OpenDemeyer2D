@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <gl/glew.h>
 #include <string>
+#include <filesystem>
 
 /** Simple RAII container for the sdl texture*/
 class Texture2D final
@@ -25,12 +26,12 @@ public:
 	int GetWidth() const { return m_Width; }
 	int GetHeight() const { return m_Height; }
 
-	const std::string& GetFilePath() const { return m_sourceFile; }
+	const std::filesystem::path& GetFilePath() const { return m_sourceFile; }
 
 private:
 	GLuint m_Id{};
 	int m_Width{};
 	int m_Height{};
 
-	std::string m_sourceFile{};
+	std::filesystem::path m_sourceFile{};
 };

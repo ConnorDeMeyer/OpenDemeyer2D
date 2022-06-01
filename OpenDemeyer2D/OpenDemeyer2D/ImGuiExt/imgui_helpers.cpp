@@ -8,11 +8,11 @@
 
 void ImGui::ResourceSelect(const char* label, std::shared_ptr<Texture2D>& Resource)
 {
-	if (ImGui::BeginCombo("TextureFile", (Resource) ? Resource->GetFilePath().c_str() : label))
+	if (ImGui::BeginCombo("TextureFile", (Resource) ? Resource->GetFilePath().string().c_str() : label))
 	{
 		for (auto& resources : RESOURCES.GetTexture2DFiles())
 		{
-			if (!resources.second.expired() && ImGui::Selectable(resources.first.c_str()))
+			if (!resources.second.expired() && ImGui::Selectable(resources.first.string().c_str()))
 			{
 				Resource = resources.second.lock();
 			}
@@ -35,13 +35,13 @@ void ImGui::ResourceSelect(const char* label, std::shared_ptr<Texture2D>& Resour
 
 void ImGui::ResourceSelect(const char* label, std::shared_ptr<Surface2D>& Resource)
 {
-	if (ImGui::BeginCombo("SurfaceFile", (Resource) ? Resource->GetFilePath().c_str() : label))
+	if (ImGui::BeginCombo("SurfaceFile", (Resource) ? Resource->GetFilePath().string().c_str() : label))
 	{
 		for (auto& resources : RESOURCES.GetTexture2DFiles())
 		{
-			if (!resources.second.expired() && ImGui::Selectable(resources.first.c_str()))
+			if (!resources.second.expired() && ImGui::Selectable(resources.first.string().c_str()))
 			{
-				std::string filePath = resources.second.lock()->GetFilePath();
+				auto filePath = resources.second.lock()->GetFilePath();
 				Resource = RESOURCES.LoadSurface(filePath);
 			}
 		}
@@ -63,11 +63,11 @@ void ImGui::ResourceSelect(const char* label, std::shared_ptr<Surface2D>& Resour
 
 void ImGui::ResourceSelect(const char* label, std::shared_ptr<Sound>& Resource)
 {
-	if (ImGui::BeginCombo("SoundFile", (Resource) ? Resource->GetFilePath().c_str() : label))
+	if (ImGui::BeginCombo("SoundFile", (Resource) ? Resource->GetFilePath().string().c_str() : label))
 	{
 		for (auto& resources : RESOURCES.GetSoundFiles())
 		{
-			if (!resources.second.expired() && ImGui::Selectable(resources.first.c_str()))
+			if (!resources.second.expired() && ImGui::Selectable(resources.first.string().c_str()))
 			{
 				Resource = resources.second.lock();
 			}
@@ -90,11 +90,11 @@ void ImGui::ResourceSelect(const char* label, std::shared_ptr<Sound>& Resource)
 
 void ImGui::ResourceSelect(const char* label, std::shared_ptr<Music>& Resource)
 {
-	if (ImGui::BeginCombo("MusicFile", (Resource) ? Resource->GetFilePath().c_str() : label))
+	if (ImGui::BeginCombo("MusicFile", (Resource) ? Resource->GetFilePath().string().c_str() : label))
 	{
 		for (auto& resources : RESOURCES.GetMusicFiles())
 		{
-			if (!resources.second.expired() && ImGui::Selectable(resources.first.c_str()))
+			if (!resources.second.expired() && ImGui::Selectable(resources.first.string().c_str()))
 			{
 				Resource = resources.second.lock();
 			}
@@ -110,6 +110,31 @@ void ImGui::ResourceSelect(const char* label, std::shared_ptr<Music>& Resource)
 		if (auto payload = ImGui::AcceptDragDropPayload(musicString.c_str()))
 		{
 			Resource = *static_cast<const std::shared_ptr<Music>*>(payload->Data);
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
+
+void ImGui::ResourceSelect(const char* label, std::shared_ptr<GameObject>& Resource)
+{
+	if (ImGui::BeginCombo("GameObjectFile", (Resource) ? Resource->GetDisplayName().c_str() : label))
+	{
+		// TODO
+		//for (auto& resources : RESOURCES.GetMusicFiles())
+		//{
+		//	if (!resources.second.expired() && ImGui::Selectable(resources.first.c_str()))
+		//	{
+		//		Resource = resources.second.lock();
+		//	}
+		//}
+		//
+		ImGui::EndCombo();
+	}
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (auto payload = ImGui::AcceptDragDropPayload("GameObjectFile"))
+		{
+			Resource = *static_cast<const std::shared_ptr<GameObject>*>(payload->Data);
 		}
 		ImGui::EndDragDropTarget();
 	}

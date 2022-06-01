@@ -9,6 +9,7 @@ class Sound;
 class Music;
 class GameObject;
 class Scene;
+class Prefab;
 
 class FileDetailView
 {
@@ -62,7 +63,7 @@ class ImageDetailView final : public FileDetailView
 {
 public:
 
-	ImageDetailView(const std::filesystem::path& path, std::shared_ptr<Texture2D> texture)
+	ImageDetailView(const std::filesystem::path& path, const std::shared_ptr<Texture2D>& texture)
 		: FileDetailView(path)
 		, m_Texture{ texture }
 	{}
@@ -83,7 +84,7 @@ class MusicDetailView final : public FileDetailView
 {
 public:
 
-	MusicDetailView(const std::filesystem::path& path, std::shared_ptr<Music> music)
+	MusicDetailView(const std::filesystem::path& path, const std::shared_ptr<Music>& music)
 		: FileDetailView(path)
 		, m_Music{ music }
 	{}
@@ -105,7 +106,7 @@ class SoundDetailView final : public FileDetailView
 {
 public:
 
-	SoundDetailView(const std::filesystem::path& path, std::shared_ptr<Sound> sound)
+	SoundDetailView(const std::filesystem::path& path, const std::shared_ptr<Sound>& sound)
 		: FileDetailView(path)
 		, m_Sound{ sound }
 	{}
@@ -123,13 +124,16 @@ private:
 
 };
 
-class ObjectDetailView final : public FileDetailView
+class PrefabDetailView final : public FileDetailView
 {
 public:
 
-	ObjectDetailView(const std::filesystem::path& path, GameObject* go);
+	PrefabDetailView(const std::filesystem::path& path, const std::shared_ptr<Prefab>& prefab)
+		: FileDetailView{ path }
+		, m_Prefab{ prefab }
+	{}
 
-	virtual ~ObjectDetailView() = default;
+	virtual ~PrefabDetailView() = default;
 
 	void RenderDetails() override;
 	constexpr std::string_view GetFileClass() override;
@@ -138,7 +142,7 @@ public:
 
 private:
 
-	std::unique_ptr<GameObject> m_Object;
+	std::shared_ptr<Prefab> m_Prefab;
 
 };
 

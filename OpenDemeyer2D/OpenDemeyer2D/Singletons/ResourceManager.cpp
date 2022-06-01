@@ -18,6 +18,7 @@
 #include "ResourceWrappers/Texture2D.h"
 #include "ResourceWrappers/RenderTarget.h"
 #include "ResourceWrappers/Sound.h"
+#include "ResourceWrappers/Prefab.h"
 #include "ResourceWrappers/Font.h"
 
 #include "EngineFiles/GameObject.h"
@@ -25,10 +26,13 @@
 
 #include "ImGuiExt/FileDetailView.h"
 
-void ResourceManager::Init(const std::string& dataPath)
+using namespace std::filesystem;
+
+void ResourceManager::Init(const path& dataPath)
 {
 
 	m_DataPath = dataPath;
+	m_DataPath._Remove_filename_and_separator();
 
 	// load support for png and jpg, this takes a while!
 
@@ -57,7 +61,7 @@ void ResourceManager::Init(const std::string& dataPath)
 
 #pragma region FileLoaders
 
-std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file, bool keepLoaded)
+std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const path& file, bool keepLoaded)
 {
 	auto it = m_Texture2DFiles.find(file);
 	if (it != m_Texture2DFiles.end() && !it->second.expired())
@@ -67,12 +71,15 @@ std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file,
 
 	SDL_Surface* pLoadedSurface{};
 	{
+		path finalPath = GetfinalPath(file);
+
 		std::scoped_lock<std::mutex> lock(m_IMGLock);
 
-		pLoadedSurface = IMG_Load(file.c_str());
+		pLoadedSurface = IMG_Load(finalPath.string().c_str());
 		if (!pLoadedSurface)
 		{
-			throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+			//throw std::runtime_error(std::string("Failed to load texture: ") + SDL_GetError());
+			// TODO log error
 		}
 	}
 
@@ -88,7 +95,7 @@ std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const std::string& file,
 	return texture2d;
 }
 
-std::shared_ptr<Font> ResourceManager::LoadFont(const std::string& file, unsigned size, bool)
+std::shared_ptr<Font> ResourceManager::LoadFont(const path& file, unsigned size, bool)
 {
 	// Load the resource and lock the resource loading mechanism
 	//std::scoped_lock<std::mutex> lock(*m_ResourceLoaderLocks[typeid(Font)]);
@@ -100,7 +107,9 @@ std::shared_ptr<Font> ResourceManager::LoadFont(const std::string& file, unsigne
 			return it->second.lock();
 	}
 
-	auto sharedFont = std::make_shared<Font>(m_DataPath + file, size);
+	path finalPath = GetfinalPath(file);
+
+	auto sharedFont = std::make_shared<Font>(finalPath.string().c_str(), size);
 
 	// Add to the list
 	m_LoadedFonts.insert(std::make_pair(std::make_pair(file, size), sharedFont));
@@ -108,7 +117,7 @@ std::shared_ptr<Font> ResourceManager::LoadFont(const std::string& file, unsigne
 	return sharedFont;
 }
 
-std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file, bool keepLoaded)
+std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const path& file, bool keepLoaded)
 {
 	auto it = m_Surface2DFiles.find(file);
 	if (it != m_Surface2DFiles.end() && !it->second.expired())
@@ -119,12 +128,15 @@ std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file,
 	// SURFACE LOADER
 	SDL_Surface* pLoadedSurface{};
 	{
+		path finalPath = GetfinalPath(file);
+
 		std::scoped_lock<std::mutex> lock(m_IMGLock);
 
-		pLoadedSurface = IMG_Load(file.c_str());
+		pLoadedSurface = IMG_Load(finalPath.string().c_str());
 		if (!pLoadedSurface)
 		{
-			throw std::runtime_error(std::string("Failed to load surface: ") + SDL_GetError());
+			//throw std::runtime_error(std::string("Failed to load surface: ") + SDL_GetError());
+			// TODO log error
 		}
 	}
 
@@ -140,7 +152,7 @@ std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const std::string& file,
 	return surface2D;
 }
 
-std::shared_ptr<Sound> ResourceManager::LoadSound(const std::string& file, bool keepLoaded)
+std::shared_ptr<Sound> ResourceManager::LoadSound(const path& file, bool keepLoaded)
 {
 	auto it = m_SoundFiles.find(file);
 	if (it != m_SoundFiles.end() && !it->second.expired())
@@ -151,11 +163,14 @@ std::shared_ptr<Sound> ResourceManager::LoadSound(const std::string& file, bool 
 	// SOUND LOADING
 	Mix_Chunk* sample;
 	{
+		path finalPath = GetfinalPath(file);
+
 		std::scoped_lock<std::mutex> lock(m_MixLock);
 
-		sample = Mix_LoadWAV(file.c_str());
+		sample = Mix_LoadWAV(finalPath.string().c_str());
 		if (!sample) {
-			throw std::runtime_error(Mix_GetError());
+			//throw std::runtime_error(Mix_GetError());
+			// TODO log error
 		}
 	}
 
@@ -172,7 +187,7 @@ std::shared_ptr<Sound> ResourceManager::LoadSound(const std::string& file, bool 
 }
 
 
-std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file, bool keepLoaded)
+std::shared_ptr<Music> ResourceManager::LoadMusic(const path& file, bool keepLoaded)
 {
 	auto it = m_MusicFiles.find(file);
 	if (it != m_MusicFiles.end() && !it->second.expired())
@@ -183,11 +198,14 @@ std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file, bool 
 	// MUSIC LOADING
 	Mix_Music* musicSample;
 	{
+		path finalPath = GetfinalPath(file);
+
 		std::scoped_lock<std::mutex> lock(m_MixLock);
 
-		musicSample = Mix_LoadMUS(file.c_str());
+		musicSample = Mix_LoadMUS(finalPath.string().c_str());
 		if (!musicSample) {
-			throw std::runtime_error(Mix_GetError());
+			//throw std::runtime_error(Mix_GetError());
+			// TODO log error
 		}
 	}
 
@@ -203,32 +221,95 @@ std::shared_ptr<Music> ResourceManager::LoadMusic(const std::string& file, bool 
 	return music;
 }
 
+std::shared_ptr<Prefab> ResourceManager::LoadPrefab(const path& file, bool keepLoaded)
+{
+	auto it = m_PrefabFiles.find(file);
+	if (it != m_PrefabFiles.end() && !it->second.expired())
+	{
+		return it->second.lock();
+	}
+
+	// PREFAB LOADING
+	std::shared_ptr<Prefab> prefab;
+	{
+		path finalPath = GetfinalPath(file);
+
+		std::ifstream is(finalPath);
+		Deserializer deserializer{};
+		try
+		{
+			prefab = std::shared_ptr<Prefab>(new Prefab(deserializer.DeserializeObject(is)));
+		}
+		catch (std::exception&)
+		{
+			// TODO log error
+		}
+	}
+
+	prefab->m_sourceFile = file;
+	m_PrefabFiles.emplace(file, prefab);
+
+	if (keepLoaded)
+	{
+		m_AlwaysLoadedPrefabs.emplace_back(prefab);
+	}
+
+	return prefab;
+}
+
 #pragma endregion
 
 #pragma region FileLoadersAsync
 
-std::future<std::shared_ptr<Surface2D>> ResourceManager::LoadSurfaceAsync(const std::string& file, bool keepLoaded)
+std::shared_ptr<Surface2D> ResourceManager::LoadSurfaceAsync(const path& file, bool keepLoaded)
 {
+	auto it = m_Surface2DFiles.find(file);
+	if (it != m_Surface2DFiles.end() && !it->second.expired())
+	{
+		return it->second.lock();
+	}
+
+	std::shared_ptr<Surface2D> resource{};
+	m_Surface2DFiles.emplace(file, resource);
+
 	std::scoped_lock<std::mutex> lock(m_SurfaceQueueLock);
 
-	m_SurfaceLoaderQueue.emplace_back(m_DataPath + file, new std::promise<std::shared_ptr<Surface2D>>(), keepLoaded);
-	return std::get<1>(m_SurfaceLoaderQueue.back())->get_future();
+	m_SurfaceLoaderQueue.emplace_back(file, resource, keepLoaded);
+	return resource;
 }
 
-std::future<std::shared_ptr<Sound>> ResourceManager::LoadSoundAsync(const std::string& file, bool keepLoaded)
+std::shared_ptr<Sound> ResourceManager::LoadSoundAsync(const path& file, bool keepLoaded)
 {
+	auto it = m_SoundFiles.find(file);
+	if (it != m_SoundFiles.end() && !it->second.expired())
+	{
+		return it->second.lock();
+	}
+
+	std::shared_ptr<Sound> resource{};
+	m_SoundFiles.emplace(file, resource);
+
 	std::scoped_lock<std::mutex> lock(m_SoundQueueLock);
 
-	m_SoundLoaderQueue.emplace_back(m_DataPath + file, new std::promise<std::shared_ptr<Sound>>(), keepLoaded);
-	return std::get<1>(m_SoundLoaderQueue.back())->get_future();
+	m_SoundLoaderQueue.emplace_back(file, resource, keepLoaded);
+	return resource;
 }
 
-std::future<std::shared_ptr<Music>> ResourceManager::LoadMusicAsync(const std::string& file, bool keepLoaded)
+std::shared_ptr<Music> ResourceManager::LoadMusicAsync(const path& file, bool keepLoaded)
 {
+	auto it = m_MusicFiles.find(file);
+	if (it != m_MusicFiles.end() && !it->second.expired())
+	{
+		return it->second.lock();
+	}
+
+	std::shared_ptr<Music> resource{};
+	m_MusicFiles.emplace(file, resource);
+
 	std::scoped_lock<std::mutex> lock(m_MusicQueueLock);
 
-	m_MusicLoaderQueue.emplace_back(m_DataPath + file, new std::promise<std::shared_ptr<Music>>(), keepLoaded);
-	return std::get<1>(m_MusicLoaderQueue.back())->get_future();
+	m_MusicLoaderQueue.emplace_back(file, resource, keepLoaded);
+	return resource;
 }
 
 #pragma endregion
@@ -260,13 +341,14 @@ void ResourceManager::SoundLoaderThread()
 		if (queue.empty())
 			continue;
 
-		std::tuple<std::string, std::shared_ptr<std::promise<std::shared_ptr<Sound>>>, bool> entry;
+		std::tuple<path, std::shared_ptr<Sound>, bool> entry;
 		{
 			std::scoped_lock<std::mutex> lock(m_SoundQueueLock);
 			entry = queue.front();
 			queue.pop_front();
 		}
-		std::get<1>(entry)->set_value(LoadSound(std::get<0>(entry), std::get<2>(entry)));
+		std::shared_ptr<Sound> resource = LoadSound(std::get<0>(entry), std::get<2>(entry));
+		std::get<1>(entry).swap(resource);
 	}
 }
 
@@ -293,13 +375,14 @@ void ResourceManager::MusicLoaderThread()
 		if (queue.empty())
 			continue;
 
-		std::tuple<std::string, std::shared_ptr<std::promise<std::shared_ptr<Music>>>,bool> entry;
+		std::tuple<path, std::shared_ptr<Music>,bool> entry;
 		{
 			std::scoped_lock<std::mutex> lock(m_MusicQueueLock);
 			entry = queue.front();
 			queue.pop_front();
 		}
-		std::get<1>(entry)->set_value(LoadMusic(std::get<0>(entry), std::get<2>(entry)));
+		std::shared_ptr<Music> resource = LoadMusic(std::get<0>(entry), std::get<2>(entry));
+		std::get<1>(entry).swap(resource);
 	}
 }
 
@@ -326,13 +409,14 @@ void ResourceManager::SurfaceLoaderThread()
 		if (queue.empty())
 			continue;
 
-		std::tuple<std::string, std::shared_ptr<std::promise<std::shared_ptr<Surface2D>>>,bool> entry;
+		std::tuple<path, std::shared_ptr<Surface2D>,bool> entry;
 		{
 			std::scoped_lock<std::mutex> lock(m_SurfaceQueueLock);
 			entry = queue.front();
 			queue.pop_front();
 		}
-		std::get<1>(entry)->set_value(LoadSurface(std::get<0>(entry), std::get<2>(entry)));
+		std::shared_ptr<Surface2D> resource = LoadSurface(std::get<0>(entry), std::get<2>(entry));
+		std::get<1>(entry).swap(resource);
 	}
 }
 
@@ -340,45 +424,74 @@ void ResourceManager::SurfaceLoaderThread()
 
 void ResourceManager::LoadFilePaths()
 {
-	std::filesystem::recursive_directory_iterator it(m_DataPath);
-
+	directory_iterator it(m_DataPath);
+	
 	m_Directories.clear();
 
+	// create a first directory that will be at the top of the tree
 	std::unique_ptr<Directory> topDir{ new Directory(m_DataPath) };
 	m_RootDirectory = topDir.get();
 
+	// create a stack that we will use when iterating over all the directories to know which we are currently on
+	// and to get the previous directory
 	std::stack<Directory*, std::vector<Directory*>> directoryStack;
 	directoryStack.push(m_RootDirectory);
 
 	m_Directories.emplace_back(std::move(topDir));
 
-	int currentDepth{it.depth()};
 	for (auto& entry : it)
 	{
-		if (it.depth() > currentDepth)
-		{
-			directoryStack.push(m_Directories.back().get());
-		}
-		else if (it.depth() < currentDepth)
-		{
-			directoryStack.pop();
-		}
-		currentDepth = it.depth();
+		m_Directories.emplace_back(new Directory(entry.path()));
+		m_Directories.back().get()->previous = directoryStack.top();
+		directoryStack.push(m_Directories.back().get());
 
-		if (entry.is_directory())
+		recursive_directory_iterator subDirectoryIt{ directoryStack.top()->dirPath };
+
+		for (auto& subEntry : subDirectoryIt)
 		{
-			m_Directories.emplace_back(new Directory(entry.path()));
-			m_Directories.back().get()->previous = directoryStack.top();
-			directoryStack.top()->Directories.emplace_back(m_Directories.back().get());
+			int currentDepth{ subDirectoryIt.depth() };
+
+			if (subDirectoryIt.depth() > currentDepth) // we went a directory deeper
+			{
+				directoryStack.push(m_Directories.back().get());
+			}
+			else if (subDirectoryIt.depth() < currentDepth) // we went back a directory
+			{
+				directoryStack.pop();
+			}
+			currentDepth = subDirectoryIt.depth();
+
+			if (subEntry.is_directory())
+			{
+				// if current item in the iterator is a directory we add it to the Vector
+				m_Directories.emplace_back(new Directory(subEntry.path()));
+				m_Directories.back().get()->previous = directoryStack.top();
+				directoryStack.top()->Directories.emplace_back(m_Directories.back().get());
+			}
+			else if (subEntry.is_regular_file())
+			{
+				// we add the file to the current directory (top of the stack)
+				directoryStack.top()->Files.emplace_back(FileDetailView::FileDetailFactory(subEntry.path()));
+			}
 		}
-		else if (entry.is_regular_file())
-			directoryStack.top()->Files.emplace_back(FileDetailView::FileDetailFactory(entry.path()));
 	}
+}
+
+path ResourceManager::GetfinalPath(const std::filesystem::path& inputPath)
+{
+	path finalPath{};
+
+	if (!inputPath.is_absolute() && (*inputPath.begin() != m_DataPath))
+		finalPath = m_DataPath / inputPath;
+	else
+		finalPath = inputPath;
+
+	return finalPath;
 }
 
 void ResourceManager::DeleteDirectory(Directory* dir)
 {
-	std::filesystem::remove_all(dir->dirPath);
+	remove_all(dir->dirPath);
 
 	m_Directories.erase(std::find_if(m_Directories.begin(), m_Directories.end(), [dir](const std::unique_ptr<Directory>& pDir) {return pDir.get() == dir; }));
 }
@@ -387,7 +500,7 @@ void ResourceManager::AddDirectory(Directory* root, const std::string& DirName)
 {
 	auto newDir = root->dirPath;
 	newDir /= DirName;
-	std::filesystem::create_directory(newDir);
+	create_directory(newDir);
 
 	m_Directories.emplace_back(new Directory(newDir));
 	Directory* newDirectory = m_Directories.back().get();
@@ -402,7 +515,7 @@ void ResourceManager::AddDirectory(Directory* root, const std::string& DirName)
 	}
 }
 
-void ResourceManager::SaveGameObject(GameObject* pGameObject, std::filesystem::path& outPutPath)
+void ResourceManager::SaveGameObject(GameObject* pGameObject, path& outPutPath)
 {
 	if (outPutPath.extension() != ".gobj")
 		outPutPath.replace_extension("");
@@ -417,10 +530,10 @@ void ResourceManager::SaveGameObject(GameObject* pGameObject, std::filesystem::p
 	newGo->Copy(pGameObject);
 
 	auto dir = GetDirectory(outPutPath);
-	dir->Files.emplace_back(new ObjectDetailView(outPutPath, newGo));
+	dir->Files.emplace_back(new PrefabDetailView(outPutPath, std::shared_ptr<Prefab>(new Prefab(newGo))));
 }
 
-void ResourceManager::SaveScene(Scene* pScene, std::filesystem::path& outPutPath)
+void ResourceManager::SaveScene(Scene* pScene, path& outPutPath)
 {
 	if (outPutPath.extension() != ".scene")
 		outPutPath.replace_extension("");
@@ -435,7 +548,7 @@ void ResourceManager::SaveScene(Scene* pScene, std::filesystem::path& outPutPath
 	dir->Files.emplace_back(new SceneDetailView(outPutPath, pScene));
 }
 
-Directory* ResourceManager::GetDirectory(const std::filesystem::path& path)
+Directory* ResourceManager::GetDirectory(const path& path)
 {
 	auto parentPath = path.parent_path();
 

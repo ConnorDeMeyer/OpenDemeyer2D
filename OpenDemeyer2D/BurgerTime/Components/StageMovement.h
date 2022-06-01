@@ -23,6 +23,8 @@ public:
 
 	void SetEnabled(bool enabled) { m_IsEnabled = enabled; }
 
+	void SnapToGridY();
+
 protected:
 
 	std::weak_ptr<Stage> m_pStage;
