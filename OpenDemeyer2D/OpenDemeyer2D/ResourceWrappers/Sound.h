@@ -8,15 +8,33 @@ class Sound final
 	friend class Engine;
 
 public:
+	Sound() = default;
+
 	Sound(Mix_Chunk* pSound)
 		: m_Sound{ pSound }
 	{
 	}
 
 	Sound(const Sound&) = delete;
-	Sound(Sound&&) = delete;
 	Sound& operator=(const Sound&) = delete;
-	Sound& operator=(Sound&&) = delete;
+
+	Sound(Sound&& other) noexcept
+		: m_Sound{ other.m_Sound }
+		, m_channel{ other.m_channel }
+		, m_volume{ other.m_volume }
+		, m_sourceFile{ std::move(other.m_sourceFile) }
+	{
+		other.m_Sound = nullptr;
+	}
+
+	Sound& operator=(Sound&& other) noexcept
+	{
+		m_Sound = other.m_Sound;
+		other.m_Sound = nullptr;
+		m_channel = other.m_channel;
+		m_volume = other.m_volume;
+		m_sourceFile = std::move(other.m_sourceFile);
+	}
 
 	~Sound()
 	{
@@ -73,6 +91,8 @@ public:
 
 	const std::filesystem::path& GetFilePath() const { return m_sourceFile; }
 
+	inline bool IsValid() { return m_Sound; }
+	inline operator bool() { return IsValid(); }
 
 private:
 
@@ -89,14 +109,31 @@ class Music final
 	friend class ResourceManager;
 public:
 
+	Music() = default;
+
 	Music(Mix_Music* pMusic)
 		: m_Music{ pMusic }
 	{}
 
 	Music(const Music&) = delete;
-	Music(Music&&) = delete;
 	Music& operator=(const Music&) = delete;
-	Music& operator=(Music&&) = delete;
+
+	Music(Music&& other) noexcept
+		: m_Music{ other.m_Music }
+		, m_volume{ other.m_volume }
+		, m_sourceFile{ std::move(other.m_sourceFile) }
+	{
+		other.m_Music = nullptr;
+	}
+
+	Music& operator=(Music&& other) noexcept
+	{
+		m_Music = other.m_Music;
+		other.m_Music = nullptr;
+		m_sourceFile = std::move(other.m_sourceFile);
+		m_volume = other.m_volume;
+		return *this;
+	}
 
 	~Music()
 	{
@@ -112,9 +149,12 @@ public:
 	*/
 	void PlayMusic(int loops = -1, int fadeInTimeMs = 0, double position = 0) const
 	{
-		CurrentlyPlayingMusic = m_Music;
-		Mix_FadeInMusicPos(m_Music, loops, fadeInTimeMs, position);
-		Mix_VolumeMusic(int(m_volume * MIX_MAX_VOLUME));
+		if (m_Music)
+		{
+			CurrentlyPlayingMusic = m_Music;
+			Mix_FadeInMusicPos(m_Music, loops, fadeInTimeMs, position);
+			Mix_VolumeMusic(int(m_volume * MIX_MAX_VOLUME));
+		}
 	}
 
 	/**
@@ -163,6 +203,8 @@ public:
 
 	const std::filesystem::path& GetFilePath() const { return m_sourceFile; }
 
+	inline bool IsValid() { return m_Music; }
+	inline operator bool() { return IsValid(); }
 
 private:
 

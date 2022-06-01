@@ -49,7 +49,6 @@ void PhysicsComponent::Update(float)
 
 void PhysicsComponent::RenderImGui()
 {
-	ImGui::Indent(20.f);
 	if (ImGui::CollapsingHeader("Body"))
 	{
 		ImGui::Checkbox("Allow Sleep", &m_BodyDef.allowSleep);
@@ -435,8 +434,6 @@ void PhysicsComponent::RenderImGui()
 			ImGui::PopID();
 		}
 	}
-
-	ImGui::Unindent();
 }
 
 const glm::vec2& PhysicsComponent::GetLinearVelocity() const

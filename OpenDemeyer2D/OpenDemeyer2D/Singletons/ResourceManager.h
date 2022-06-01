@@ -145,19 +145,19 @@ private:
 public: //**// PREFABS //**//
 
 	std::shared_ptr<Prefab> LoadPrefab(const std::filesystem::path& file, bool keepLoaded = false);
-	//std::future<std::shared_ptr<Prefab>> LoadPrefabAsync(const std::string& file, bool keekLoaded = false);
+	std::shared_ptr<Prefab> LoadPrefabAsync(const std::filesystem::path& file, bool keepLoaded = false);
 
 	const std::unordered_map<std::filesystem::path, std::weak_ptr<Prefab>> GetPrefabs() const { return m_PrefabFiles; };
 
 private:
 
-	//void PrefabLoaderThread();
+	void PrefabLoaderThread();
 
 	std::vector<std::shared_ptr<Prefab>> m_AlwaysLoadedPrefabs;
 	std::unordered_map<std::filesystem::path, std::weak_ptr<Prefab>> m_PrefabFiles;
-	//std::deque<std::tuple<std::string, std::shared_ptr<std::promise<std::shared_ptr<Music>>>, bool>> m_MusicLoaderQueue;
-	//std::mutex m_MusicQueueLock;
-	//std::jthread m_MusicLoaderThread;
+	std::deque<std::tuple<std::filesystem::path, std::shared_ptr<Music>, bool>> m_PrefabLoaderQueue;
+	std::mutex m_PrefabQueueLock;
+	std::jthread m_PrefabLoaderThread;
 
 public:
 

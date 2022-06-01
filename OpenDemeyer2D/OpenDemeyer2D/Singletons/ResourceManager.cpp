@@ -83,7 +83,7 @@ std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const path& file, bool k
 		}
 	}
 
-	auto texture2d = LoadTexture(pLoadedSurface);
+	std::shared_ptr<Texture2D> texture2d = pLoadedSurface ? LoadTexture(pLoadedSurface) : nullptr;
 	texture2d->m_sourceFile = file;
 	m_Texture2DFiles.emplace(file, texture2d);
 
@@ -140,7 +140,7 @@ std::shared_ptr<Surface2D> ResourceManager::LoadSurface(const path& file, bool k
 		}
 	}
 
-	auto surface2D = std::make_shared<Surface2D>(pLoadedSurface);
+	std::shared_ptr<Surface2D> surface2D = pLoadedSurface ? std::make_shared<Surface2D>(pLoadedSurface) : nullptr;
 	surface2D->m_sourceFile = file;
 	m_Surface2DFiles.emplace(file, surface2D);
 
@@ -174,7 +174,7 @@ std::shared_ptr<Sound> ResourceManager::LoadSound(const path& file, bool keepLoa
 		}
 	}
 
-	auto sound = std::make_shared<Sound>(sample);
+	std::shared_ptr<Sound> sound = sample ? std::make_shared<Sound>(sample) : nullptr;
 	sound->m_sourceFile = file;
 	m_SoundFiles.emplace(file, sound);
 
@@ -209,7 +209,7 @@ std::shared_ptr<Music> ResourceManager::LoadMusic(const path& file, bool keepLoa
 		}
 	}
 
-	auto music = std::make_shared<Music>(musicSample);
+	std::shared_ptr<Music> music = musicSample ? std::make_shared<Music>(musicSample) : nullptr;
 	music->m_sourceFile = file;
 	m_MusicFiles.emplace(file, music);
 
@@ -243,6 +243,7 @@ std::shared_ptr<Prefab> ResourceManager::LoadPrefab(const path& file, bool keepL
 		catch (std::exception&)
 		{
 			// TODO log error
+			prefab = nullptr;
 		}
 	}
 
@@ -269,8 +270,7 @@ std::shared_ptr<Surface2D> ResourceManager::LoadSurfaceAsync(const path& file, b
 		return it->second.lock();
 	}
 
-	std::shared_ptr<Surface2D> resource{};
-	m_Surface2DFiles.emplace(file, resource);
+	std::shared_ptr<Surface2D> resource = std::make_shared_for_overwrite<Surface2D>();
 
 	std::scoped_lock<std::mutex> lock(m_SurfaceQueueLock);
 
@@ -286,8 +286,7 @@ std::shared_ptr<Sound> ResourceManager::LoadSoundAsync(const path& file, bool ke
 		return it->second.lock();
 	}
 
-	std::shared_ptr<Sound> resource{};
-	m_SoundFiles.emplace(file, resource);
+	std::shared_ptr<Sound> resource = std::make_shared_for_overwrite<Sound>();
 
 	std::scoped_lock<std::mutex> lock(m_SoundQueueLock);
 
@@ -303,12 +302,27 @@ std::shared_ptr<Music> ResourceManager::LoadMusicAsync(const path& file, bool ke
 		return it->second.lock();
 	}
 
-	std::shared_ptr<Music> resource{};
-	m_MusicFiles.emplace(file, resource);
+	std::shared_ptr<Music> resource = std::make_shared_for_overwrite<Music>();
 
 	std::scoped_lock<std::mutex> lock(m_MusicQueueLock);
 
 	m_MusicLoaderQueue.emplace_back(file, resource, keepLoaded);
+	return resource;
+}
+
+std::shared_ptr<Prefab> ResourceManager::LoadPrefabAsync(const std::filesystem::path& file, bool keepLoaded)
+{
+	auto it = m_PrefabFiles.find(file);
+	if (it != m_PrefabFiles.end() && !it->second.expired())
+	{
+		return it->second.lock();
+	}
+
+	std::shared_ptr<Prefab> resource = std::make_shared_for_overwrite<Prefab>();
+
+	std::scoped_lock<std::mutex> lock(m_PrefabQueueLock);
+
+	m_PrefabLoaderQueue.emplace_back(file, resource, keepLoaded);
 	return resource;
 }
 
@@ -348,7 +362,7 @@ void ResourceManager::SoundLoaderThread()
 			queue.pop_front();
 		}
 		std::shared_ptr<Sound> resource = LoadSound(std::get<0>(entry), std::get<2>(entry));
-		std::get<1>(entry).swap(resource);
+		std::swap(*resource, *std::get<1>(entry));
 	}
 }
 
@@ -381,8 +395,9 @@ void ResourceManager::MusicLoaderThread()
 			entry = queue.front();
 			queue.pop_front();
 		}
+
 		std::shared_ptr<Music> resource = LoadMusic(std::get<0>(entry), std::get<2>(entry));
-		std::get<1>(entry).swap(resource);
+		std::swap(*resource, *std::get<1>(entry));
 	}
 }
 
@@ -415,8 +430,44 @@ void ResourceManager::SurfaceLoaderThread()
 			entry = queue.front();
 			queue.pop_front();
 		}
+
 		std::shared_ptr<Surface2D> resource = LoadSurface(std::get<0>(entry), std::get<2>(entry));
-		std::get<1>(entry).swap(resource);
+		std::swap(*resource, *std::get<1>(entry));
+	}
+}
+
+void ResourceManager::PrefabLoaderThread()
+{
+	auto& queue = m_PrefabLoaderQueue;
+
+	bool* terminate{ &m_TerminateLoaderThreads };
+	std::condition_variable threadIdle;
+	std::mutex waitlock;
+	std::unique_lock<std::mutex> uniqueWaitLock(waitlock);
+
+	while (true)
+	{
+		threadIdle.wait_for(uniqueWaitLock, 100ms, [&terminate, &queue]
+			{
+				return (*terminate || !queue.empty());
+			});
+
+		// terminate the thread if terminateLoaderThreads is true
+		if (*terminate)
+			return;
+
+		if (queue.empty())
+			continue;
+
+		std::tuple<path, std::shared_ptr<Prefab>, bool> entry;
+		{
+			std::scoped_lock<std::mutex> lock(m_PrefabQueueLock);
+			entry = queue.front();
+			queue.pop_front();
+		}
+
+		std::shared_ptr<Prefab> resource = LoadPrefab(std::get<0>(entry), std::get<2>(entry));
+		std::swap(*resource, *std::get<1>(entry));
 	}
 }
 
@@ -444,6 +495,9 @@ void ResourceManager::LoadFilePaths()
 		m_Directories.emplace_back(new Directory(entry.path()));
 		m_Directories.back().get()->previous = directoryStack.top();
 		directoryStack.push(m_Directories.back().get());
+
+		// link the first and the second directory
+		m_Directories.front()->Directories.emplace_back(directoryStack.top());
 
 		recursive_directory_iterator subDirectoryIt{ directoryStack.top()->dirPath };
 

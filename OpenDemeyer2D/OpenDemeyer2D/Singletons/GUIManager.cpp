@@ -314,7 +314,9 @@ void GUIManager::RenderImGuiObjectInfo()
 			}
 			if (header)
 			{
+				ImGui::Indent(20.f);
 				comp.second->RenderImGui();
+				ImGui::Unindent(20.f);
 			}
 			ImGui::PopID();
 		}

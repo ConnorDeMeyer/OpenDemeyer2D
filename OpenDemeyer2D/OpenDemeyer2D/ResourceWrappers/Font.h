@@ -14,6 +14,8 @@ class Font final
 public:
 	_TTF_Font* GetFont() const { return m_Font; }
 
+	Font() = default;
+
 	explicit Font(const std::string& fullPath, unsigned int size)
 	{
 		m_Font = TTF_OpenFont(fullPath.c_str(), size);
@@ -38,6 +40,9 @@ public:
 	Font(Font &&) = delete;
 	Font & operator= (const Font &) = delete;
 	Font & operator= (const Font &&) = delete;
+
+	inline bool IsValid() { return m_Font; }
+	inline operator bool() { return IsValid(); }
 private:
 	_TTF_Font* m_Font;
 	unsigned int m_Size;

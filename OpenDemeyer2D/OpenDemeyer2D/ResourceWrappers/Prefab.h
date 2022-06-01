@@ -9,6 +9,8 @@ class Prefab final
 
 public:
 
+	Prefab() = default;
+
 	Prefab(GameObject* object)
 		: m_Object{object}
 	{}
@@ -16,9 +18,18 @@ public:
 	~Prefab() = default;
 
 	Prefab(const Prefab&) = delete;
-	Prefab(Prefab&&) = delete;
 	Prefab& operator=(const Prefab&) = delete;
-	Prefab& operator=(Prefab&&) = delete;
+
+	Prefab(Prefab&& other) noexcept
+		: m_Object{ std::move(other.m_Object) }
+		, m_sourceFile{ std::move(other.m_sourceFile) }
+	{}
+
+	Prefab& operator=(Prefab&& other) noexcept
+	{
+		m_Object = std::move(other.m_Object);
+		m_sourceFile = std::move(other.m_sourceFile);
+	}
 
 	GameObject* Instantiate() const
 	{
@@ -34,6 +45,9 @@ public:
 	}
 
 	const std::filesystem::path& GetPath() const { return m_sourceFile; }
+
+	inline bool IsValid() { return m_Object.get(); }
+	inline operator bool() { return IsValid(); }
 
 private:
 
