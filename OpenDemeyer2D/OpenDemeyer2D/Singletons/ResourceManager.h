@@ -155,7 +155,7 @@ private:
 
 	std::vector<std::shared_ptr<Prefab>> m_AlwaysLoadedPrefabs;
 	std::unordered_map<std::filesystem::path, std::weak_ptr<Prefab>> m_PrefabFiles;
-	std::deque<std::tuple<std::filesystem::path, std::shared_ptr<Music>, bool>> m_PrefabLoaderQueue;
+	std::deque<std::tuple<std::filesystem::path, std::shared_ptr<Prefab>, bool>> m_PrefabLoaderQueue;
 	std::mutex m_PrefabQueueLock;
 	std::jthread m_PrefabLoaderThread;
 

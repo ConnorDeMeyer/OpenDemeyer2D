@@ -14,8 +14,6 @@ public:
 	//SDL_Texture* GetSDLTexture() const { return m_Texture; }
 	Texture2D() = default;
 
-	~Texture2D() = default;
-
 	Texture2D(const Texture2D&) = delete;
 	Texture2D& operator=(const Texture2D&) = delete;
 
@@ -39,16 +37,12 @@ public:
 		m_Height = other.m_Height;
 		other.m_Height = 0;
 		m_sourceFile = std::move(other.m_sourceFile);
+		return *this;
 	}
 
 	explicit Texture2D(GLuint id, int width, int height)
 		: m_Id{ id }, m_Width{ width }, m_Height{ height }{}
 	~Texture2D(){ glDeleteTextures(1, &m_Id); }
-	
-	Texture2D(const Texture2D&) = delete;
-	Texture2D(Texture2D&&) = delete;
-	Texture2D& operator= (const Texture2D&) = delete;
-	Texture2D& operator= (const Texture2D&&) = delete;
 
 	GLuint GetId() const { return m_Id; }
 	int GetWidth() const { return m_Width; }

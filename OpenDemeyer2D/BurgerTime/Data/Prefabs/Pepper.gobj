@@ -1,7 +1,7 @@
 101 Pepper
 class Transform
 {
-position 50 50
+position 0 0
 scale 1 1
 rotation 0
 }

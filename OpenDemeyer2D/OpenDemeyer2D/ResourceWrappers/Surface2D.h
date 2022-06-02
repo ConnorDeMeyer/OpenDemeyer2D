@@ -28,11 +28,12 @@ public:
 		other.m_pSurface = nullptr;
 	}
 
-	Surface2D& operator= (const Surface2D&& other) noexcept
+	Surface2D& operator= (Surface2D&& other) noexcept
 	{
 		m_pSurface = other.m_pSurface;
 		other.m_pSurface = nullptr;
 		m_sourceFile = std::move(other.m_sourceFile);
+		return *this;
 	}
 
 	SDL_Surface* GetSurface() const { return m_pSurface; }

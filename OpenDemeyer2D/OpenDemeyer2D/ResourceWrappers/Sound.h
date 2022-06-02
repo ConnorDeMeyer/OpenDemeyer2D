@@ -34,6 +34,7 @@ public:
 		m_channel = other.m_channel;
 		m_volume = other.m_volume;
 		m_sourceFile = std::move(other.m_sourceFile);
+		return *this;
 	}
 
 	~Sound()

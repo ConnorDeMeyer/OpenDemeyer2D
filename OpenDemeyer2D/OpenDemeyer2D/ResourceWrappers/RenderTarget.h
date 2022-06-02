@@ -45,6 +45,7 @@ public:
 		other.m_width = 0;
 		m_height = other.m_height;
 		other.m_height = 0;
+		return *this;
 	}
 
 	GLuint GetFrameBuffer() { return m_FrameBuffer; }

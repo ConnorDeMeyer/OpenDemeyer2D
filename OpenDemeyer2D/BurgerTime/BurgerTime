@@ -4,7 +4,7 @@ Test_Scene
 1 1up
 class TextPixelComponent
 {
-FontSurface Bitmaps/Text.png
+FontSurface "Bitmaps/Text.png"
 FontColor 255 0 0 255
 CharSize 8
 Text 1UP
@@ -26,7 +26,7 @@ pivot 1 0
 2 hi score
 class TextPixelComponent
 {
-FontSurface Bitmaps/Text.png
+FontSurface "Bitmaps/Text.png"
 FontColor 255 0 0 255
 CharSize 8
 Text HI-SCORE
@@ -48,7 +48,7 @@ pivot 1 0
 3 pepper
 class TextPixelComponent
 {
-FontSurface Bitmaps/Text.png
+FontSurface "Bitmaps/Text.png"
 FontColor 0 255 0 255
 CharSize 8
 Text PEPPER
@@ -68,16 +68,16 @@ pivot 1 0
 {
 }
 4 score
+class Score
+{
+SheetTexture "Bitmaps\\FullSheet.png"
+}
 class TextPixelComponent
 {
-FontSurface Bitmaps/Text.png
+FontSurface "Bitmaps/Text.png"
 FontColor 255 255 255 255
 CharSize 8
 Text 0
-}
-class Score
-{
-SheetTexture Bitmaps\FullSheet.png
 }
 class Transform
 {
@@ -126,6 +126,10 @@ position 104 3
 scale 1 1
 rotation 0
 }
+class PeterPepper
+{
+PepperPrefab "Data\\Prefabs\\Pepper.gobj"
+}
 class PhysicsComponent
 {
 Body 0 0 0 0 1 0 2
@@ -136,8 +140,11 @@ Shapes {
 2 4 -6 1 6 1 6 13 -6 13 
 }
 }
-class PeterPepper
+class RenderComponent
 {
+renderLayer 2
+sourceRect 16 0 16 16
+pivot 0.5 1
 }
 class SpriteComponent
 {
@@ -148,12 +155,6 @@ frameTime 0.125
 loop 1
 paused 0
 }
-class RenderComponent
-{
-renderLayer 2
-sourceRect 16 0 16 16
-pivot 0.5 1
-}
 class InputComponent
 {
 }
@@ -162,7 +163,7 @@ class PPSpriteMovement
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 {
 }
@@ -195,7 +196,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -224,7 +225,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -253,7 +254,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -282,7 +283,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -326,7 +327,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -355,7 +356,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -384,7 +385,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -413,7 +414,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -457,7 +458,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -486,7 +487,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -515,7 +516,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -544,7 +545,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -588,7 +589,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -617,7 +618,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -646,7 +647,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -675,7 +676,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -719,7 +720,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -748,7 +749,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -777,7 +778,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -806,7 +807,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -850,7 +851,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -879,7 +880,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -908,7 +909,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -937,7 +938,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -981,7 +982,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1010,7 +1011,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1039,7 +1040,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1068,7 +1069,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1112,7 +1113,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1141,7 +1142,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1170,7 +1171,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1199,7 +1200,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1243,7 +1244,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1272,7 +1273,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1301,7 +1302,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1330,7 +1331,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1374,7 +1375,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1403,7 +1404,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1432,7 +1433,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1461,7 +1462,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1505,7 +1506,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1534,7 +1535,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1563,7 +1564,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1592,7 +1593,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1636,7 +1637,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1665,7 +1666,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1694,7 +1695,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1723,7 +1724,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1767,7 +1768,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1796,7 +1797,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1825,7 +1826,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1854,7 +1855,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1898,7 +1899,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1927,7 +1928,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1956,7 +1957,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -1985,7 +1986,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -2029,7 +2030,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -2058,7 +2059,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -2087,7 +2088,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -2116,7 +2117,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -2160,7 +2161,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -2189,7 +2190,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -2218,7 +2219,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -2247,7 +2248,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class PhysicsComponent
 {
@@ -2277,7 +2278,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 {
 }
@@ -2296,7 +2297,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 {
 }
@@ -2315,7 +2316,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 {
 }
@@ -2334,7 +2335,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 {
 }
@@ -2351,6 +2352,12 @@ position -16 3
 scale 1 1
 rotation 0
 }
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 32 16 16
+pivot 0.5 1
+}
 class SpriteComponent
 {
 frameDimension 16 16
@@ -2360,15 +2367,9 @@ frameTime 0.15
 loop 1
 paused 0
 }
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 32 16 16
-pivot 0.5 1
-}
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class Enemy
 {
@@ -2400,12 +2401,6 @@ position 224 3
 scale 1 1
 rotation 0
 }
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 64 16 16
-pivot 0.5 1
-}
 class SpriteComponent
 {
 frameDimension 16 16
@@ -2415,9 +2410,15 @@ frameTime 0.15
 loop 1
 paused 0
 }
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 64 16 16
+pivot 0.5 1
+}
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class Enemy
 {
@@ -2449,12 +2450,6 @@ position 224 147
 scale 1 1
 rotation 0
 }
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 32 16 16
-pivot 0.5 1
-}
 class SpriteComponent
 {
 frameDimension 16 16
@@ -2464,9 +2459,15 @@ frameTime 0.15
 loop 1
 paused 0
 }
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 32 16 16
+pivot 0.5 1
+}
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class Enemy
 {
@@ -2498,6 +2499,12 @@ position -16 147
 scale 1 1
 rotation 0
 }
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 96 16 16
+pivot 0.5 1
+}
 class SpriteComponent
 {
 frameDimension 16 16
@@ -2507,15 +2514,9 @@ frameTime 0.15
 loop 1
 paused 0
 }
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 96 16 16
-pivot 0.5 1
-}
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 class Enemy
 {
@@ -2556,7 +2557,7 @@ rotation 0
 }
 class PlayerResources
 {
-Texture Bitmaps\FullSheet.png
+Texture "Bitmaps\\FullSheet.png"
 Player 6
 PepperText 100
 SourceRect 200 0 8 8
@@ -2577,7 +2578,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 {
 }
@@ -2596,7 +2597,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 {
 }
@@ -2615,7 +2616,7 @@ pivot 0.5 0.5
 }
 class TextureComponent
 {
-Texture2D Bitmaps\FullSheet.png
+Texture2D "Bitmaps\\FullSheet.png"
 }
 {
 }
@@ -2623,7 +2624,7 @@ Texture2D Bitmaps\FullSheet.png
 100 PlayerPepper
 class TextPixelComponent
 {
-FontSurface Bitmaps\Text.png
+FontSurface "Bitmaps/Text.png"
 FontColor 255 255 255 255
 CharSize 8
 Text 5

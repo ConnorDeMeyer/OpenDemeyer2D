@@ -3,6 +3,7 @@
 #include "ResourceWrappers/Sound.h"
 #include "ResourceWrappers/Surface2D.h"
 #include "ResourceWrappers/Texture2D.h"
+#include "ResourceWrappers/Prefab.h"
 
 #include "Singletons/ResourceManager.h"
 
@@ -115,26 +116,25 @@ void ImGui::ResourceSelect(const char* label, std::shared_ptr<Music>& Resource)
 	}
 }
 
-void ImGui::ResourceSelect(const char* label, std::shared_ptr<GameObject>& Resource)
+void ImGui::ResourceSelect(const char* label, std::shared_ptr<Prefab>& Resource)
 {
-	if (ImGui::BeginCombo("GameObjectFile", (Resource) ? Resource->GetDisplayName().c_str() : label))
+	if (ImGui::BeginCombo("Prefab File", (Resource) ? Resource->GetGameObject()->GetDisplayName().c_str() : label))
 	{
-		// TODO
-		//for (auto& resources : RESOURCES.GetMusicFiles())
-		//{
-		//	if (!resources.second.expired() && ImGui::Selectable(resources.first.c_str()))
-		//	{
-		//		Resource = resources.second.lock();
-		//	}
-		//}
-		//
+		for (auto& resources : RESOURCES.GetPrefabs())
+		{
+			if (!resources.second.expired() && ImGui::Selectable(resources.first.string().c_str()))
+			{
+				Resource = resources.second.lock();
+			}
+		}
+		
 		ImGui::EndCombo();
 	}
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (auto payload = ImGui::AcceptDragDropPayload("GameObjectFile"))
+		if (auto payload = ImGui::AcceptDragDropPayload(type_name<Prefab>().data()))
 		{
-			Resource = *static_cast<const std::shared_ptr<GameObject>*>(payload->Data);
+			Resource = *static_cast<const std::shared_ptr<Prefab>*>(payload->Data);
 		}
 		ImGui::EndDragDropTarget();
 	}

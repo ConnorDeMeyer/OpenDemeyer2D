@@ -273,9 +273,13 @@ void GameObject::SetScene(Scene* pScene)
 	if (pScene != m_pScene)
 	{
 		if (m_pScene)
+		{
 			m_pScene->UnregisterObject(this);
+		}
 		if (pScene)
+		{
 			pScene->RegisterObject(this);
+		}
 	}
 
 	m_pScene = pScene;

@@ -226,6 +226,11 @@ std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Surface2D>&
 	return stream << surface->GetFilePath();
 }
 
+std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Prefab>& prefab)
+{
+	return stream << prefab->GetPath();
+}
+
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Sound>& sound)
 {
 	std::filesystem::path file;
@@ -255,6 +260,14 @@ std::istream& operator>>(std::istream& stream, std::shared_ptr<Surface2D>& surfa
 	std::filesystem::path file;
 	stream >> file;
 	surface = RESOURCES.LoadSurface(file);
+	return stream;
+}
+
+std::istream& operator>>(std::istream& stream, std::shared_ptr<Prefab>& prefab)
+{
+	std::filesystem::path file;
+	stream >> file;
+	prefab = RESOURCES.LoadPrefab(file);
 	return stream;
 }
 

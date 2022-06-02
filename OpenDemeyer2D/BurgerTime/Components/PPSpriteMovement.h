@@ -19,7 +19,7 @@ public:
 
 	void ResetAnimation();
 
-	//const std::string GetComponentName() override { return "PPSpriteMovement"; };
+	void StartThrowAnimation();
 
 protected:
 
@@ -31,6 +31,8 @@ protected:
 
 	float m_OriginalAnimationSpeed{ 1 };
 
-	bool m_isDying{};
+	float m_AccumulatedTime{};
 
+	bool m_isDying{};
+	bool m_IsThrowing{};
 };

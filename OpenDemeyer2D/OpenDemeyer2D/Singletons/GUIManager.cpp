@@ -17,6 +17,7 @@
 #include "Singletons/RenderManager.h"
 
 #include "ResourceWrappers/RenderTarget.h"
+#include "ResourceWrappers/Prefab.h"
 
 #include "EngineFiles/GameObject.h"
 #include "EngineFiles/ComponentBase.h"
@@ -783,13 +784,12 @@ void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
 			}
 		}
 
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjectFile"))
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type_name<Prefab>().data()))
 		{
 			if (payload->Data)
 			{
-				auto& goPayload = *static_cast<std::unique_ptr<GameObject>*>(payload->Data);
-				auto newGo = new GameObject();
-				newGo->Copy(goPayload.get());
+				auto& goPayload = *static_cast<std::shared_ptr<Prefab>*>(payload->Data);
+				auto newGo = goPayload->Instantiate();
 				newGo->SetParent(go);
 				m_bSceneGraphQuickExit = true;
 			}
@@ -1000,13 +1000,12 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 				}
 			}
 
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("GameObjectFile"))
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type_name<Prefab>().data()))
 			{
 				if (payload->Data && payload->Delivery)
 				{
-					auto& goPayload = *static_cast<std::unique_ptr<GameObject>*>(payload->Data);
-					auto newGo = new GameObject();
-					newGo->Copy(goPayload.get());
+					auto& goPayload = *static_cast<std::shared_ptr<Prefab>*>(payload->Data);
+					auto newGo = goPayload->Instantiate();
 					newGo->SetParent(*pScene);
 				}
 			}

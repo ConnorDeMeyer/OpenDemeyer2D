@@ -7,8 +7,14 @@
 #include "Components/RenderComponent.h"
 #include "PPSpriteMovement.h"
 #include "StageMovement.h"
+#include "ResourceWrappers/Prefab.h"
 
 #include "ImGuiExt/imgui_helpers.h"
+
+void PeterPepper::DefineUserFields(UserFieldBinder& binder) const
+{
+	binder.Add<std::shared_ptr<Prefab>>("PepperPrefab", offsetof(PeterPepper, m_PepperPrefab));
+}
 
 void PeterPepper::BeginPlay()
 {
@@ -19,6 +25,7 @@ void PeterPepper::BeginPlay()
 	input->BindKeyPressed(SDLK_a, [movement] {movement->Move(movementDirection::left); });
 	input->BindKeyPressed(SDLK_w, [movement] {movement->Move(movementDirection::up); });
 	input->BindKeyPressed(SDLK_s, [movement] {movement->Move(movementDirection::down); });
+	input->BindKeyDown(SDLK_SPACE, std::bind(&PeterPepper::ThrowPepper, this));
 
 	if (auto sprite = GetObject()->GetComponent<SpriteComponent>())
 	{
@@ -58,5 +65,37 @@ void PeterPepper::StunEnd()
 
 		if (auto movement = GetComponent<StageMovement>())
 			movement->SetEnabled(true);
+	}
+}
+
+void PeterPepper::ThrowPepper()
+{
+	if (m_PepperPrefab && m_Pepper > 0)
+	{
+		--m_Pepper;
+
+		OnPepperSpray.BroadCast();
+
+		if (auto sprite = GetComponent<PPSpriteMovement>())
+		{
+			sprite->StartThrowAnimation();
+		}
+
+		glm::vec2 direction{};
+		if (auto movement = GetComponent<StageMovement>())
+		{
+			movement->GetMovementInput();
+		}
+
+		if (direction != glm::vec2{0, 0})
+		{
+			direction = glm::normalize(direction);
+			constexpr float range{ 8.f };
+			direction *= range;
+		}
+
+		auto pPepper = m_PepperPrefab->Instantiate();
+		pPepper->SetScene(GetScene());
+		pPepper->GetTransform()->SetPosition(GetTransform()->GetWorldPosition() + direction);
 	}
 }

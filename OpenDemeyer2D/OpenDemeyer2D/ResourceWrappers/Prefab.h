@@ -29,6 +29,7 @@ public:
 	{
 		m_Object = std::move(other.m_Object);
 		m_sourceFile = std::move(other.m_sourceFile);
+		return *this;
 	}
 
 	GameObject* Instantiate() const

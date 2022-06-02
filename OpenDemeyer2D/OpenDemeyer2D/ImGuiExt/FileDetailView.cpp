@@ -15,7 +15,7 @@
 constexpr std::string_view texture2D{ type_name<Texture2D>() };
 constexpr std::string_view sound{ type_name<Sound>() };
 constexpr std::string_view music{ type_name<Music>() };
-constexpr std::string_view gameObject{ "GameObjectFile" };
+constexpr std::string_view prefab{ type_name<Prefab>() };
 constexpr std::string_view scene{ "SceneFile" };
 
 std::string_view GetFileTypeFromExtension(const std::string extention)
@@ -26,7 +26,7 @@ std::string_view GetFileTypeFromExtension(const std::string extention)
 
 	static std::unordered_map<std::string, std::string_view> FileExtentionMap
 	{
-		{".gobj"	,gameObject},
+		{".gobj"	,prefab},
 
 		{".scene"	,scene},
 
@@ -101,12 +101,8 @@ FileDetailView* FileDetailView::FileDetailFactory(const std::filesystem::path& p
 	if (file == texture2D)
 		return new ImageDetailView(path, RESOURCES.LoadTexture(path, true));
 
-	if (file == gameObject)
-	{
-		std::ifstream is(path);
-		Deserializer deserializer{};
-		return new PrefabDetailView(path, std::shared_ptr<Prefab>(new Prefab(deserializer.DeserializeObject(is))));
-	}
+	if (file == prefab)
+		return new PrefabDetailView(path, RESOURCES.LoadPrefab(path, true));
 
 	if (file == scene)
 	{
@@ -290,7 +286,7 @@ void PrefabDetailView::RenderDetails()
 
 constexpr std::string_view PrefabDetailView::GetFileClass()
 {
-	return gameObject;
+	return prefab;
 }
 
 void* PrefabDetailView::GetPackage()

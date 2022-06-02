@@ -11,6 +11,7 @@
 #include "ResourceWrappers/Texture2D.h"
 #include "ResourceWrappers/Surface2D.h"
 #include "ResourceWrappers/Sound.h"
+#include "ResourceWrappers/Prefab.h"
 
 #include "EngineFiles/ComponentBase.h"
 #include "Deserializer.h"
@@ -56,11 +57,13 @@ std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Sound>& sou
 std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Music>& music);
 std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Texture2D>& texture2d);
 std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Surface2D>& surface2d);
+std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<Prefab>& prefab);
 
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Sound>& sound);
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Music>& music);
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Texture2D>& texture2d);
 std::istream& operator>>(std::istream& stream, std::shared_ptr<Surface2D>& surface2d);
+std::istream& operator>>(std::istream& stream, std::shared_ptr<Prefab>& prefab);
 
 //Box2D
 struct b2BodyDef;

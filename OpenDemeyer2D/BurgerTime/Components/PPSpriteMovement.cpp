@@ -27,8 +27,14 @@ void PPSpriteMovement::BeginPlay()
 	
 }
 
-void PPSpriteMovement::Update(float)
+void PPSpriteMovement::Update(float dt)
 {
+	if (m_IsThrowing)
+	{
+		m_AccumulatedTime -= dt;
+		m_IsThrowing = (m_AccumulatedTime <= 0);
+	}
+
 	if (m_pPeterPepper && m_pSpriteComponent && m_pStageMovement && !m_isDying)
 	{
 		auto& direction = m_pStageMovement->GetMovementInput();
@@ -36,32 +42,64 @@ void PPSpriteMovement::Update(float)
 		if (GetObject()->GetTransform()->GetLocalScale().x != 1.f)
 			GetObject()->GetTransform()->SetScale({ 1,1 });
 
-		if (abs(direction.x) <= 0.05f)
+		if (!m_IsThrowing)
 		{
-			m_pSpriteComponent->SetFrameOffset(1);
-			m_pSpriteComponent->SetTotalFrames(1);
-		}
-		else if (direction.x >= 0.05f)
-		{
-			m_pSpriteComponent->SetFrameOffset(3);
-			m_pSpriteComponent->SetTotalFrames(3);
-			GetObject()->GetTransform()->SetScale({ -1,1 });
-		}
-		else if (direction.x <= -0.05f)
-		{
-			m_pSpriteComponent->SetTotalFrames(3);
-			m_pSpriteComponent->SetFrameOffset(3);
-		}
 
-		if (direction.y >= 0.05f)
-		{
-			m_pSpriteComponent->SetTotalFrames(3);
-			m_pSpriteComponent->SetFrameOffset(6);
+			if (abs(direction.x) <= 0.05f) // standing still
+			{
+				m_pSpriteComponent->SetFrameOffset(1);
+				m_pSpriteComponent->SetTotalFrames(1);
+			}
+			else if (direction.x >= 0.05f) // going right
+			{
+				m_pSpriteComponent->SetFrameOffset(3);
+				m_pSpriteComponent->SetTotalFrames(3);
+				GetObject()->GetTransform()->SetScale({ -1,1 });
+			}
+			else if (direction.x <= -0.05f) // going left
+			{
+				m_pSpriteComponent->SetTotalFrames(3);
+				m_pSpriteComponent->SetFrameOffset(3);
+			}
+
+			if (direction.y >= 0.05f) // going up
+			{
+				m_pSpriteComponent->SetTotalFrames(3);
+				m_pSpriteComponent->SetFrameOffset(6);
+			}
+			else if (direction.y <= -0.05f) // going down
+			{
+				m_pSpriteComponent->SetTotalFrames(3);
+				m_pSpriteComponent->SetFrameOffset(0);
+			}
+
 		}
-		else if (direction.y <= -0.05f)
+		else if (m_IsThrowing)
 		{
-			m_pSpriteComponent->SetTotalFrames(3);
-			m_pSpriteComponent->SetFrameOffset(0);
+			m_pSpriteComponent->SetTotalFrames(1);
+
+			if (abs(direction.x) <= 0.05f) // standing still
+			{
+				m_pSpriteComponent->SetFrameOffset(15);
+			}
+			else if (direction.x >= 0.05f) // going right
+			{
+				m_pSpriteComponent->SetFrameOffset(16);
+				GetObject()->GetTransform()->SetScale({ -1,1 });
+			}
+			else if (direction.x <= -0.05f) // going left
+			{
+				m_pSpriteComponent->SetFrameOffset(16);
+			}
+
+			if (direction.y >= 0.05f) // going up
+			{
+				m_pSpriteComponent->SetFrameOffset(17);
+			}
+			else if (direction.y <= -0.05f) // going down
+			{
+				m_pSpriteComponent->SetFrameOffset(15);
+			}
 		}
 	}
 }
@@ -90,4 +128,10 @@ void PPSpriteMovement::ResetAnimation()
 		m_pSpriteComponent->SetTimePerFrame(m_OriginalAnimationSpeed);
 		m_isDying = false;
 	}
+}
+
+void PPSpriteMovement::StartThrowAnimation()
+{
+	m_IsThrowing = true;
+	m_AccumulatedTime = 0.2f;
 }

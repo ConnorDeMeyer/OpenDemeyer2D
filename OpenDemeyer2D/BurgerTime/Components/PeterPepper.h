@@ -3,12 +3,15 @@
 #include "glm/glm.hpp"
 #include "UtilityFiles/Delegate.h"
 
+class Prefab;
 
 class PeterPepper final : public ComponentBase
 {
 	COMPONENT_BODY(PeterPepper)
 
 public:
+
+	void DefineUserFields(UserFieldBinder&) const override;
 
 	void BeginPlay() override;
 
@@ -28,6 +31,8 @@ private:
 
 	void StunEnd();
 
+	void ThrowPepper();
+
 private:
 
 	int m_Lives{ 3 };
@@ -36,5 +41,5 @@ private:
 
 	bool m_isStunned{};
 
-	std::shared_ptr<GameObject> m_PepperPrefab;
+	std::shared_ptr<Prefab> m_PepperPrefab;
 };
