@@ -45,8 +45,10 @@ public:
 	/** Updates the scene objects in the scene tree.*/
 	void Update(float deltaTime);
 
+	/** Updates the scene objects before their Update function is called*/
 	void PreUpdate(bool IsPlaying);
 
+	/** Updates the scene objects after their Update function was called*/
 	void AfterUpdate();
 
 	/** Renders the scene objects in the scene tree.*/
@@ -55,24 +57,39 @@ public:
 	/** Returns the name of this scene.*/
 	const std::string& GetName() { return m_Name; }
 
+	/** Changes the name of the scene*/
 	void ChangeName(const std::string& name);
 
+	/** Returns the top Game Objects of the scene without their children*/
 	const std::vector<GameObject*>& GetSceneTree() const { return m_SceneTree; }
 
+	/** 
+	* Outputs the Scene through a stream
+	* This includes the Gameobjects and their components
+	*/
 	void Serialize(std::ostream& os) const;
 
+	/**
+	* Will take a stream and convert it into a Scene with GameObject children
+	*/
 	void Deserialize(Deserializer& is);
 
+	/** Returns a map of all gameobjects in the scene with as key their Object ID*/
 	const std::unordered_map<uint32, GameObject*>& GetAllObjects() const { return m_RegisteredObjects; }
 
+	/** Copies the original scene given into this one including the game objects inside*/
 	void Copy(Scene* originalScene);
 
+	/** Begins play of the scene and the Game Objects inside*/
 	void BeginPlay() { m_HasBegunPlay = true; }
 
+	/** Returns true if the Scene has begun playing*/
 	bool HasBegunPlay() { return m_HasBegunPlay; }
 
+	/** Adds an object to the scene if it isn't already in there*/
 	void AddToSceneTree(GameObject* go);
 
+	/** Returns the class responsible for managing the Physics API for this scene*/
 	inline PhysicsInterface* GetPhysicsInterface() const { return m_PhysicsInterface.get(); }
 
 private:
