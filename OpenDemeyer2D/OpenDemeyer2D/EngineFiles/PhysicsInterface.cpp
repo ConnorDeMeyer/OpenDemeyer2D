@@ -41,7 +41,7 @@ void PhysicsInterface::BeginContact(b2Contact* contact)
 	PhysicsComponent* compB = reinterpret_cast<PhysicsComponent*>(contact->GetFixtureB()->GetUserData().pointer);
 
 	if (compA && compB) {
-		compA->OnOverlap.BroadCast(compB);
+ 		compA->OnOverlap.BroadCast(compB);
 		compB->OnOverlap.BroadCast(compA);
 
 		if (contact->GetFixtureA()->IsSensor())

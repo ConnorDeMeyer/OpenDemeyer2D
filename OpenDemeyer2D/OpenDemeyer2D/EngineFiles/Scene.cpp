@@ -18,13 +18,34 @@ Scene::~Scene()
 	for (auto obj : m_SceneTree)
 		delete obj;
 
-	for (auto obj : m_UninitializedObject)
+	for (auto obj : m_NewSceneTreeObjects)
 		delete obj;
 }
 
-GameObject* Scene::Add(GameObject* pObject)
+//GameObject* Scene::Add(GameObject* pObject)
+//{
+//	if (pObject->m_pScene) throw ObjectAlreadyInASceneException();
+//
+//	m_UninitializedObject.emplace_back(pObject);
+//
+//	return pObject;
+//}
+
+GameObject* Scene::CreateGameObject(GameObject* pParent)
 {
-	if (pObject->m_pScene) throw ObjectAlreadyInASceneException();
+	GameObject* pObject = new GameObject();
+	pObject->m_pScene = this;
+	RegisterObject(pObject);
+
+	if (pParent)
+	{
+		pObject->m_Parent = pParent;
+		pParent->m_Children.emplace_back(pObject);
+	}
+	else
+	{
+		m_NewSceneTreeObjects.emplace_back(pObject);
+	}
 
 	m_UninitializedObject.emplace_back(pObject);
 
@@ -38,6 +59,7 @@ void Scene::DestroyObject(GameObject* pObject)
 
 void Scene::DestroyObjectImmediately(GameObject* pObject)
 {
+	pObject->SetParent(nullptr);
 	delete pObject;
 	m_SceneTree.SwapRemove(pObject);
 }
@@ -65,12 +87,17 @@ void Scene::PreUpdate(bool IsPlaying)
 	// initialized objects
 	for (GameObject* pObject : m_UninitializedObject)
 	{
-		m_SceneTree.emplace_back(pObject);
-		pObject->SetScene(this);
+		//m_SceneTree.emplace_back(pObject);
 		m_NotBegunObjects.emplace_back(pObject);
 		pObject->InitializeComponents();
 	}
 	m_UninitializedObject.clear();
+
+	for (GameObject* pObject : m_NewSceneTreeObjects)
+	{
+		m_SceneTree.emplace_back(pObject);
+	}
+	m_NewSceneTreeObjects.clear();
 
 	if (IsPlaying)
 	{
@@ -90,7 +117,6 @@ void Scene::AfterUpdate()
 	// Delete the destroyed Objects
 	for (GameObject* object : m_DestroyableObjects)
 	{
-		object->SetParent(nullptr);
 		DestroyObjectImmediately(object);
 	}
 	m_DestroyableObjects.clear();
@@ -137,7 +163,7 @@ void Scene::Deserialize(Deserializer& is)
 	{
 		while (!IsEnd(*is.GetStream()))
 		{
-			auto go = Add(new GameObject());
+			auto go = CreateGameObject();
 			go->Deserialize(is);
 		}
 	}
@@ -151,9 +177,8 @@ void Scene::Copy(Scene* originalScene)
 
 	for (auto pObject : originalScene->m_SceneTree)
 	{
-		auto go = new GameObject();
+		auto go = CreateGameObject();
 		go->Copy(pObject, &linker);
-		Add(go);
 	}
 
 	linker.PerformLinkingActions();
@@ -161,11 +186,13 @@ void Scene::Copy(Scene* originalScene)
 
 void Scene::AddToSceneTree(GameObject* go)
 {
+#ifdef _DEBUG
 	for (auto sgo : m_SceneTree)
 	{
 		if (sgo == go)
-			return;
+			assert(false);
 	}
+#endif // _DEBUG
 
 	m_SceneTree.push_back(go);
 }
@@ -190,7 +217,7 @@ void Scene::UnregisterObject(GameObject* pObject)
 
 void Scene::RemoveObject(GameObject* object)
 {
-	m_SceneTree.SwapRemove(object);
+	m_SceneTree.RSwapRemove(object);
 }
 
 //void Scene::SetScene(GameObject* object)

@@ -33,8 +33,14 @@ public:
 	Scene& operator=(const Scene& other)	= delete;
 	Scene& operator=(Scene&& other)			= delete;
 
+	/** 
+	* Creates a Game Object that is managed by the scene
+	* @param pParent: Parent of the game object. Will parent to the scene if nullptr
+	*/
+	GameObject* CreateGameObject(GameObject* pParent = nullptr);
+
 	/** Adds a Scene object to the top of the scene tree.*/
-	GameObject* Add(GameObject* pObject);
+	//GameObject* Add(GameObject* pObject);
 
 	/** Flag the object for deletion at the end of the frame.*/
 	void DestroyObject(GameObject* pObject);
@@ -112,8 +118,8 @@ private:
 	ODArray<GameObject*> m_DestroyableObjects;
 	
 	std::vector<GameObject*> m_UninitializedObject;
-
 	std::vector<GameObject*> m_NotBegunObjects;
+	std::vector<GameObject*> m_NewSceneTreeObjects;
 
 	std::unordered_map<uint32, GameObject*> m_RegisteredObjects;
 

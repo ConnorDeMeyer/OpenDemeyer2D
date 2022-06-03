@@ -56,7 +56,7 @@ void Score::Update(float deltaTime)
 
 		m_Score += score;
 
-		auto scoreSprite = new GameObject();
+		auto scoreSprite = GetObject()->GetScene()->CreateGameObject();
 		auto render = scoreSprite->AddComponent<RenderComponent>();
 		auto texture = scoreSprite->AddComponent<TextureComponent>();
 
@@ -67,7 +67,6 @@ void Score::Update(float deltaTime)
 		render->SetRenderLayer(2);
 
 		scoreSprite->GetTransform()->SetPosition(std::get<1>(message) + glm::vec2{ 8.f, 20.f });
-		GetObject()->GetScene()->Add(scoreSprite);
 
 		m_ScoreDisplays.emplace_back(std::pair{ scoreSprite, 2.f });
 	}

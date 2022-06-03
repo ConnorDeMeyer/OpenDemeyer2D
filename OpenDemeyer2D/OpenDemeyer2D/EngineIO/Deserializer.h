@@ -30,7 +30,9 @@ public:
 
 	void DeserializeGame(std::istream& iStream);
 	Scene* DeserializeScene(std::istream& iStream);
-	GameObject* DeserializeObject(std::istream& iStream);
+
+	/** Deserializes a stream into the given pObject*/
+	GameObject* DeserializeObject(std::istream& iStream, GameObject* pObject);
 
 	std::istream* GetStream() { return m_pIStream; }
 

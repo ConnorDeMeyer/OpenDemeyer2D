@@ -130,14 +130,14 @@ Scene* Deserializer::DeserializeScene(std::istream& iStream)
 	return pScene;
 }
 
-GameObject* Deserializer::DeserializeObject(std::istream& iStream)
+GameObject* Deserializer::DeserializeObject(std::istream& iStream, GameObject* pObject)
 {
+	assert(pObject);
+
 	m_pIStream = &iStream;
 
-	GameObject* pObject{};
 	if (iStream.good())
 	{
-		pObject = new GameObject();
 		pObject->Deserialize(*this);
 	}
 

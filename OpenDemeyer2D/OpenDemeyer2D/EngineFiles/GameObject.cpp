@@ -24,8 +24,6 @@ GameObject::~GameObject()
 		delete obj;
 	}
 
-	// signal scene that it has been destroyed
-	//if (m_pScene) m_pScene->RemoveObject(this); //TODO fix this so it doesnt invalidate the for loop when deleting the scene
 }
 
 void GameObject::Update(float deltaTime)
@@ -72,10 +70,10 @@ void GameObject::BeginPlay()
 	}
 	m_HasBegunPlay = true;
 
-	for (auto obj : m_Children)
-	{
-		if (!obj->m_HasBegunPlay)obj->BeginPlay();
-	}
+	//for (auto obj : m_Children)
+	//{
+	//	if (!obj->m_HasBegunPlay)obj->BeginPlay();
+	//}
 }
 
 void GameObject::InitializeComponents()
@@ -86,10 +84,10 @@ void GameObject::InitializeComponents()
 	}
 	m_HasBeenInitialized = true;
 
-	for (auto obj : m_Children)
-	{
-		if (!obj->m_HasBeenInitialized)obj->InitializeComponents();
-	}
+	//for (auto obj : m_Children)
+	//{
+	//	if (!obj->m_HasBeenInitialized)obj->InitializeComponents();
+	//}
 }
 
 void GameObject::Destroy()
@@ -149,17 +147,17 @@ void GameObject::SetParent(GameObject* pObject)
 		pObject->m_Children.emplace_back(this);
 
 		// Set the scene
-		if (m_pScene != pObject->m_pScene)
-		SetScene(pObject->m_pScene);
+		//if (m_pScene != pObject->m_pScene)
+		//SetScene(pObject->m_pScene);
 
 		// initialize game object
-		if (pObject->m_HasBeenInitialized && !m_HasBeenInitialized) InitializeComponents();
-		if (pObject->m_HasBegunPlay && !m_HasBegunPlay) BeginPlay();
+		//if (pObject->m_HasBeenInitialized && !m_HasBeenInitialized) InitializeComponents();
+		//if (pObject->m_HasBegunPlay && !m_HasBegunPlay) BeginPlay();
 	}
-	else if (m_pScene)
-	{
-		m_pScene->UnregisterObject(this);
-	}
+	//else if (m_pScene)
+	//{
+	//	m_pScene->UnregisterObject(this);
+	//}
 
 	// Set transform relative to parent
 	m_pTransform->Move({});
@@ -184,7 +182,6 @@ void GameObject::SetParent(Scene& scene)
 	}
 
 	m_Parent = nullptr;
-	SetScene(&scene);
 
 	scene.AddToSceneTree(this);
 
@@ -249,8 +246,7 @@ void GameObject::Deserialize(Deserializer& is)
 	{
 		while (!is.IsEnd())
 		{
-			auto go = new GameObject();
-			go->SetParent(this);
+			auto go = GetScene()->CreateGameObject(this);
 			go->Deserialize(is);
 		}
 	}
@@ -268,27 +264,27 @@ std::string GameObject::GetDisplayName() const
 		m_Name.c_str();
 }
 
-void GameObject::SetScene(Scene* pScene)
-{
-	if (pScene != m_pScene)
-	{
-		if (m_pScene)
-		{
-			m_pScene->UnregisterObject(this);
-		}
-		if (pScene)
-		{
-			pScene->RegisterObject(this);
-		}
-	}
-
-	m_pScene = pScene;
-
-	for (auto child : m_Children)
-	{
-		child->SetScene(pScene);
-	}
-}
+//void GameObject::SetScene(Scene* pScene)
+//{
+//	if (pScene != m_pScene)
+//	{
+//		if (m_pScene)
+//		{
+//			m_pScene->UnregisterObject(this);
+//		}
+//		if (pScene)
+//		{
+//			pScene->RegisterObject(this);
+//		}
+//	}
+//
+//	m_pScene = pScene;
+//
+//	for (auto child : m_Children)
+//	{
+//		child->SetScene(pScene);
+//	}
+//}
 
 void GameObject::Copy(GameObject* originalObject, CopyLinker* copyLinker)
 {
@@ -305,9 +301,8 @@ void GameObject::Copy(GameObject* originalObject, CopyLinker* copyLinker)
 
 		for (auto child : originalObject->m_Children)
 		{
-			auto go = new GameObject();
+			auto go = GetScene()->CreateGameObject(this);
 			go->Copy(child, copyLinker);
-			go->SetParent(this);
 		}
 	}
 	else
@@ -325,9 +320,8 @@ void GameObject::Copy(GameObject* originalObject, CopyLinker* copyLinker)
 
 		for (auto child : originalObject->m_Children)
 		{
-			auto go = new GameObject();
+			auto go = GetScene()->CreateGameObject(this);
 			go->Copy(child, &linker);
-			go->SetParent(this);
 		}
 
 		linker.PerformLinkingActions();

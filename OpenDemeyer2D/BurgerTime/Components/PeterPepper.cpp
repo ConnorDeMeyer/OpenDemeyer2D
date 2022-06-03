@@ -94,8 +94,7 @@ void PeterPepper::ThrowPepper()
 			direction *= range;
 		}
 
-		auto pPepper = m_PepperPrefab->Instantiate();
-		pPepper->SetScene(GetScene());
+		auto pPepper = m_PepperPrefab->Instantiate(GetScene());
 		pPepper->GetTransform()->SetPosition(GetTransform()->GetWorldPosition() + direction);
 	}
 }

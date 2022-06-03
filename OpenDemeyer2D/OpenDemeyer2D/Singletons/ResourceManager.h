@@ -30,6 +30,7 @@ class FileDetailView;
 class GameObject;
 class Scene;
 class Prefab;
+class scene;
 
 struct Directory
 {
@@ -50,7 +51,7 @@ class ResourceManager final : public Singleton<ResourceManager>
 
 private:
 
-	ResourceManager() = default;
+	ResourceManager();
 	virtual ~ResourceManager()
 	{
 		m_TerminateLoaderThreads = true;
@@ -152,6 +153,8 @@ public: //**// PREFABS //**//
 private:
 
 	void PrefabLoaderThread();
+
+	std::unique_ptr<Scene> m_PrefabScene;
 
 	std::vector<std::shared_ptr<Prefab>> m_AlwaysLoadedPrefabs;
 	std::unordered_map<std::filesystem::path, std::weak_ptr<Prefab>> m_PrefabFiles;

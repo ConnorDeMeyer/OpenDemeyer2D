@@ -14,6 +14,7 @@
 #include "imgui.h"
 #include "PeterPepper.h"
 #include "StageMovement.h"
+#include "EngineFiles/Scene.h"
 
 //constexpr char level1[stageSize]
 //{
@@ -115,71 +116,71 @@ SDL_Surface* Stage::GenerateStageSurface() const
 	return pLevelLayout;
 }
 
-void Stage::LoadStageItems()
-{
-	struct burgerPieceInfo
-	{
-		BurgerPieceType type;
-		uint8_t posX;
-		uint8_t posY;
-	};
+//void Stage::LoadStageItems()
+//{
+//	struct burgerPieceInfo
+//	{
+//		BurgerPieceType type;
+//		uint8_t posX;
+//		uint8_t posY;
+//	};
+//
+//	constexpr int burgerPiecesAmount{ 16 };
+//	constexpr burgerPieceInfo burgerPiecesLayout[burgerPiecesAmount]
+//	{
+//		{BurgerPieceType::topBun, 0,7},
+//		{BurgerPieceType::topBun, 1,9},
+//		{BurgerPieceType::topBun, 2,9},
+//		{BurgerPieceType::topBun, 3,9},
+//
+//		{BurgerPieceType::lettuce, 0,5},
+//		{BurgerPieceType::lettuce, 1,4},
+//		{BurgerPieceType::lettuce, 2,7},
+//		{BurgerPieceType::lettuce, 3,7},
+//
+//		{BurgerPieceType::meat, 0,2},
+//		{BurgerPieceType::meat, 1,2},
+//		{BurgerPieceType::meat, 2,4},
+//		{BurgerPieceType::meat, 3,5},
+//
+//		{BurgerPieceType::bottomBun, 0,0},
+//		{BurgerPieceType::bottomBun, 1,0},
+//		{BurgerPieceType::bottomBun, 2,0},
+//		{BurgerPieceType::bottomBun, 3,3}
+//	};
+//
+//	for (int i{}; i < burgerPiecesAmount; ++i)
+//	{
+//		auto& info = burgerPiecesLayout[i];
+//
+//		auto piece = GetScene()->CreateGameObject();
+//		auto burgerPiece = piece->AddComponent<BurgerPiece>();
+//
+//		burgerPiece->SetType(info.type);
+//		piece->GetTransform()->SetPosition({ 32.f + 48.f * float(info.posX), 4.f + 16.f * float(info.posY) });
+//
+//		piece->SetParent(GetObject());
+//	}
+//
+//
+//	auto sheetTexture = RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png");
+//	// burger holders at the bottom
+//	for (int i{}; i < 4; ++i)
+//	{
+//		auto go = new GameObject();
+//		auto render = go->AddComponent<RenderComponent>();
+//		auto texture = go->AddComponent<TextureComponent>();
+//		texture->SetTexture(sheetTexture);
+//		GetRenderComponent()->SetSourceRect({112.f, 104.f, 48.f, 16.f});
+//		render->SetRenderAlignMode(eRenderAlignMode::left);
+//
+//		go->GetTransform()->SetPosition({ 8.f + 48.f * i, -32.f });
+//		go->SetParent(GetObject());
+//	}
+//}
 
-	constexpr int burgerPiecesAmount{ 16 };
-	constexpr burgerPieceInfo burgerPiecesLayout[burgerPiecesAmount]
-	{
-		{BurgerPieceType::topBun, 0,7},
-		{BurgerPieceType::topBun, 1,9},
-		{BurgerPieceType::topBun, 2,9},
-		{BurgerPieceType::topBun, 3,9},
-
-		{BurgerPieceType::lettuce, 0,5},
-		{BurgerPieceType::lettuce, 1,4},
-		{BurgerPieceType::lettuce, 2,7},
-		{BurgerPieceType::lettuce, 3,7},
-
-		{BurgerPieceType::meat, 0,2},
-		{BurgerPieceType::meat, 1,2},
-		{BurgerPieceType::meat, 2,4},
-		{BurgerPieceType::meat, 3,5},
-
-		{BurgerPieceType::bottomBun, 0,0},
-		{BurgerPieceType::bottomBun, 1,0},
-		{BurgerPieceType::bottomBun, 2,0},
-		{BurgerPieceType::bottomBun, 3,3}
-	};
-
-	for (int i{}; i < burgerPiecesAmount; ++i)
-	{
-		auto& info = burgerPiecesLayout[i];
-
-		auto piece = new GameObject();
-		auto burgerPiece = piece->AddComponent<BurgerPiece>();
-
-		burgerPiece->SetType(info.type);
-		piece->GetTransform()->SetPosition({ 32.f + 48.f * float(info.posX), 4.f + 16.f * float(info.posY) });
-
-		piece->SetParent(GetObject());
-	}
-
-
-	auto sheetTexture = RESOURCES.LoadTexture("Data/Bitmaps/FullSheet.png");
-	// burger holders at the bottom
-	for (int i{}; i < 4; ++i)
-	{
-		auto go = new GameObject();
-		auto render = go->AddComponent<RenderComponent>();
-		auto texture = go->AddComponent<TextureComponent>();
-		texture->SetTexture(sheetTexture);
-		GetRenderComponent()->SetSourceRect({112.f, 104.f, 48.f, 16.f});
-		render->SetRenderAlignMode(eRenderAlignMode::left);
-
-		go->GetTransform()->SetPosition({ 8.f + 48.f * i, -32.f });
-		go->SetParent(GetObject());
-	}
-}
-
-void Stage::SpawnPlayer()
-{
+//void Stage::SpawnPlayer()
+//{
 	//m_pPeterPepper = new GameObject();
 	//m_pPeterPepper->AddComponent<PhysicsComponent>();
 	//m_pPeterPepper->AddComponent<RenderComponent>();
@@ -193,7 +194,7 @@ void Stage::SpawnPlayer()
 	//
 	//m_pPeterPepper->SetParent(GetParent());
 	//m_pPeterPepper->GetTransform()->SetPosition({ 104,3 });
-}
+//}
 
 constexpr int BigHorizontalTiles = stageWidth / 2;
 constexpr int smallHorizontalTiles = stageWidth - BigHorizontalTiles;

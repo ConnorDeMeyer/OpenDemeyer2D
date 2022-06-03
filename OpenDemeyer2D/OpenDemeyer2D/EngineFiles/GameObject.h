@@ -40,11 +40,15 @@ private:
 class GameObject final
 {
 
-	friend class Scene;
+	friend class Scene;/*
+	friend class ResourceManager;
+	friend class Prefab;*/
 
-public:
+private:
 
 	GameObject();
+
+public:
 
 	/** 
 	* Will destroy the game object immediately.
@@ -175,7 +179,7 @@ public:
 
 	std::string GetDisplayName() const;
 
-	void SetScene(Scene* pScene);
+	//void SetScene(Scene* pScene);
 
 	void Copy(GameObject* originalObject, CopyLinker* copyLinker = nullptr);
 
@@ -211,8 +215,8 @@ private:
 
 	bool m_HasBeenInitialized{};
 	bool m_HasBegunPlay{};
-};
 
+};
 
 /**
  * TEMPLATE METHODS

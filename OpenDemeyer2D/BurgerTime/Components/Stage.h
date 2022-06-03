@@ -62,9 +62,9 @@ private:
 
 	SDL_Surface* GenerateStageSurface() const;
 
-	void LoadStageItems();
+	//void LoadStageItems();
 
-	void SpawnPlayer();
+	//void SpawnPlayer();
 
 
 private:

@@ -657,18 +657,14 @@ void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
 
 			if (ImGui::MenuItem("Duplicate"))
 			{
-				auto otherGo = new GameObject();
+				auto otherGo = go->GetScene()->CreateGameObject(go->GetParent());
 				otherGo->Copy(go);
-				if (go->GetParent())
-					otherGo->SetParent(go->GetParent());
-				else
-					go->GetScene()->Add(otherGo);
 				m_bSceneGraphQuickExit = true;
 			}
 
 			if (ImGui::MenuItem("Add Empty Child"))
 			{
-				auto newGo = new GameObject();
+				auto newGo = go->GetScene()->CreateGameObject();
 				newGo->SetParent(go);
 			}
 
@@ -789,7 +785,7 @@ void GUIManager::RenderImGuiGameObjectRecursive(GameObject* go)
 			if (payload->Data)
 			{
 				auto& goPayload = *static_cast<std::shared_ptr<Prefab>*>(payload->Data);
-				auto newGo = goPayload->Instantiate();
+				auto newGo = goPayload->Instantiate(go->GetScene());
 				newGo->SetParent(go);
 				m_bSceneGraphQuickExit = true;
 			}
@@ -896,7 +892,7 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 
 			if (ImGui::MenuItem("Add GameObject"))
 			{
-				pScene->Add(new GameObject());
+				pScene->CreateGameObject();
 				ImGui::CloseCurrentPopup();
 			}
 
@@ -1005,7 +1001,7 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 				if (payload->Data && payload->Delivery)
 				{
 					auto& goPayload = *static_cast<std::shared_ptr<Prefab>*>(payload->Data);
-					auto newGo = goPayload->Instantiate();
+					auto newGo = goPayload->Instantiate(pScene);
 					newGo->SetParent(*pScene);
 				}
 			}

@@ -156,7 +156,7 @@ void BurgerPiece::FallDown()
 
 void BurgerPiece::SegmentOverlap(GameObject* pSegment, PhysicsComponent* other)
 {
-	auto otherBurgerPiece = other->GetObject()->GetParent()->GetComponent<BurgerPiece>();
+	auto otherBurgerPiece = other->GetObject()->GetParent() ? other->GetObject()->GetParent()->GetComponent<BurgerPiece>() : nullptr;
 	auto otherPeterPepper = other->GetObject()->GetComponent<PeterPepper>();
 
 	if ((otherPeterPepper || otherBurgerPiece) && (!m_IsFalling && m_FallDelay <= 0.f))

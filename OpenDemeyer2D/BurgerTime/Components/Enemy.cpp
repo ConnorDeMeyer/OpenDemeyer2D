@@ -32,6 +32,8 @@ void Enemy::Initialize()
 		m_pStageMovement = pStageMov->GetWeakReferenceType();
 	if (auto pSprite = GetComponent<SpriteComponent>())
 		m_pSpriteComponent = pSprite->GetWeakReferenceType();
+
+	UpdateSprite();
 }
 
 void Enemy::BeginPlay()
@@ -221,6 +223,7 @@ void Enemy::RenderImGui()
 void Enemy::SetEnemyType(EnemyType type)
 {
 	m_EnemyType = type;
+	UpdateSprite();
 }
 
 void Enemy::UpdateSprite()
@@ -334,7 +337,6 @@ void Enemy::Die()
 void Enemy::FallDown(float location)
 {
 	m_IsFalling = true;
-	m_IsDying = false;
 	m_RestLocation = location;
 }
 

@@ -62,6 +62,8 @@ public:
 
 	std::vector<PhysicsComponent*> GetOverlappingComponents();
 
+	//void Clone(const ComponentBase* pOriginal, CopyLinker* copyLinker = nullptr) override;
+
 private:
 
 	b2Body* m_pBody{};

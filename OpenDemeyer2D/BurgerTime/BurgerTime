@@ -143,7 +143,7 @@ Shapes {
 class RenderComponent
 {
 renderLayer 2
-sourceRect 16 0 16 16
+sourceRect 0 0 16 16
 pivot 0.5 1
 }
 class SpriteComponent
@@ -2361,7 +2361,7 @@ pivot 0.5 1
 class SpriteComponent
 {
 frameDimension 16 16
-frameOffset 32
+frameOffset 30
 totalFrames 1
 frameTime 0.15
 loop 1
@@ -2404,7 +2404,7 @@ rotation 0
 class SpriteComponent
 {
 frameDimension 16 16
-frameOffset 32
+frameOffset 60
 totalFrames 1
 frameTime 0.15
 loop 1
@@ -2453,7 +2453,7 @@ rotation 0
 class SpriteComponent
 {
 frameDimension 16 16
-frameOffset 32
+frameOffset 30
 totalFrames 1
 frameTime 0.15
 loop 1
@@ -2508,7 +2508,7 @@ pivot 0.5 1
 class SpriteComponent
 {
 frameDimension 16 16
-frameOffset 32
+frameOffset 90
 totalFrames 1
 frameTime 0.15
 loop 1
@@ -2643,15 +2643,5 @@ pivot 0 0
 }
 {
 }
-}
-}
-{
-MainMenu
-{
-}
-}
-{
-Level01
-{
 }
 }

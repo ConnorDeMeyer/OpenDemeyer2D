@@ -66,7 +66,7 @@ void PlayerResources::GenerateLives()
 
 		for (int i{}; i < lives; ++i)
 		{
-			auto go =  new GameObject();
+			auto go = GetScene()->CreateGameObject(GetObject());
 			
 			auto render = go->AddComponent<RenderComponent>();
 			render->SetSourceRect(m_SourceRect);
@@ -78,8 +78,6 @@ void PlayerResources::GenerateLives()
 			transform->SetPosition({ 0,i * m_SourceRect.h });
 
 			m_Resources.emplace_back(go);
-			
-			go->SetParent(GetObject());
 		}
 	}
 }

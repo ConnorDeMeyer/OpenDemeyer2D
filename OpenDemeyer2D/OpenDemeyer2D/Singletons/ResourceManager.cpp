@@ -28,6 +28,11 @@
 
 using namespace std::filesystem;
 
+ResourceManager::ResourceManager()
+	: m_PrefabScene{ new Scene("Prefab Scene")}
+{
+}
+
 void ResourceManager::Init(const path& dataPath)
 {
 
@@ -238,7 +243,7 @@ std::shared_ptr<Prefab> ResourceManager::LoadPrefab(const path& file, bool keepL
 		Deserializer deserializer{};
 		try
 		{
-			prefab = std::shared_ptr<Prefab>(new Prefab(deserializer.DeserializeObject(is)));
+			prefab = std::shared_ptr<Prefab>(new Prefab(deserializer.DeserializeObject(is, m_PrefabScene->CreateGameObject())));
 		}
 		catch (std::exception&)
 		{
@@ -580,7 +585,7 @@ void ResourceManager::SaveGameObject(GameObject* pGameObject, path& outPutPath)
 
 	pGameObject->Serialize(of);
 
-	auto newGo = new GameObject();
+	auto newGo = m_PrefabScene->CreateGameObject();
 	newGo->Copy(pGameObject);
 
 	auto dir = GetDirectory(outPutPath);

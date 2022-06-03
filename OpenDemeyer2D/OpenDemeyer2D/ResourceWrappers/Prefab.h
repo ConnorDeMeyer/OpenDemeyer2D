@@ -1,5 +1,6 @@
 #pragma once
 #include "EngineFiles/GameObject.h"
+#include "EngineFiles/Scene.h"
 #include <memory>
 #include <filesystem>
 
@@ -12,7 +13,7 @@ public:
 	Prefab() = default;
 
 	Prefab(GameObject* object)
-		: m_Object{object}
+		: m_Object{ object }
 	{}
 
 	~Prefab() = default;
@@ -27,31 +28,31 @@ public:
 
 	Prefab& operator=(Prefab&& other) noexcept
 	{
-		m_Object = std::move(other.m_Object);
+		m_Object = other.m_Object;
 		m_sourceFile = std::move(other.m_sourceFile);
 		return *this;
 	}
 
-	GameObject* Instantiate() const
+	GameObject* Instantiate(Scene* pScene) const
 	{
 		CopyLinker linker{};
-		GameObject* go = new GameObject();
-		go->Copy(m_Object.get(), &linker);
+		GameObject* go = pScene->CreateGameObject();
+		go->Copy(m_Object, &linker);
 		return go;
 	}
 
 	GameObject* GetGameObject()
 	{
-		return m_Object.get();
+		return m_Object;
 	}
 
 	const std::filesystem::path& GetPath() const { return m_sourceFile; }
 
-	inline bool IsValid() { return m_Object.get(); }
+	inline bool IsValid() { return m_Object; }
 	inline operator bool() { return IsValid(); }
 
 private:
 
-	std::unique_ptr<GameObject> m_Object;
+	GameObject* m_Object;
 	std::filesystem::path m_sourceFile{};
 };
