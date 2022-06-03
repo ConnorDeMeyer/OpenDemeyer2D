@@ -14,7 +14,16 @@ class SceneManager final : public Singleton<SceneManager>
 {
 	friend class Singleton<SceneManager>;
 
+private:
+
+	SceneManager() = default;
+
+	virtual ~SceneManager() = default;
+
 public:
+
+	/** Destroys all the scenes*/
+	void Destroy();
 
 	/** Updates all the scenes*/
 	void Update(float deltaTime);
@@ -66,17 +75,11 @@ public:
 
 private:
 
-	SceneManager() = default;
-
-	virtual ~SceneManager();
-
-private:
-
 	std::vector<Scene*> m_Scenes;
 
 	std::unique_ptr<Scene> m_GameScene;
 
-	std::vector<GameObject*> m_Prefabs;
+	//std::vector<GameObject*> m_Prefabs;
 
 	Scene* m_pActiveScene{};
 

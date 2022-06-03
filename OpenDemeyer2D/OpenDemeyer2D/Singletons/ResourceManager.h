@@ -60,6 +60,7 @@ private:
 public:
 
 	void Init(const std::filesystem::path& dataPath);
+	void Destroy();
 
 public: //**// TEXTURE2D //**//
 

@@ -5,6 +5,17 @@
 #include "EngineFiles/Scene.h"
 #include "imgui.h"
 
+void SceneManager::Destroy()
+{
+	for (Scene* pScene : m_Scenes)
+	{
+		delete pScene;
+	}
+
+	if (m_GameScene)
+		delete m_GameScene.release();
+}
+
 void SceneManager::Update(float deltaTime)
 {
 	if (m_GameScene)
@@ -154,15 +165,4 @@ void SceneManager::StopPlayingScene()
 	{
 		delete m_GameScene.release();
 	}
-}
-
-SceneManager::~SceneManager()
-{
-	for (Scene* pScene : m_Scenes)
-	{
-		delete pScene;
-	}
-
-	if (m_GameScene)
-		delete m_GameScene.release();
 }

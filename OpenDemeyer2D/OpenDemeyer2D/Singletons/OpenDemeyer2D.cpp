@@ -133,6 +133,8 @@ void Engine::Cleanup()
 {
 	GUI.Destroy();
 	RENDER.Destroy();
+	SCENES.Destroy();
+	RESOURCES.Destroy();
 
 	delete m_pGameinstance;
 

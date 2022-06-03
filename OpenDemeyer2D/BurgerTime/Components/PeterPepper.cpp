@@ -18,14 +18,36 @@ void PeterPepper::DefineUserFields(UserFieldBinder& binder) const
 
 void PeterPepper::BeginPlay()
 {
-	auto input = GetObject()->GetComponent<InputComponent>();
-	auto movement = GetObject()->GetComponent<StageMovement>();
-
-	input->BindKeyPressed(SDLK_d, [movement] {movement->Move(movementDirection::right); });
-	input->BindKeyPressed(SDLK_a, [movement] {movement->Move(movementDirection::left); });
-	input->BindKeyPressed(SDLK_w, [movement] {movement->Move(movementDirection::up); });
-	input->BindKeyPressed(SDLK_s, [movement] {movement->Move(movementDirection::down); });
-	input->BindKeyDown(SDLK_SPACE, std::bind(&PeterPepper::ThrowPepper, this));
+	if (auto movement = GetObject()->GetComponent<StageMovement>())
+		if (auto input = GetObject()->GetComponent<InputComponent>())
+		{
+			if (input->GetControllerId() == -1) // keyboard input
+			{
+				input->BindKeyPressed(SDLK_d, [movement] {movement->Move(movementDirection::right); });
+				input->BindKeyPressed(SDLK_a, [movement] {movement->Move(movementDirection::left); });
+				input->BindKeyPressed(SDLK_w, [movement] {movement->Move(movementDirection::up); });
+				input->BindKeyPressed(SDLK_s, [movement] {movement->Move(movementDirection::down); });
+				input->BindKeyDown(SDLK_SPACE, std::bind(&PeterPepper::ThrowPepper, this));
+			}
+			else // controller input
+			{
+				input->BindControllerAxis(SDL_CONTROLLER_AXIS_LEFTX, [movement](float axis)
+					{
+						if (axis < -0.1)
+							movement->Move(movementDirection::left);
+						if (axis > 0.1)
+							movement->Move(movementDirection::right);
+					});
+				input->BindControllerAxis(SDL_CONTROLLER_AXIS_LEFTY, [movement](float axis)
+					{
+						if (axis > 0.1)
+							movement->Move(movementDirection::down);
+						if (axis < -0.1)
+							movement->Move(movementDirection::up);
+					});
+				input->BindControllerDown(SDL_CONTROLLER_BUTTON_A, std::bind(&PeterPepper::ThrowPepper, this));
+			}
+		}
 
 	if (auto sprite = GetObject()->GetComponent<SpriteComponent>())
 	{

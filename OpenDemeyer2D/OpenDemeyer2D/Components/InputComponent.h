@@ -14,30 +14,32 @@ public:
 
 	void SetActive(bool bActive) { m_bIsActive = bActive; }
 
-	void BindKeyDown(SDL_Keycode SDLK_key, const std::function<void()>& function) const;
-	void BindKeyUp(SDL_Keycode SDLK_key, const std::function<void()>& function) const;
-	void BindKeyPressed(SDL_Keycode SDLK_key, const std::function<void()>& function) const;
+	void BindKeyDown(SDL_Keycode SDLK_key, const std::function<void()>& function);
+	void BindKeyUp(SDL_Keycode SDLK_key, const std::function<void()>& function);
+	void BindKeyPressed(SDL_Keycode SDLK_key, const std::function<void()>& function);
 
-	void BindMouseDown(Uint8 SDL_BUTTON, const std::function<void(float, float)>& function) const;
-	void BindMouseUp(Uint8 SDL_BUTTON, const std::function<void(float, float)>& function) const;
-	void BindMousePressed(Uint8 SDL_BUTTON, const std::function<void(float, float)>& function) const;
-	void BindMouseMove(const std::function<void(float, float)>& function) const;
-	void BindMouseWheel(const std::function<void(float)>& function) const;
+	void BindMouseDown(Uint8 SDL_BUTTON, const std::function<void(float, float)>& function);
+	void BindMouseUp(Uint8 SDL_BUTTON, const std::function<void(float, float)>& function);
+	void BindMousePressed(Uint8 SDL_BUTTON, const std::function<void(float, float)>& function);
+	void BindMouseMove(const std::function<void(float, float)>& function);
+	void BindMouseWheel(const std::function<void(float)>& function);
 
-	void BindControllerUp(SDL_GameControllerButton SDL_CONTROLLER_BUTTON, Uint8 controllerId, const std::function<void()>& function) const;
-	void BindControllerDown(SDL_GameControllerButton SDL_CONTROLLER_BUTTON, Uint8 controllerId, const std::function<void()>& function) const;
-	void BindControllerPressed(SDL_GameControllerButton SDL_CONTROLLER_BUTTON, Uint8 controllerId, const std::function<void()>& function) const;
-	void BindControllerAxis(SDL_GameControllerAxis SDL_CONTROLLER_AXIS, Uint8 controllerId, const std::function<void(float)>& function) const;
+	void BindControllerUp(SDL_GameControllerButton SDL_CONTROLLER_BUTTON, const std::function<void()>& function);
+	void BindControllerDown(SDL_GameControllerButton SDL_CONTROLLER_BUTTON, const std::function<void()>& function);
+	void BindControllerPressed(SDL_GameControllerButton SDL_CONTROLLER_BUTTON, const std::function<void()>& function);
+	void BindControllerAxis(SDL_GameControllerAxis SDL_CONTROLLER_AXIS, const std::function<void(float)>& function);
 
+	/** Will bind to controller if not already bound to one*/
+	int GetControllerId();
+
+	/** Binds the input to the next available controller*/
 	int BindToController();
-	int GetControllerId() const { return m_ControllerId; }
-
-	//const std::string GetComponentName() override { return "InputComponent"; }
 
 	void RenderImGui() override;
 
 private:
 
+
 	bool m_bIsActive{ true };
-	char m_ControllerId{};
+	char m_ControllerId{-1};
 };

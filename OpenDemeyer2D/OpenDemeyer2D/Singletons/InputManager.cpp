@@ -15,10 +15,7 @@ void InputManager::ProcessInput()
 
 		ImGui_ImplSDL2_ProcessEvent(&e);
 
-		if (e.type == SDL_QUIT) {
-			ENGINE.Quit();
-		}
-		else if (e.type == SDL_KEYDOWN) {
+		if (e.type == SDL_KEYDOWN) {
 			if (e.key.repeat) break;
 			HandleKeyDown(e);
 		}
@@ -44,11 +41,14 @@ void InputManager::ProcessInput()
 		else if (e.type == SDL_CONTROLLERBUTTONDOWN) {
 			HandleControllerButtonDown(e);
 		}
-		else if (e.type == SDL_CONTROLLERAXISMOTION) {
-			HandleControllerAxis(e);
-		}
+		//else if (e.type == SDL_CONTROLLERAXISMOTION) {
+		//	HandleControllerAxis(e);
+		//}
 		else if (e.type == SDL_WINDOWEVENT) {
 			HandleWindowEvent(e);
+		}
+		else if (e.type == SDL_QUIT) {
+			ENGINE.Quit();
 		}
 	}
 
@@ -61,6 +61,8 @@ void InputManager::ProcessInput()
 	for (int i{}; i < MaxControllers; ++i)
 		for (auto& controllerBtn : m_PressedControllerButtons[i])
 			m_pControllerPressedActions[i][controllerBtn].BroadCast();
+	
+	UpdateControllersAxis();
 }
 
 int InputManager::RegisterInputComponent(InputComponent* comp)
@@ -77,6 +79,8 @@ int InputManager::RegisterInputComponent(InputComponent* comp)
 			if (m_pControllers[i] == nullptr)
 			{
 				printf("Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError());
+				comp->m_ControllerId = -1;
+				return -1;
 			}
 
 			m_pControllerInputComps[i] = comp;
@@ -200,6 +204,24 @@ void InputManager::HandleControllerAxis(const SDL_Event& e)
 	if (it != m_pControllerAxis[e.cbutton.which].end())
 	{
 		it->second.BroadCast(float(e.caxis.value) / float(SDL_JOYSTICK_AXIS_MAX));
+	}
+}
+
+void InputManager::UpdateControllersAxis()
+{
+	for (int i{}; i < MaxControllers; ++i)
+	{
+		if (auto pController = m_pControllers[i])
+		{
+			float invMax{ 1.f / float(SDL_JOYSTICK_AXIS_MAX) };
+			auto& ctrAxis = m_pControllerAxis[i];
+			ctrAxis[SDL_CONTROLLER_AXIS_LEFTX].BroadCast(float(SDL_GameControllerGetAxis(pController, SDL_CONTROLLER_AXIS_LEFTX)) * invMax);
+			ctrAxis[SDL_CONTROLLER_AXIS_LEFTY].BroadCast(float(SDL_GameControllerGetAxis(pController, SDL_CONTROLLER_AXIS_LEFTY)) * invMax);
+			ctrAxis[SDL_CONTROLLER_AXIS_RIGHTX].BroadCast(float(SDL_GameControllerGetAxis(pController, SDL_CONTROLLER_AXIS_RIGHTX)) * invMax);
+			ctrAxis[SDL_CONTROLLER_AXIS_RIGHTY].BroadCast(float(SDL_GameControllerGetAxis(pController, SDL_CONTROLLER_AXIS_RIGHTY)) * invMax);
+			ctrAxis[SDL_CONTROLLER_AXIS_TRIGGERLEFT].BroadCast(float(SDL_GameControllerGetAxis(pController, SDL_CONTROLLER_AXIS_TRIGGERLEFT)) * invMax);
+			ctrAxis[SDL_CONTROLLER_AXIS_TRIGGERRIGHT].BroadCast(float(SDL_GameControllerGetAxis(pController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT)) * invMax);
+		}
 	}
 }
 

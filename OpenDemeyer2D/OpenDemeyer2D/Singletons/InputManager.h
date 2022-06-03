@@ -71,6 +71,8 @@ private:
 	void HandleControllerButtonDown	(const SDL_Event& e);
 	void HandleControllerAxis		(const SDL_Event& e);
 
+	void UpdateControllersAxis();
+
 private:
 
 	void HandleWindowEvent			(const SDL_Event& e);

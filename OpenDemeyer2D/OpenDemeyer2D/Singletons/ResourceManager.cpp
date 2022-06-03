@@ -64,6 +64,11 @@ void ResourceManager::Init(const path& dataPath)
 
 }
 
+void ResourceManager::Destroy()
+{
+	m_PrefabScene.reset();
+}
+
 #pragma region FileLoaders
 
 std::shared_ptr<Texture2D> ResourceManager::LoadTexture(const path& file, bool keepLoaded)
