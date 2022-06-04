@@ -1,17 +1,8 @@
 ﻿#include "CustomSerializers.h"
-#include "EngineFiles/Scene.h"
-#include "EngineFiles/ComponentBase.h"
 #include "EngineFiles/ComponentBase.h"
 #include "TypeInformation.h"
-#include "EngineFiles/GameObject.h"
 
 #include <stack>
-#include <fstream>
-#include <ios>
-#include <map>
-#include <functional>
-#include <sstream>
-#include "CustomSerializers.h"
 
 #include "Singletons/ResourceManager.h"
 #include "box2d.h"

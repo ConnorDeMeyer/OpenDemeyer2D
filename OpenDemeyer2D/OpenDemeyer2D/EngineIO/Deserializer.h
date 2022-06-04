@@ -1,11 +1,9 @@
 #pragma once
 #include <string>
-#include <fstream>
 #include <sstream>
 #include <vector>
 #include <unordered_map>
 #include <functional>
-#include <typeindex>
 #include <memory>
 
 class Scene;

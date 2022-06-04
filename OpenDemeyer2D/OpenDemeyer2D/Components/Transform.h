@@ -1,7 +1,5 @@
 #pragma once
 #include "EngineFiles/ComponentBase.h"
-#include <glm/vec2.hpp>
-#include <glm/matrix.hpp>
 
 class Transform final : public ComponentBase
 {

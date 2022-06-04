@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "EngineFiles/ComponentBase.h"
-#include <array>
 #include "ResourceWrappers/Texture2D.h"
 #include "memory"
 #include "glm/glm.hpp"

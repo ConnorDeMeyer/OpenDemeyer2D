@@ -3,7 +3,6 @@
 #include "imgui.h"
 #include "EngineFiles/GameObject.h"
 #include "Components/Transform.h"
-#include "EngineFiles/Scene.h"
 #include "ImGuiExt/imgui_helpers.h"
 
 bool StageMovement::Move(movementDirection direction)

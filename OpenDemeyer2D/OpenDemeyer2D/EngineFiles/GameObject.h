@@ -26,11 +26,16 @@ class CopyLinker final
 public:
 	void LinkWithNewObject(GameObject* originalObject, const std::function<void(GameObject*)>& linkingAction);
 	void RegisterObject(GameObject* originalObject, GameObject* newObject);
+
+	bool IsSameScene() const { return m_IsSameScene; }
+	void SetIsSameScene(bool val) { m_IsSameScene = val; }
+
 	/**Only call at the end of copying*/
 	void PerformLinkingActions();
 private:
 	std::unordered_map<GameObject*, GameObject*> m_RegisteredObjects;
 	std::vector<LinkingAction> m_LinkingActions;
+	bool m_IsSameScene{};
 };
 
 /** 

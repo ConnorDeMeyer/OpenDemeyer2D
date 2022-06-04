@@ -6,6 +6,7 @@
 #include <stack>
 #include <vector>
 #include <fstream>
+#include <iostream>
 
 #include <SDL_image.h>
 #include <SDL_ttf.h>

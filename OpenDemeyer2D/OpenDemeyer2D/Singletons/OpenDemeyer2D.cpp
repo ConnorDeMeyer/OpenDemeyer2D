@@ -10,7 +10,6 @@
 #include <cassert>
 
 #include <gl/glew.h>
-#include <gl/wglew.h>
 
 #include <SDL_mixer.h>
 
@@ -20,10 +19,6 @@
 #include "RenderManager.h"
 #include "Singletons/ResourceManager.h"
 #include "Singletons/GUIManager.h"
-#include "EngineFiles/GameObject.h"
-#include "EngineFiles/Scene.h"
-#include "ResourceWrappers/Sound.h"
-#include "EngineIO/CustomSerializers.h"
 
 #include "imgui.h"
 

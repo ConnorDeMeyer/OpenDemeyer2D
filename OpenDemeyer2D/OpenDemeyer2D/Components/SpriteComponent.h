@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "EngineFiles/ComponentBase.h"
-#include "ResourceWrappers/Texture2D.h"
 #include <glm/glm.hpp>
 #include "UtilityFiles/Delegate.h"
 

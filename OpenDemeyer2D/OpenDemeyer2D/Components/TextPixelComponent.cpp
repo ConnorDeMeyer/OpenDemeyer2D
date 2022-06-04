@@ -1,5 +1,4 @@
 ﻿#include "TextPixelComponent.h"
-#include "EngineFiles/GameObject.h"
 #include "RenderComponent.h"
 #include "Singletons/ResourceManager.h"
 #include "Singletons/RenderManager.h"

@@ -4,11 +4,7 @@
 #include "ImGuiExt/imgui_helpers.h"
 
 #include "RenderComponent.h"
-#include "EngineFiles/GameObject.h"
 #include "Singletons/ResourceManager.h"
-
-#include "Singletons/RenderManager.h"
-#include "EngineIO/Reflection.h"
 
 void TextureComponent::DefineUserFields(UserFieldBinder& binder) const
 {

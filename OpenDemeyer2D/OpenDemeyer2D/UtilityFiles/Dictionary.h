@@ -2,7 +2,6 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
-#include <exception>
 
 /**
  * This is a map that can store any type of value.

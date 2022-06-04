@@ -1,9 +1,6 @@
 ﻿#pragma once
-#include <vector>
-#include <functional>
 #include <tuple>
 #include <deque>
-#include "Delegate.h"
 
 template <typename... EventParameters>
 class EventQueue final

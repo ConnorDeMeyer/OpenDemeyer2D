@@ -7,8 +7,6 @@
 
 #include "EngineIO/Reflection.h"
 
-#include "Components/Transform.h"
-
 class Texture2D;
 class Surface2D;
 class Sound;

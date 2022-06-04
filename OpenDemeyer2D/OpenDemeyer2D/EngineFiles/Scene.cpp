@@ -174,6 +174,7 @@ void Scene::Copy(Scene* originalScene)
 	m_SceneTree.reserve(originalScene->m_SceneTree.size());
 
 	CopyLinker linker{};
+	linker.SetIsSameScene(false);
 
 	for (auto pObject : originalScene->m_SceneTree)
 	{

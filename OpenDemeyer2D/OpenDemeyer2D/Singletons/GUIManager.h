@@ -3,7 +3,6 @@
 #include "UtilityFiles/Singleton.h"
 #include <memory>
 #include <SDL.h>
-#include <glm/glm.hpp>
 #include <chrono>
 #include <unordered_map>
 #include <filesystem>

@@ -5,15 +5,11 @@
 #include <map>
 #include <memory>
 #include <string>
-#include <typeindex>
 #include <thread>
 #include <future>
 #include <mutex>
-#include <functional>
 #include <deque>
 #include <SDL.h>
-#include <cassert>
-#include <iostream>
 #include <filesystem>
 
 #include "UtilityFiles/Singleton.h"

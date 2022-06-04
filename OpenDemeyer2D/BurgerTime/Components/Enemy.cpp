@@ -3,7 +3,6 @@
 #include "StageMovement.h"
 
 #include "Components/SpriteComponent.h"
-#include "Components/RenderComponent.h"
 #include "Components/Transform.h"
 #include "Components/PhysicsComponent.h"
 #include "PeterPepper.h"

@@ -1,7 +1,5 @@
 #pragma once
 #include <SDL.h>
-#include <gl/glew.h>
-#include <string>
 #include <filesystem>
 
 /** Simple RAII container for the sdl texture*/

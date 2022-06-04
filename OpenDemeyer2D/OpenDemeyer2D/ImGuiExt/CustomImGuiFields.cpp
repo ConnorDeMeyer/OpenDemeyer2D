@@ -1,5 +1,7 @@
 #include "CustomImGuiFields.h"
 
+#include "imgui.h"
+
 bool ImGui::CustomInput(const char* label, SDL_Rect& rect)
 {
 	ImGui::Text(label);

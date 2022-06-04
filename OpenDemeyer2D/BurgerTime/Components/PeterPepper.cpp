@@ -4,7 +4,7 @@
 #include "EngineFiles/GameObject.h"
 #include "Components/PhysicsComponent.h"
 #include "Components/SpriteComponent.h"
-#include "Components/RenderComponent.h"
+#include "Components/Transform.h"
 #include "PPSpriteMovement.h"
 #include "StageMovement.h"
 #include "ResourceWrappers/Prefab.h"
@@ -33,16 +33,16 @@ void PeterPepper::BeginPlay()
 			{
 				input->BindControllerAxis(SDL_CONTROLLER_AXIS_LEFTX, [movement](float axis)
 					{
-						if (axis < -0.1)
+						if (axis < -0.1f)
 							movement->Move(movementDirection::left);
-						if (axis > 0.1)
+						if (axis > 0.1f)
 							movement->Move(movementDirection::right);
 					});
 				input->BindControllerAxis(SDL_CONTROLLER_AXIS_LEFTY, [movement](float axis)
 					{
-						if (axis > 0.1)
+						if (axis > 0.1f)
 							movement->Move(movementDirection::down);
-						if (axis < -0.1)
+						if (axis < -0.1f)
 							movement->Move(movementDirection::up);
 					});
 				input->BindControllerDown(SDL_CONTROLLER_BUTTON_A, std::bind(&PeterPepper::ThrowPepper, this));
@@ -106,7 +106,7 @@ void PeterPepper::ThrowPepper()
 		glm::vec2 direction{};
 		if (auto movement = GetComponent<StageMovement>())
 		{
-			movement->GetMovementInput();
+			direction = movement->GetMovementInput();
 		}
 
 		if (direction != glm::vec2{0, 0})

@@ -1,10 +1,8 @@
 #include "TextComponent.h"
 
-#include "EngineFiles/GameObject.h"
 #include "RenderComponent.h"
 #include "ResourceWrappers/Font.h"
 #include "Singletons/ResourceManager.h"
-#include "Singletons/RenderManager.h"
 #include "imgui.h"
 
 

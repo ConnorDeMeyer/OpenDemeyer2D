@@ -3,9 +3,6 @@
 #include "Singletons/SceneManager.h"
 #include "Singletons/ResourceManager.h"
 
-#include "SDL_image.h"
-
-#include <stdexcept>
 #include <gl/glew.h>
 #include <gl/wglew.h>
 

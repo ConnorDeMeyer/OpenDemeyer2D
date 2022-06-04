@@ -1,7 +1,6 @@
 ﻿#include "SpriteComponent.h"
 #include "RenderComponent.h"
 #include "Singletons/ResourceManager.h"
-#include "Singletons/RenderManager.h"
 #include "imgui.h"
 
 

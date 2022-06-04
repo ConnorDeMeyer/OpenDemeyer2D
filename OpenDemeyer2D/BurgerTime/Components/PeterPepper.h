@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "EngineFiles/ComponentBase.h"
-#include "glm/glm.hpp"
 #include "UtilityFiles/Delegate.h"
 
 class Prefab;

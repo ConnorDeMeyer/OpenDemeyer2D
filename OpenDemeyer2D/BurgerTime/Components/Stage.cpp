@@ -4,17 +4,10 @@
 #include "SDL.h"
 #include "Singletons/ResourceManager.h"
 #include "BurgerPiece.h"
-#include "Components/TextureComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/Transform.h"
-#include "Components/InputComponent.h"
-#include "Components/SpriteComponent.h"
 #include "Components/PhysicsComponent.h"
-#include "PPSpriteMovement.h"
 #include "imgui.h"
-#include "PeterPepper.h"
-#include "StageMovement.h"
-#include "EngineFiles/Scene.h"
 
 //constexpr char level1[stageSize]
 //{

@@ -308,6 +308,7 @@ void GameObject::Copy(GameObject* originalObject, CopyLinker* copyLinker)
 	else
 	{
 		CopyLinker linker;
+		linker.SetIsSameScene(m_pScene == originalObject->m_pScene);
 
 		linker.RegisterObject(originalObject, this);
 

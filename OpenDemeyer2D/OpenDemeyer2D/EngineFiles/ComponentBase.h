@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <memory>
-#include <string>
 #include <string_view>
 #include "UtilityFiles/Dictionary.h"
 #include <unordered_map>
@@ -160,6 +159,13 @@ void CopyWeakPtr(const std::weak_ptr<T>& original, std::weak_ptr<T>& copy, CopyL
 	{
 		if (copyLinker && !original.expired())
 		{
+			// copy the same reference if inside the same scene
+			if (copyLinker->IsSameScene())
+			{
+				copy = original;
+			}
+
+			// in case the referenced object was also copied we take the reference from the newly copied object instead of the old one
 			copyLinker->LinkWithNewObject(original.lock()->GetObject(), [&copy, &original](GameObject* obj)
 				{
 					copy = std::reinterpret_pointer_cast<T>(obj->GetComponentById(original.lock()->GetComponentId())->GetWeakReference().lock());
