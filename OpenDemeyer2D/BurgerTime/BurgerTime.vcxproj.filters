@@ -9,8 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BurgerTimeGI.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Components\BurgerPiece.cpp" />
     <ClCompile Include="Components\Enemy.cpp" />
     <ClCompile Include="Components\HealthComponent.cpp" />
@@ -24,7 +22,6 @@
     <ClCompile Include="Components\PepperSpray.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BurgerTimeGI.h" />
     <ClInclude Include="Components\BurgerPiece.h" />
     <ClInclude Include="Components\Enemy.h" />
     <ClInclude Include="Components\HealthComponent.h" />

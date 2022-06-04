@@ -6,7 +6,6 @@
 #define ENGINE Engine::GetInstance()
 
 struct SDL_Window;
-class GameInstance;
 
 class Engine final : public Singleton<Engine>
 {
@@ -18,7 +17,7 @@ public:
 	void Initialize();
 	//void LoadGame() const;
 	void Cleanup();
-	void Run(GameInstance* pGameInstance);
+	void Run();
 
 	float GetDeltaTime() const { return m_DeltaTime; }
 
@@ -65,8 +64,6 @@ private:
 	int m_ResolutionHeight = 480;
 	
 	Dictionary m_EngineSettings;
-
-	GameInstance* m_pGameinstance{};
 };
 
 #pragma region EngineSettings
@@ -89,5 +86,6 @@ private:
 #define OD_RESOURCES_PATH "ResourcesPath"
 #define OD_KEEP_ASPECT_RATIO_EDITOR "KeepAspectRatioEditor"
 #define OD_GAME_TITLE "GameTitle"
+#define OD_GAME_START_SCENE "StartScene"
 
 #pragma endregion

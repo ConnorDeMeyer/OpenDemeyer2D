@@ -22,7 +22,6 @@
 #include "Singletons/GUIManager.h"
 #include "EngineFiles/GameObject.h"
 #include "EngineFiles/Scene.h"
-#include "EngineFiles/GameInstance.h"
 #include "ResourceWrappers/Sound.h"
 #include "EngineIO/CustomSerializers.h"
 
@@ -136,8 +135,6 @@ void Engine::Cleanup()
 	SCENES.Destroy();
 	RESOURCES.Destroy();
 
-	delete m_pGameinstance;
-
 	Mix_CloseAudio();
 
 	SDL_DestroyWindow(m_Window);
@@ -145,12 +142,13 @@ void Engine::Cleanup()
 	SDL_Quit();
 }
 
-void Engine::Run(GameInstance* pGameInstance)
+void Engine::Run()
 {
 	Initialize();
 
-	pGameInstance->LoadGame();
-	m_pGameinstance = pGameInstance;
+	std::string startScenePath;
+	m_EngineSettings.GetData(OD_GAME_START_SCENE, startScenePath);
+
 	{
 		auto& renderer = RENDER;
 		auto& sceneManager = SCENES;
@@ -241,6 +239,7 @@ void Engine::InitializeSettings()
 	m_EngineSettings.Insert(OD_EDITOR_FULLSCREEN, boolean);
 
 	m_EngineSettings.Insert(OD_RESOURCES_PATH, std::string("Data/"));
+	m_EngineSettings.Insert(OD_GAME_START_SCENE, std::string("/"));
 	m_EngineSettings.Insert(OD_GAME_TITLE, std::string("OpenDemeyer2D"));
 
 	// Load the engineconfig.ini file

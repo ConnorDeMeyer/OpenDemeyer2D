@@ -34,24 +34,6 @@
     <ClCompile Include="Components\Transform.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\3rdParty\DearImGui\imgui.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rdParty\DearImGui\imgui_draw.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rdParty\DearImGui\imgui_tables.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rdParty\DearImGui\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Components\SpriteComponent.cpp">
       <Filter>EngineFiles\Components</Filter>
     </ClCompile>
@@ -82,6 +64,13 @@
     <ClCompile Include="ImGuiExt\imgui_helpers.cpp" />
     <ClCompile Include="ImGuiExt\CustomImGuiFields.cpp" />
     <ClCompile Include="EngineFiles\PhysicsInterface.cpp" />
+    <ClCompile Include="ImGui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="ImGui\backends\imgui_impl_sdl.cpp" />
+    <ClCompile Include="ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\imgui_tables.cpp" />
+    <ClCompile Include="ImGui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Transform.h">
@@ -95,33 +84,6 @@
     </ClInclude>
     <ClInclude Include="Components\TextureComponent.h">
       <Filter>EngineFiles\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rdParty\DearImGui\imconfig.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rdParty\DearImGui\imgui.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rdParty\DearImGui\imgui_internal.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rdParty\DearImGui\imstb_rectpack.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rdParty\DearImGui\imstb_textedit.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rdParty\DearImGui\imstb_truetype.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3_loader.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.h">
-      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Components\SpriteComponent.h">
       <Filter>EngineFiles\Components</Filter>
@@ -160,7 +122,6 @@
     <ClInclude Include="Singletons\ResourceManager.h" />
     <ClInclude Include="Singletons\SceneManager.h" />
     <ClInclude Include="EngineFiles\ComponentBase.h" />
-    <ClInclude Include="EngineFiles\GameInstance.h" />
     <ClInclude Include="EngineFiles\GameObject.h" />
     <ClInclude Include="EngineFiles\Scene.h" />
     <ClInclude Include="EngineIO\Reflection.h" />
@@ -177,8 +138,14 @@
     <ClInclude Include="ImGuiExt\FileDetailView.h" />
     <ClInclude Include="EngineFiles\PhysicsInterface.h" />
     <ClInclude Include="ResourceWrappers\Prefab.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="engineconfig.ini" />
+    <ClInclude Include="ImGui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="ImGui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="ImGui\backends\imgui_impl_sdl.h" />
+    <ClInclude Include="ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\imgui.h" />
+    <ClInclude Include="ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\imstb_rectpack.h" />
+    <ClInclude Include="ImGui\imstb_textedit.h" />
+    <ClInclude Include="ImGui\imstb_truetype.h" />
   </ItemGroup>
 </Project>

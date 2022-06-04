@@ -12,10 +12,11 @@ $(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget);
 $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget);
 $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget);
 $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget);
+$(SolutionDir)3rdParty\vld\lib\$(PlatformTarget);
 %(AdditionalLibraryDirectories)
 			</AdditionalLibraryDirectories>
 			<AdditionalDependencies>;
-xinput.lib;
+vld.lib;
 glew32.lib;
 glew32s.lib;
 opengl32.lib;
@@ -32,7 +33,7 @@ SDL2_ttf.lib;
 		<ClCompile>
 			<AdditionalIncludeDirectories>;
 $(SolutionDir)\3rdParty\glew-2.1.0\include;
-$(SolutionDir)\3rdParty\DearImGui;
+$(SolutionDir)\OpenDemeyer2D\ImGui;
 $(SolutionDir)\3rdParty\box2d\include;
 $(SolutionDir)\OpenDemeyer2D;
 $(SolutionDir)\3rdParty\steamworks\public\steam;
@@ -41,6 +42,7 @@ $(SolutionDir)3rdParty\SDL2_ttf\include;
 $(SolutionDir)3rdParty\SDL2_image\include;
 $(SolutionDir)3rdParty\glm;
 $(SolutionDir)3rdParty\SDL2\include;
+$(SolutionDir)3rdParty\vld\include;
 			</AdditionalIncludeDirectories>
 		</ClCompile>
 		<PostBuildEvent>
@@ -48,6 +50,8 @@ $(SolutionDir)3rdParty\SDL2\include;
 xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\Microsoft.DTfW.DHL.manifest $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform)\*.dll $(OutputPath) /Y
 xcopy $(ProjectDir)imgui.ini $(OutputPath) /R /Y

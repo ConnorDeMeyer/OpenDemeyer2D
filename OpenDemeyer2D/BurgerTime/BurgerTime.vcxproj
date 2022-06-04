@@ -102,14 +102,14 @@
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Visual Leak Detector\include;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>OpenDemeyer2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files (x86)\Visual Leak Detector\lib\Win32;$(SolutionDir)lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
@@ -118,6 +118,8 @@ xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) 
 xcopy $(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform)\*.dll $(OutputPath) /Y
+xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\Microsoft.DTfW.DHL.manifest $(OutputPath) /R /Y
 xcopy $(ProjectDir)imgui.ini $(OutputPath) /R /Y
 xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
       <Message>Copied necessary dlls</Message>
@@ -133,7 +135,7 @@ xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Visual Leak Detector\include;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -142,7 +144,7 @@ xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>OpenDemeyer2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files (x86)\Visual Leak Detector\lib\Win32;$(SolutionDir)lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
@@ -151,6 +153,8 @@ xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) 
 xcopy $(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform)\*.dll $(OutputPath) /Y
+xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\Microsoft.DTfW.DHL.manifest $(OutputPath) /R /Y
 xcopy $(ProjectDir)imgui.ini $(OutputPath) /R /Y
 xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
       <Message>Copied necessary dlls</Message>
@@ -164,14 +168,14 @@ xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Visual Leak Detector\include;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>OpenDemeyer2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;$(SolutionDir)lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
@@ -180,6 +184,8 @@ xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) 
 xcopy $(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform)\*.dll $(OutputPath) /Y
+xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\Microsoft.DTfW.DHL.manifest $(OutputPath) /R /Y
 xcopy $(ProjectDir)imgui.ini $(OutputPath) /R /Y
 xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
       <Message>Copied necessary dlls</Message>
@@ -195,7 +201,7 @@ xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
       <ConformanceMode>true</ConformanceMode>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\Visual Leak Detector\include;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -204,7 +210,7 @@ xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>OpenDemeyer2D.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Visual Leak Detector\lib\Win64;$(SolutionDir)lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
@@ -213,13 +219,14 @@ xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) 
 xcopy $(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
 xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform)\*.dll $(OutputPath) /Y
+xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
+xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\Microsoft.DTfW.DHL.manifest $(OutputPath) /R /Y
 xcopy $(ProjectDir)imgui.ini $(OutputPath) /R /Y
 xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
       <Message>Copied necessary dlls</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BurgerTimeGI.cpp" />
     <ClCompile Include="Components\BurgerPiece.cpp" />
     <ClCompile Include="Components\Enemy.cpp" />
     <ClCompile Include="Components\HealthComponent.cpp" />
@@ -230,11 +237,9 @@ xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
     <ClCompile Include="Components\SoundLoaderTest.cpp" />
     <ClCompile Include="Components\Stage.cpp" />
     <ClCompile Include="Components\StageMovement.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Components\PepperSpray.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BurgerTimeGI.h" />
     <ClInclude Include="Components\BurgerPiece.h" />
     <ClInclude Include="Components\Enemy.h" />
     <ClInclude Include="Components\HealthComponent.h" />

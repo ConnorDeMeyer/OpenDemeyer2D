@@ -102,7 +102,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\vld\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
@@ -117,6 +117,10 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -128,7 +132,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\vld\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
@@ -145,6 +149,10 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -154,7 +162,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\vld\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
@@ -171,6 +179,7 @@
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -183,7 +192,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\vld\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
@@ -202,15 +211,10 @@
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.cpp" />
-    <ClCompile Include="..\3rdParty\DearImGui\imgui.cpp" />
-    <ClCompile Include="..\3rdParty\DearImGui\imgui_draw.cpp" />
-    <ClCompile Include="..\3rdParty\DearImGui\imgui_tables.cpp" />
-    <ClCompile Include="..\3rdParty\DearImGui\imgui_widgets.cpp" />
     <ClCompile Include="Components\PhysicsComponent.cpp" />
     <ClCompile Include="Components\InputComponent.cpp" />
     <ClCompile Include="Components\RenderComponent.cpp" />
@@ -225,6 +229,13 @@
     <ClCompile Include="ImGuiExt\CustomImGuiFields.cpp" />
     <ClCompile Include="ImGuiExt\FileDetailView.cpp" />
     <ClCompile Include="ImGuiExt\imgui_helpers.cpp" />
+    <ClCompile Include="ImGui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="ImGui\backends\imgui_impl_sdl.cpp" />
+    <ClCompile Include="ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\imgui_tables.cpp" />
+    <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="EngineIO\Deserializer.cpp" />
     <ClCompile Include="EngineFiles\PhysicsInterface.cpp" />
@@ -236,15 +247,6 @@
     <ClCompile Include="Singletons\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="..\3rdParty\DearImGui\backends\imgui_impl_sdl.h" />
-    <ClInclude Include="..\3rdParty\DearImGui\imconfig.h" />
-    <ClInclude Include="..\3rdParty\DearImGui\imgui.h" />
-    <ClInclude Include="..\3rdParty\DearImGui\imgui_internal.h" />
-    <ClInclude Include="..\3rdParty\DearImGui\imstb_rectpack.h" />
-    <ClInclude Include="..\3rdParty\DearImGui\imstb_textedit.h" />
-    <ClInclude Include="..\3rdParty\DearImGui\imstb_truetype.h" />
     <ClInclude Include="Components\PhysicsComponent.h" />
     <ClInclude Include="Components\InputComponent.h" />
     <ClInclude Include="Components\RenderComponent.h" />
@@ -254,7 +256,6 @@
     <ClInclude Include="Components\TextureComponent.h" />
     <ClInclude Include="Components\Transform.h" />
     <ClInclude Include="EngineFiles\ComponentBase.h" />
-    <ClInclude Include="EngineFiles\GameInstance.h" />
     <ClInclude Include="EngineFiles\GameObject.h" />
     <ClInclude Include="EngineFiles\Scene.h" />
     <ClInclude Include="EngineIO\EngineSettings.h" />
@@ -267,6 +268,15 @@
     <ClInclude Include="ImGuiExt\FileDetailView.h" />
     <ClInclude Include="ImGuiExt\imgui_helpers.h" />
     <ClInclude Include="EngineFiles\PhysicsInterface.h" />
+    <ClInclude Include="ImGui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="ImGui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="ImGui\backends\imgui_impl_sdl.h" />
+    <ClInclude Include="ImGui\imconfig.h" />
+    <ClInclude Include="ImGui\imgui.h" />
+    <ClInclude Include="ImGui\imgui_internal.h" />
+    <ClInclude Include="ImGui\imstb_rectpack.h" />
+    <ClInclude Include="ImGui\imstb_textedit.h" />
+    <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="ResourceWrappers\Font.h" />
     <ClInclude Include="ResourceWrappers\Prefab.h" />
     <ClInclude Include="ResourceWrappers\RenderTarget.h" />
@@ -289,9 +299,6 @@
     <ClInclude Include="UtilityFiles\StateMachine.h" />
     <ClInclude Include="UtilityFiles\Surface2D.h" />
     <ClInclude Include="UtilityFiles\Texture2D.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="engineconfig.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

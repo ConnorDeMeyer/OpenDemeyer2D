@@ -105,11 +105,7 @@ FileDetailView* FileDetailView::FileDetailFactory(const std::filesystem::path& p
 		return new PrefabDetailView(path, RESOURCES.LoadPrefab(path, true));
 
 	if (file == scene)
-	{
-		std::ifstream is(path);
-		Deserializer deserializer{};
-		return new SceneDetailView(path, deserializer.DeserializeScene(is));
-	}
+		return new SceneDetailView(path, nullptr);
 
 	return new EmptyFileDetailView(path);
 }
@@ -307,8 +303,8 @@ SceneDetailView::SceneDetailView(const std::filesystem::path& path, Scene* pScen
 	: FileDetailView(path)
 	, m_Scene{ pScene }
 {
-	m_Scene->PreUpdate(false);
-	m_Scene->AfterUpdate();
+	//m_Scene->PreUpdate(false);
+	//m_Scene->AfterUpdate();
 }
 
 void SceneDetailView::RenderDetails()
