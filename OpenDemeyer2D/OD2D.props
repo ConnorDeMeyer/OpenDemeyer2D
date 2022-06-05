@@ -46,16 +46,15 @@ $(SolutionDir)3rdParty\vld\include;
 			</AdditionalIncludeDirectories>
 		</ClCompile>
 		<PostBuildEvent>
-			<Command>xcopy $(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget)\SDL2.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\vld\bin\$(PlatformTarget)\Microsoft.DTfW.DHL.manifest $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform)\*.dll $(OutputPath) /R /Y
-xcopy $(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform)\*.dll $(OutputPath) /Y
-xcopy $(ProjectDir)imgui.ini $(OutputPath) /R /Y
-xcopy $(ProjectDir)Engineconfig.ini $(OutputPath) /R /Y</Command>
+			<Command>robocopy "$(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget) " "$(OutputPath) " SDL2.dll
+robocopy "$(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget) " "$(OutputPath) " *.dll
+robocopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget) " "$(OutputPath) " *.dll
+robocopy "$(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget) " "$(OutputPath) " *.dll
+robocopy "$(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform) " "$(OutputPath) " *.dll
+robocopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform) " "$(OutputPath) " *.dll
+robocopy "$(SolutionDir)3rdParty\vld\bin\$(PlatformTarget) " "$(OutputPath) " *.dll
+robocopy "$(SolutionDir)3rdParty\vld\bin\$(PlatformTarget) " "$(OutputPath) " Microsoft.DTfW.DHL.manifest
+robocopy "$(ProjectDir) " "$(OutputPath) " *.ini</Command>
 		</PostBuildEvent>
 	</ItemDefinitionGroup>
 	<ItemGroup />
