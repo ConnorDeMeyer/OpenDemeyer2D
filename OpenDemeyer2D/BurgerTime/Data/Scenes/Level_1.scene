@@ -1,4 +1,4 @@
-Test_Scene
+Level_1
 {
 1 1up
 class TextPixelComponent
@@ -67,16 +67,16 @@ pivot 1 0
 {
 }
 4 score
+class Score
+{
+SheetTexture "Bitmaps\\FullSheet.png"
+}
 class TextPixelComponent
 {
 FontSurface "Bitmaps/Text.png"
 FontColor 255 255 255 255
 CharSize 8
 Text 0
-}
-class Score
-{
-SheetTexture "Bitmaps\\FullSheet.png"
 }
 class Transform
 {
@@ -125,6 +125,10 @@ position 104 3
 scale 1 1
 rotation 0
 }
+class PeterPepper
+{
+PepperPrefab "Data\\Prefabs\\Pepper.gobj"
+}
 class PhysicsComponent
 {
 Body 0 0 0 0 1 0 2
@@ -135,9 +139,11 @@ Shapes {
 2 4 -6 1 6 1 6 13 -6 13 
 }
 }
-class PeterPepper
+class RenderComponent
 {
-PepperPrefab "Data\\Prefabs\\Pepper.gobj"
+renderLayer 2
+sourceRect 0 0 16 16
+pivot 0.5 1
 }
 class SpriteComponent
 {
@@ -147,12 +153,6 @@ totalFrames 3
 frameTime 0.125
 loop 1
 paused 0
-}
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 0 16 16
-pivot 0.5 1
 }
 class InputComponent
 {
@@ -2351,6 +2351,12 @@ position -16 3
 scale 1 1
 rotation 0
 }
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 32 16 16
+pivot 0.5 1
+}
 class SpriteComponent
 {
 frameDimension 16 16
@@ -2359,12 +2365,6 @@ totalFrames 1
 frameTime 0.15
 loop 1
 paused 0
-}
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 32 16 16
-pivot 0.5 1
 }
 class TextureComponent
 {
@@ -2400,12 +2400,6 @@ position 224 3
 scale 1 1
 rotation 0
 }
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 64 16 16
-pivot 0.5 1
-}
 class SpriteComponent
 {
 frameDimension 16 16
@@ -2414,6 +2408,12 @@ totalFrames 1
 frameTime 0.15
 loop 1
 paused 0
+}
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 64 16 16
+pivot 0.5 1
 }
 class TextureComponent
 {
@@ -2449,12 +2449,6 @@ position 224 147
 scale 1 1
 rotation 0
 }
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 32 16 16
-pivot 0.5 1
-}
 class SpriteComponent
 {
 frameDimension 16 16
@@ -2463,6 +2457,12 @@ totalFrames 1
 frameTime 0.15
 loop 1
 paused 0
+}
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 32 16 16
+pivot 0.5 1
 }
 class TextureComponent
 {
@@ -2498,6 +2498,12 @@ position -16 147
 scale 1 1
 rotation 0
 }
+class RenderComponent
+{
+renderLayer 2
+sourceRect 0 96 16 16
+pivot 0.5 1
+}
 class SpriteComponent
 {
 frameDimension 16 16
@@ -2506,12 +2512,6 @@ totalFrames 1
 frameTime 0.15
 loop 1
 paused 0
-}
-class RenderComponent
-{
-renderLayer 2
-sourceRect 0 96 16 16
-pivot 0.5 1
 }
 class TextureComponent
 {

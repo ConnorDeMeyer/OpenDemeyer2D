@@ -81,6 +81,15 @@ void Engine::Initialize()
 	/**
 	* SDL_MIXER
 	*/
+	
+	// load support for the OGG and MOD sample/music formats
+	int flags = MIX_INIT_OGG | MIX_INIT_MOD;
+	int initialized = Mix_Init(flags);
+	if ((initialized & flags) != flags) {
+		printf("Mix_Init: Failed to init required ogg and mod support!\n");
+		printf("Mix_Init: %s\n", Mix_GetError());
+		// handle error
+	}
 
 	// open 44.1KHz, signed 16bit, system byte order,
 	//      stereo audio, using 1024 byte chunks
@@ -120,12 +129,17 @@ void Engine::Initialize()
 	m_EngineSettings.GetData(OD_RESOURCES_PATH, dataPath);
 	RESOURCES.Init(dataPath);
 
+#ifdef _DEBUG
 	GUI.Init(m_Window);
+#endif
 }
 
 void Engine::Cleanup()
 {
+#ifdef _DEBUG
 	GUI.Destroy();
+#endif
+
 	RENDER.Destroy();
 	SCENES.Destroy();
 	RESOURCES.Destroy();
@@ -143,6 +157,14 @@ void Engine::Run()
 
 	std::string startScenePath;
 	m_EngineSettings.GetData(OD_GAME_START_SCENE, startScenePath);
+	auto startScene = RESOURCES.LoadScene(startScenePath);
+
+#ifdef _DEBUG
+	SCENES.SetActiveScene(startScene);
+#else
+	SCENES.PlayScene(startScene);
+#endif
+
 
 	{
 		auto& renderer = RENDER;

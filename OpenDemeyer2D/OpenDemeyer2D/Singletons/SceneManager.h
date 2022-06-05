@@ -46,6 +46,8 @@ public:
 
 	const std::vector<Scene*>& GetScenes() const { return m_Scenes; }
 
+	void AddScene(Scene* pScene);
+
 	void SetActiveScene(const std::string& name);
 
 	void SetActiveScene(Scene* pScene);

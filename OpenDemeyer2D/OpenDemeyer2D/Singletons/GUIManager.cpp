@@ -1,3 +1,5 @@
+#ifdef _DEBUG
+
 #include "Singletons/GUIManager.h"
 #include <stack>
 
@@ -15,6 +17,7 @@
 #include "Singletons/ResourceManager.h"
 #include "Singletons/SceneManager.h"
 #include "Singletons/RenderManager.h"
+#include "Singletons/InputManager.h"
 
 #include "ResourceWrappers/RenderTarget.h"
 #include "ResourceWrappers/Prefab.h"
@@ -81,6 +84,14 @@ void GUIManager::Init(SDL_Window* window)
 		m_SettingsInputBuffer.insert(std::make_pair(key, buffer));
 
 		++it;
+	}
+
+	// bind inputs to the input manager
+	{
+		INPUT.GetKeyDownActions(SDLK_UP)	.BindFunction(std::bind(&GUIManager::ManipulateSelectedObject, this, glm::vec2{ 0,1 }));
+		INPUT.GetKeyDownActions(SDLK_DOWN)	.BindFunction(std::bind(&GUIManager::ManipulateSelectedObject, this, glm::vec2{ 0,-1 }));
+		INPUT.GetKeyDownActions(SDLK_RIGHT)	.BindFunction(std::bind(&GUIManager::ManipulateSelectedObject, this, glm::vec2{ 1,0 }));
+		INPUT.GetKeyDownActions(SDLK_LEFT)	.BindFunction(std::bind(&GUIManager::ManipulateSelectedObject, this, glm::vec2{ -1,0 }));
 	}
 }
 
@@ -252,6 +263,23 @@ void GUIManager::RenderHitboxes() const
 
 }
 
+void GUIManager::ManipulateSelectedObject(const glm::vec2& moveDirection)
+{
+	if (auto object = m_pSelectedObject.lock())
+	{
+		auto transform = object->GetTransform();
+		auto state = SDL_GetKeyboardState(nullptr);
+		glm::vec2 translation{ moveDirection };
+		
+		if (state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT])
+		{
+			translation *= 5;
+		}
+
+		transform->Move(translation);
+	}
+}
+
 void GUIManager::RenderImGuiObjectInfo()
 {
 	ImGui::Begin("Component Details");
@@ -328,16 +356,33 @@ void GUIManager::RenderImGuiObjectInfo()
 	ImGui::End();
 }
 
-void GUIManager::RenderImGuiObjectLocation()
+void CombineBoundingBoxes(SDL_Rect& original, const SDL_Rect& additive)
 {
-	if (!m_pSelectedObject.expired())
+	int originalX2{ original.x + original.w };
+	int originalY2{ original.y + original.h };
+	int additiveX2{ additive.x + additive.w };
+	int additiveY2{ additive.y + additive.h };
+
+	int maxX2{ std::max(originalX2, additiveX2) };
+	int maxY2{ std::max(originalY2, additiveY2) };
+
+	original.x = std::min(original.x, additive.x);
+	original.y = std::min(original.y, additive.y);
+
+	original.w = maxX2 - original.x;
+	original.h = maxY2 - original.y;
+}
+
+constexpr SDL_Color BoundingBoxRenderColor{ 25,255,25,175 };
+
+void RenderChildBoundingBox(const GameObject* pObject)
+{
+	for (auto child : pObject->GetChildren())
 	{
-		// Draw bounding box
-		auto pObject = m_pSelectedObject.lock();
-		if (auto pRenderComp = pObject->GetRenderComponent())
+		if (auto pRenderComp = child->GetRenderComponent())
 		{
 			auto& renderer = RENDER;
-			renderer.SetColor({ 25,255,25,175 });
+			renderer.SetColor(BoundingBoxRenderColor);
 
 			glm::vec2 vertices[4];
 			pRenderComp->GetWorldRect(vertices);
@@ -348,13 +393,37 @@ void GUIManager::RenderImGuiObjectLocation()
 	}
 }
 
+void GUIManager::RenderImGuiObjectLocation()
+{
+	if (!m_pSelectedObject.expired())
+	{
+		// Draw bounding box
+		auto pObject = m_pSelectedObject.lock();
+		if (auto pRenderComp = pObject->GetRenderComponent())
+		{
+			auto& renderer = RENDER;
+			renderer.SetColor(BoundingBoxRenderColor);
+
+			glm::vec2 vertices[4];
+			pRenderComp->GetWorldRect(vertices);
+
+			renderer.SetRenderTarget(renderer.GetRenderLayers().back());
+			renderer.RenderPolygon(vertices, 4, false);
+		}
+		else
+		{
+			RenderChildBoundingBox(pObject.get());
+		}
+	}
+}
+
 void GUIManager::RenderImGuiMainMenu()
 {
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Save Game", "CTRL+S"))
+			if (ImGui::MenuItem("Save Scene", "CTRL+S", false, !SCENES.GetActiveScene()->GetFilePath().empty()))
 			{
 				ENGINE.SaveGame();
 			}
@@ -863,10 +932,14 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 	
 	bool beginTab = ImGui::BeginTabItem(pScene->GetName().c_str());
 
+	if (ImGui::IsItemClicked())
+		SCENES.SetActiveScene(pScene);
+
 	// POPUP
 	{
 		bool changeName{};
 		bool saveScene{};
+		bool saveSceneAs{};
 		static char buffer[32]{};
 
 		if (ImGui::BeginPopupContextItem("Scene settings"))
@@ -884,11 +957,11 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 				ImGui::CloseCurrentPopup();
 			}
 
-			if (ImGui::MenuItem("Set as active"))
-			{
-				SCENES.SetActiveScene(pScene);
-				ImGui::CloseCurrentPopup();
-			}
+			//if (ImGui::MenuItem("Set as active"))
+			//{
+			//	SCENES.SetActiveScene(pScene);
+			//	ImGui::CloseCurrentPopup();
+			//}
 
 			if (ImGui::MenuItem("Add GameObject"))
 			{
@@ -901,14 +974,39 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 				saveScene = true;
 			}
 
+			if (ImGui::MenuItem("Save Scene As"))
+			{
+				saveSceneAs = true;
+			}
+
+			if (ImGui::MenuItem("Duplicate"))
+			{
+				auto newScene = new Scene(pScene->GetName() + " - Copy");
+				newScene->Copy(pScene);
+				SCENES.AddScene(newScene);
+				ImGui::CloseCurrentPopup();
+			}
+
 			ImGui::EndPopup();
 		}
 
 		if (changeName)
 			ImGui::OpenPopup("Change Scene Name");
 
+		if (saveSceneAs)
+			ImGui::OpenPopup("Save Scene As");
+
 		if (saveScene)
-			ImGui::OpenPopup("Save Scene");
+		{
+			if (pScene->GetFilePath().empty())
+			{
+				saveSceneAs = true;
+			}
+			else
+			{
+				RESOURCES.SaveScene(pScene);
+			}
+		}
 
 		if (ImGui::BeginPopupModal("Change Scene Name", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
@@ -925,7 +1023,7 @@ void GUIManager::RenderImGuiScene(Scene* pScene)
 			ImGui::EndPopup();
 		}
 
-		if (ImGui::BeginPopupModal("Save Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		if (ImGui::BeginPopupModal("Save Scene As", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::Text("Select directory");
 
@@ -1076,7 +1174,7 @@ void SearchObjectForHit(const glm::vec2& point, GameObject* ob, std::vector<Game
 void GUIManager::SetSelectedObject(GameObject* pObject)
 {
 	auto now = std::chrono::high_resolution_clock::now();
-	if ((now - m_LastClickTime).count() > 2'000'000)
+	if (std::chrono::duration_cast<std::chrono::milliseconds>(now - m_LastClickTime).count() > 200)
 	{
 		m_LastClickTime = now;
 		if (pObject)
@@ -1089,6 +1187,54 @@ void GUIManager::SetSelectedObject(GameObject* pObject)
 		else
 			m_pSelectedObject = std::weak_ptr<GameObject>();
 	}
+}
+
+GameObject* ObjectParentTreeNode(GameObject* ob)
+{
+	bool treeNode = ImGui::TreeNodeEx(ob->GetDisplayName().c_str(),
+		(ImGuiTreeNodeFlags_Leaf * !ob->GetParent()) |
+		(ImGuiTreeNodeFlags_OpenOnArrow));
+	if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+		if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+		{
+			if (treeNode)
+			{
+				ImGui::TreePop();
+			}
+			return ob;
+		}
+
+	if (treeNode)
+	{
+		if (ob->GetParent())
+		{
+			if ( auto result = ObjectParentTreeNode(ob->GetParent()))
+			{
+				ImGui::TreePop();
+				return result;
+			}
+		}
+		ImGui::TreePop();
+	}
+
+	return nullptr;
+}
+
+void RemoveParentsFromVector(std::vector<GameObject*>& vector)
+{
+	ODArray copy{ vector };
+
+	for (auto ob : vector)
+	{
+		GameObject* pCurrent{ ob->GetParent() };
+		while (pCurrent)
+		{
+			copy.SwapRemove(pCurrent);
+			pCurrent = pCurrent->GetParent();
+		}
+	}
+
+	vector = copy;
 }
 
 void GUIManager::RenderImGuiGameWindow()
@@ -1152,7 +1298,7 @@ void GUIManager::RenderImGuiGameWindow()
 #pragma warning(default : 4312)
 
 	// OBJECT SELECTOR
-	if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
+	if (ImGui::IsMouseReleased(ImGuiMouseButton_Left) && ImGui::IsItemHovered())
 	{
 		glm::vec2 mousePos = ImGui::GetMousePos();
 		mousePos -= glm::vec2(pos);
@@ -1187,6 +1333,7 @@ void GUIManager::RenderImGuiGameWindow()
 		for (GameObject* pObject : sceneTree)
 		{
 			SearchObjectForHit(mousePos, pObject, m_HitObjects);
+			RemoveParentsFromVector(m_HitObjects);
 		}
 
 		if (!m_HitObjects.empty())
@@ -1199,10 +1346,10 @@ void GUIManager::RenderImGuiGameWindow()
 	{
 		for (auto ob : m_HitObjects)
 		{
-			ImGui::MenuItem(ob->GetDisplayName().c_str());
-			if (ImGui::IsItemClicked())
+			if (auto selectedOb = ObjectParentTreeNode(ob))
 			{
-				SetSelectedObject(ob);
+				ImGui::CloseCurrentPopup();
+				SetSelectedObject(selectedOb);
 			}
 		}
 		ImGui::EndPopup();
@@ -1210,3 +1357,6 @@ void GUIManager::RenderImGuiGameWindow()
 
 	ImGui::End();
 }
+
+
+#endif

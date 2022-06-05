@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <functional>
+#include <filesystem>
 
 #include "UtilityFiles/ODArray.h"
 
@@ -20,6 +21,7 @@ class Scene final
 	friend Scene& SceneManager::CreateScene(const std::string& name);
 
 	friend class GameObject;
+	friend class ResourceManager;
 
 public:
 
@@ -98,6 +100,8 @@ public:
 	/** Returns the class responsible for managing the Physics API for this scene*/
 	inline PhysicsInterface* GetPhysicsInterface() const { return m_PhysicsInterface.get(); }
 
+	inline const std::filesystem::path& GetFilePath() const { return m_FilePath; }
+
 private:
 
 	void RegisterObject(GameObject* pObject);
@@ -124,6 +128,8 @@ private:
 	std::unordered_map<uint32, GameObject*> m_RegisteredObjects;
 
 	std::unique_ptr<PhysicsInterface> m_PhysicsInterface;
+
+	std::filesystem::path m_FilePath;
 
 	bool m_HasBegunPlay{};
 

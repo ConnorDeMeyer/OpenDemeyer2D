@@ -8,7 +8,8 @@ class ODArray : public std::vector<T>
 {
 public:
 
-	ODArray() : std::vector<T>() {};
+	ODArray() : std::vector<T>() {}
+	ODArray(const std::vector<T>& other) : std::vector<T>(other) {}
 
 	inline void SwapRemove(size_t position)
 	{

@@ -13,7 +13,9 @@ void InputManager::ProcessInput()
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
 
+#ifdef _DEBUG
 		ImGui_ImplSDL2_ProcessEvent(&e);
+#endif
 
 		if (e.type == SDL_KEYDOWN) {
 			if (e.key.repeat) break;
@@ -135,7 +137,11 @@ void InputManager::HandleKeyDown(const SDL_Event& e)
 	{
 		it->second.BroadCast();
 	}
-	m_PressedKeys.emplace_back(e.key.keysym.sym);
+
+	// add it to the list of pressed keys if it isn't in there yet
+	auto& key = e.key.keysym.sym;
+	if (std::find(m_PressedKeys.begin(), m_PressedKeys.end(), key) == m_PressedKeys.end())
+		m_PressedKeys.emplace_back(key);
 }
 
 void InputManager::HandleKeyUp(const SDL_Event& e)

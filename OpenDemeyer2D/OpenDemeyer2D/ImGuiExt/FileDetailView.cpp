@@ -32,7 +32,7 @@ std::string_view GetFileTypeFromExtension(const std::string extention)
 
 		{".voc"		, music},
 		{".flac"	, music},
-		{".off"		, music},
+		{".ogg"		, music},
 		{".mp3"		, music},
 		{".midi"	, music},
 		{".mid"		, music},
@@ -105,7 +105,7 @@ FileDetailView* FileDetailView::FileDetailFactory(const std::filesystem::path& p
 		return new PrefabDetailView(path, RESOURCES.LoadPrefab(path, true));
 
 	if (file == scene)
-		return new SceneDetailView(path, nullptr);
+		return new SceneDetailView(path);
 
 	return new EmptyFileDetailView(path);
 }
@@ -119,7 +119,7 @@ void ImageDetailView::RenderDetails()
 	if (!m_Texture)
 		return;
 
-	ImGui::Text("Path:   [%s]", m_Texture->GetFilePath().c_str());
+	ImGui::TextWrapped("Path:   [%s]", m_Texture->GetFilePath().c_str());
 	ImGui::Text("Width:  [%d]", m_Texture->GetWidth());
 	ImGui::Text("Height: [%d]", m_Texture->GetHeight());
 
@@ -154,7 +154,7 @@ void MusicDetailView::RenderDetails()
 	if (!m_Music)
 		return;
 
-	ImGui::Text("Path: [%s]", m_Music->GetFilePath().c_str());
+	ImGui::TextWrapped("Path: [%s]", m_Music->GetFilePath().c_str());
 
 	if (ImGui::Button("Play"))
 	{
@@ -203,7 +203,7 @@ void SoundDetailView::RenderDetails()
 	if (!m_Sound)
 		return;
 
-	ImGui::Text("Path: [%s]", m_Sound->GetFilePath().c_str());
+	ImGui::TextWrapped("Path: [%s]", m_Sound->GetFilePath().c_str());
 
 	if (ImGui::Button("Play"))
 	{
@@ -299,9 +299,8 @@ size_t PrefabDetailView::GetPackageSize()
 // SCENE DETAIL VIEW
 // ***********************************************
 
-SceneDetailView::SceneDetailView(const std::filesystem::path& path, Scene* pScene)
+SceneDetailView::SceneDetailView(const std::filesystem::path& path)
 	: FileDetailView(path)
-	, m_Scene{ pScene }
 {
 	//m_Scene->PreUpdate(false);
 	//m_Scene->AfterUpdate();
@@ -309,13 +308,15 @@ SceneDetailView::SceneDetailView(const std::filesystem::path& path, Scene* pScen
 
 void SceneDetailView::RenderDetails()
 {
-	if (m_Scene)
+	if (ImGui::Button("Open Scene"))
 	{
-		ImGui::Text(m_Scene->GetName().c_str());
-		ImGui::Separator();
-		for (auto object : m_Scene->GetSceneTree())
+		try
 		{
-			RenderGameObject(object);
+			SCENES.SetActiveScene(RESOURCES.LoadScene(m_Path));
+		}
+		catch (std::exception&)
+		{
+			
 		}
 	}
 }
@@ -327,10 +328,10 @@ constexpr std::string_view SceneDetailView::GetFileClass()
 
 void* SceneDetailView::GetPackage()
 {
-	return &m_Scene;
+	return &m_Path;
 }
 
 size_t SceneDetailView::GetPackageSize()
 {
-	return sizeof(Scene*);
+	return sizeof(std::filesystem::path*);
 }

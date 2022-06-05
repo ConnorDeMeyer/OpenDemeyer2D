@@ -1,4 +1,5 @@
-﻿#include "RenderManager.h"
+﻿
+#include "RenderManager.h"
 
 #include "Singletons/SceneManager.h"
 #include "Singletons/ResourceManager.h"
@@ -110,8 +111,10 @@ void RenderManager::Render()
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
+#ifdef _DEBUG
 	auto& gui = GUI;
 	gui.BeginGUI();
+#endif
 
 	SetRenderTarget(m_RenderLayers[0]); {
 	glPushMatrix();
@@ -122,13 +125,20 @@ void RenderManager::Render()
 
 		SCENES.Render();
 
+#ifdef _DEBUG
 		gui.RenderGUIOnGame();
+#endif
 
 	glPopMatrix();
 	} SetRenderTargetScreen();
 
+#ifdef _DEBUG // Draw to GUI ViewPort
 	gui.RenderGUI();
 	gui.EndGUI();
+#else // Draw to screen
+	for (auto& target : m_RenderLayers)
+		RenderTexture(target, glm::vec2{ 0,0 }, { 1,1 }, 0, { 1,1 });
+#endif
 
 	for (auto& call : m_PostDrawGLCalls)
 		call();
@@ -335,3 +345,4 @@ void RenderManager::RenderEllipse(const glm::vec2& center, const glm::vec2& radi
 	}
 	glEnd();
 }
+

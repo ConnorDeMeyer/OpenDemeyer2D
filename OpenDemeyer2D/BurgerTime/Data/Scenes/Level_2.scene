@@ -1,5 +1,4 @@
-{
-Test_Scene
+Level_2
 {
 1 1up
 class TextPixelComponent
@@ -109,7 +108,7 @@ pivot 1 1
 class Stage
 {
 LevelLayout {
-1 1 1 1 1 1 1 1 1 2 0 2 2 2 0 2 0 2 3 1 3 2 3 1 3 1 3 0 2 3 3 3 2 2 0 2 1 3 3 0 2 2 3 1 3 2 2 3 1 3 3 3 2 0 2 2 2 0 2 0 3 3 1 3 3 3 1 3 1 3 2 2 2 0 2 0 2 0 2 2 2 3 1 3 1 3 1 3 3 3 
+1 1 1 1 1 1 1 1 1 3 3 3 3 3 2 2 2 2 3 3 3 2 3 2 3 2 3 2 2 3 3 3 2 3 1 3 3 3 3 3 3 3 3 1 3 0 0 3 1 3 1 3 0 0 0 0 2 0 3 1 3 0 0 0 0 3 1 3 1 3 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 3 0 0 0 0 
 }
 }
 {
@@ -170,7 +169,7 @@ Texture2D "Bitmaps\\FullSheet.png"
 7 BurgerPiece
 class Transform
 {
-position 32 117
+position 32 149
 scale 1 1
 rotation 0
 }
@@ -301,7 +300,7 @@ Shapes {
 12 BurgerPiece
 class Transform
 {
-position 32 85
+position 32 133
 scale 1 1
 rotation 0
 }
@@ -432,13 +431,13 @@ Shapes {
 17 BurgerPiece
 class Transform
 {
-position 32 37
+position 32 117
 scale 1 1
 rotation 0
 }
 class BurgerPiece
 {
-type 3
+type 2
 Stage 5
 stackPos 1
 }
@@ -453,7 +452,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 112 72 8 8
+sourceRect 112 64 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -482,7 +481,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 120 72 8 8
+sourceRect 120 64 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -511,7 +510,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 128 72 8 8
+sourceRect 128 64 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -540,7 +539,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 136 72 8 8
+sourceRect 136 64 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -563,7 +562,7 @@ Shapes {
 22 BurgerPiece
 class Transform
 {
-position 32 5
+position 32 84
 scale 1 1
 rotation 0
 }
@@ -694,7 +693,7 @@ Shapes {
 27 BurgerPiece
 class Transform
 {
-position 80 5
+position 80 36
 scale 1 1
 rotation 0
 }
@@ -825,7 +824,7 @@ Shapes {
 32 BurgerPiece
 class Transform
 {
-position 128 5
+position 128 36
 scale 1 1
 rotation 0
 }
@@ -956,7 +955,7 @@ Shapes {
 37 BurgerPiece
 class Transform
 {
-position 176 53
+position 176 84
 scale 1 1
 rotation 0
 }
@@ -1611,7 +1610,7 @@ Shapes {
 62 BurgerPiece
 class Transform
 {
-position 176 85
+position 176 101
 scale 1 1
 rotation 0
 }
@@ -1742,13 +1741,13 @@ Shapes {
 67 BurgerPiece
 class Transform
 {
-position 128 117
+position 128 84
 scale 1 1
 rotation 0
 }
 class BurgerPiece
 {
-type 5
+type 4
 Stage 5
 stackPos 2
 }
@@ -1763,7 +1762,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 112 88 8 8
+sourceRect 112 80 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -1792,7 +1791,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 120 88 8 8
+sourceRect 120 80 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -1821,7 +1820,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 128 88 8 8
+sourceRect 128 80 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -1850,7 +1849,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 136 88 8 8
+sourceRect 136 80 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -1873,13 +1872,13 @@ Shapes {
 72 BurgerPiece
 class Transform
 {
-position 80 69
+position 80 132
 scale 1 1
 rotation 0
 }
 class BurgerPiece
 {
-type 5
+type 2
 Stage 5
 stackPos 2
 }
@@ -1894,7 +1893,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 112 88 8 8
+sourceRect 112 64 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -1923,7 +1922,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 120 88 8 8
+sourceRect 120 64 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -1952,7 +1951,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 128 88 8 8
+sourceRect 128 64 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -1981,7 +1980,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 136 88 8 8
+sourceRect 136 64 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -2004,7 +2003,7 @@ Shapes {
 77 BurgerPiece
 class Transform
 {
-position 128 69
+position 128 52
 scale 1 1
 rotation 0
 }
@@ -2135,13 +2134,13 @@ Shapes {
 82 BurgerPiece
 class Transform
 {
-position 80 37
+position 80 101
 scale 1 1
 rotation 0
 }
 class BurgerPiece
 {
-type 3
+type 5
 Stage 5
 stackPos 1
 }
@@ -2156,7 +2155,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 112 72 8 8
+sourceRect 112 88 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -2185,7 +2184,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 120 72 8 8
+sourceRect 120 88 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -2214,7 +2213,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 128 72 8 8
+sourceRect 128 88 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -2243,7 +2242,7 @@ rotation 0
 class RenderComponent
 {
 renderLayer 1
-sourceRect 136 72 8 8
+sourceRect 136 88 8 8
 pivot 0.5 0.5
 }
 class TextureComponent
@@ -2348,7 +2347,7 @@ HorSpeed 24
 }
 class Transform
 {
-position -16 3
+position -16 83
 scale 1 1
 rotation 0
 }
@@ -2397,7 +2396,7 @@ HorSpeed 28
 }
 class Transform
 {
-position 224 3
+position 225 83
 scale 1 1
 rotation 0
 }
@@ -2642,6 +2641,5 @@ sourceRect 0 0 8 8
 pivot 0 0
 }
 {
-}
 }
 }

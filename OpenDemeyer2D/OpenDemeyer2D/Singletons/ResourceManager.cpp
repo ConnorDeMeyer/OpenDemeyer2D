@@ -60,6 +60,7 @@ void ResourceManager::Init(const path& dataPath)
 	m_SurfaceLoaderThread = std::jthread(&ResourceManager::SurfaceLoaderThread, this);
 	m_SoundLoaderThread = std::jthread(&ResourceManager::SoundLoaderThread, this);
 	m_MusicLoaderThread = std::jthread(&ResourceManager::MusicLoaderThread, this);
+	m_PrefabLoaderThread = std::jthread(&ResourceManager::PrefabLoaderThread, this);
 
 	LoadFilePaths();
 
@@ -542,16 +543,36 @@ void ResourceManager::LoadFilePaths()
 	}
 }
 
-path ResourceManager::GetfinalPath(const std::filesystem::path& inputPath)
+path ResourceManager::GetfinalPath(const path& inputPath)
 {
-	path finalPath{};
-
 	if (!inputPath.is_absolute() && (*inputPath.begin() != m_DataPath))
-		finalPath = m_DataPath / inputPath;
-	else
-		finalPath = inputPath;
+		return m_DataPath / inputPath;
+	
+	return inputPath;
+}
 
-	return finalPath;
+std::filesystem::path ResourceManager::GetRelativePath(const path& inputPath)
+{
+	if (!inputPath.is_absolute() && (*inputPath.begin() == m_DataPath))
+	{
+		path newPath{};
+		for (auto it{++inputPath.begin()}; it != inputPath.end(); ++it)
+		{
+			newPath /= *it;
+		}
+		return newPath;
+	}
+
+	return inputPath;
+}
+
+Scene* ResourceManager::LoadScene(const path& file)
+{
+	Deserializer deserializer;
+	auto stream = std::ifstream(GetfinalPath(file));
+	auto scene = deserializer.DeserializeScene(stream);
+	scene->m_FilePath = GetRelativePath(file);
+	return scene;
 }
 
 void ResourceManager::DeleteDirectory(Directory* dir)
@@ -598,19 +619,39 @@ void ResourceManager::SaveGameObject(GameObject* pGameObject, path& outPutPath)
 	dir->Files.emplace_back(new PrefabDetailView(outPutPath, std::shared_ptr<Prefab>(new Prefab(newGo))));
 }
 
-void ResourceManager::SaveScene(Scene* pScene, path& outPutPath)
+void ResourceManager::SaveScene(Scene* pScene, const path& outPutPath)
 {
-	if (outPutPath.extension() != ".scene")
-		outPutPath.replace_extension("");
-	if (!outPutPath.has_extension())
-		outPutPath += ".scene";
+	auto finalPath = GetfinalPath(outPutPath);
 
-	auto of = std::ofstream(outPutPath);
+	if (finalPath.extension() != ".scene")
+		finalPath.replace_extension("");
+	if (!finalPath.has_extension())
+		finalPath += ".scene";
+
+	auto of = std::ofstream(finalPath);
+
+	// change the name of the scene
+	pScene->ChangeName(outPutPath.stem().string());
 
 	pScene->Serialize(of);
 
-	auto dir = GetDirectory(outPutPath);
-	dir->Files.emplace_back(new SceneDetailView(outPutPath, pScene));
+	auto dir = GetDirectory(finalPath);
+
+	for (auto& file : dir->Files)
+	{
+		if (file->GetPath() == finalPath)
+			return;
+	}
+
+	// save a new file if the original was not found
+	dir->Files.emplace_back(new SceneDetailView(outPutPath));
+}
+
+void ResourceManager::SaveScene(Scene* pScene)
+{
+	assert(!pScene->m_FilePath.empty());
+
+	SaveScene(pScene, pScene->m_FilePath);
 }
 
 Directory* ResourceManager::GetDirectory(const path& path)

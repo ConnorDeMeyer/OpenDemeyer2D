@@ -149,7 +149,7 @@ class SceneDetailView final : public FileDetailView
 {
 public:
 
-	SceneDetailView(const std::filesystem::path& path, Scene* scene);
+	SceneDetailView(const std::filesystem::path& path);
 
 	virtual ~SceneDetailView() = default;
 
@@ -159,7 +159,6 @@ public:
 	size_t GetPackageSize() override;
 
 private:
-
-	std::shared_ptr<Scene> m_Scene;
+	
 
 };

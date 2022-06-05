@@ -76,6 +76,19 @@ Scene* SceneManager::GetScene(const std::string& name) const
 	return nullptr;
 }
 
+void SceneManager::AddScene(Scene* pScene)
+{
+	if (!pScene || pScene == m_GameScene.get()) return;
+
+	for (auto scene : m_Scenes)
+	{
+		if (pScene == scene)
+			return; // if the scene is already in there
+	}
+
+	m_Scenes.emplace_back(pScene);
+}
+
 void SceneManager::SetActiveScene(const std::string& name)
 {
 	for (Scene* pScene : m_Scenes)
@@ -86,9 +99,17 @@ void SceneManager::SetActiveScene(const std::string& name)
 
 void SceneManager::SetActiveScene(Scene* pScene)
 {
-	if (!pScene) return;
+	if (!pScene || pScene == m_GameScene.get()) return;
 
 	m_pActiveScene = pScene;
+
+	for (auto scene : m_Scenes)
+	{
+		if (pScene == scene)
+			return; // if the scene is already in there
+	}
+
+	m_Scenes.emplace_back(pScene);
 }
 
 Scene* SceneManager::GetActiveScene() const
@@ -150,19 +171,22 @@ void SceneManager::PlayScene(Scene* pScene)
 	if (m_GameScene)
 		return;
 
+#ifdef _DEBUG
 	Scene* sceneToPlay = pScene ? pScene : m_pActiveScene;
 	if (sceneToPlay)
 	{
 		m_GameScene = std::unique_ptr<Scene>(new Scene("Game"));
 		m_GameScene->Copy(sceneToPlay);
 	}
-
+#else
+	m_GameScene = std::unique_ptr<Scene>(pScene);
+#endif
 }
 
 void SceneManager::StopPlayingScene()
 {
 	if (m_GameScene)
 	{
-		delete m_GameScene.release();
+		m_GameScene.reset();
 	}
 }

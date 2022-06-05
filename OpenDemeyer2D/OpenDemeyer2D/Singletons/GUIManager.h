@@ -1,11 +1,14 @@
 #pragma once
 
+#ifdef _DEBUG
+
 #include "UtilityFiles/Singleton.h"
 #include <memory>
 #include <SDL.h>
 #include <chrono>
 #include <unordered_map>
 #include <filesystem>
+#include <glm/glm.hpp>
 
 #include "ImGuiExt/FileDetailView.h"
 
@@ -67,6 +70,8 @@ private:
 
 	void RenderHitboxes() const;
 
+	void ManipulateSelectedObject(const glm::vec2& moveDirection);
+
 private:
 
 	SDL_Window* m_Window{};
@@ -94,3 +99,4 @@ private:
 	FileDetailView* m_FileDetails{};
 };
 
+#endif

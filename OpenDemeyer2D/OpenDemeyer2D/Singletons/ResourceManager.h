@@ -159,14 +159,18 @@ private:
 	std::mutex m_PrefabQueueLock;
 	std::jthread m_PrefabLoaderThread;
 
+
 public:
+
+	Scene* LoadScene(const std::filesystem::path& file);
 
 	Directory* GetRootDirectory() const { return m_RootDirectory; }
 	void DeleteDirectory(Directory* dir);
 	void AddDirectory(Directory* root, const std::string& dirName);
 
 	void SaveGameObject(GameObject* pGameObject, std::filesystem::path& outPutPath);
-	void SaveScene(Scene* pScene, std::filesystem::path& outPutPath);
+	void SaveScene(Scene* pScene, const std::filesystem::path& outPutPath);
+	void SaveScene(Scene* pScene);
 
 	Directory* GetDirectory(const std::filesystem::path& path);
 
@@ -175,8 +179,16 @@ private:
 	// FILE EXPLORER
 	void LoadFilePaths();
 
-	/** Transforms the path into the right version for file parsing*/
+	/**
+	* Transforms the path into the right version for file parsing
+	* The new path contains the data path followed by the relative path
+	*/
 	std::filesystem::path GetfinalPath(const std::filesystem::path& inputPath);
+
+	/**
+	 * Returns the Path that is relative to the Data path in case it isn't an absolute path
+	 */
+	std::filesystem::path GetRelativePath(const std::filesystem::path& inputPath);
 
 private:
 	

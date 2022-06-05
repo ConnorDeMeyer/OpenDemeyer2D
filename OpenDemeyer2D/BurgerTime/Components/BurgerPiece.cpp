@@ -112,7 +112,7 @@ void BurgerPiece::FallDown(const glm::vec2& location)
 			}
 		}
 
-		m_RestHeight = m_Stage.lock()->GetNextPlatformDown(location, OverlappingEnemies.size() + 1, this);
+		m_RestHeight = m_Stage.lock()->GetNextPlatformDown(location, int(OverlappingEnemies.size()) + 1, this);
 		m_IsFalling = true;
 
 		for (auto enemy : OverlappingEnemies)
