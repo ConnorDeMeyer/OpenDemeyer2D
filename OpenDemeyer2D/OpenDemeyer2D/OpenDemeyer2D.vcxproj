@@ -106,6 +106,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,6 +137,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,6 +168,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -196,6 +199,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -226,7 +230,6 @@
     <ClCompile Include="EngineFiles\GameObject.cpp" />
     <ClCompile Include="EngineFiles\Scene.cpp" />
     <ClCompile Include="EngineIO\CustomSerializers.cpp" />
-    <ClCompile Include="ImGuiExt\CustomImGuiFields.cpp" />
     <ClCompile Include="ImGuiExt\FileDetailView.cpp" />
     <ClCompile Include="ImGuiExt\imgui_helpers.cpp" />
     <ClCompile Include="ImGui\backends\imgui_impl_opengl3.cpp" />
@@ -263,7 +266,6 @@
     <ClInclude Include="EngineIO\TypeInformation.h" />
     <ClInclude Include="EngineIO\CustomSerializers.h" />
     <ClInclude Include="EngineIO\Deserializer.h" />
-    <ClInclude Include="ImGuiExt\CustomImGuiFields.h" />
     <ClInclude Include="ImGuiExt\EngineStyle.h" />
     <ClInclude Include="ImGuiExt\FileDetailView.h" />
     <ClInclude Include="ImGuiExt\imgui_helpers.h" />

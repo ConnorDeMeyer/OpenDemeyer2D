@@ -2,6 +2,7 @@
 
 #include "UtilityFiles/Singleton.h"
 #include "UtilityFiles/Dictionary.h"
+#include <string_view>
 
 #define ENGINE Engine::GetInstance()
 
@@ -66,26 +67,26 @@ private:
 	Dictionary m_EngineSettings;
 };
 
-#pragma region EngineSettings
 
-#define OD_ENGINE_CONFIG_INI "engineconfig.ini"
+namespace EngineSettings
+{
+	inline std::string_view engineConfig			{ "engineconfig.ini" };
 
-#define OD_GAME_RESOLUTION_WIDTH "GameResolutionWidth"
-#define OD_GAME_RESOLUTION_HEIGHT "GameResolutionHeight"
-#define OD_EDITOR_RESOLUTION_WIDTH "EditorResolutionWidth"
-#define OD_EDITOR_RESOLUTION_HEIGHT "EditorResolutionHeight"
-#define OD_GAME_WINDOW_SIZE_WIDTH "GameWindowSizeWidth"
-#define OD_GAME_WINDOW_SIZE_HEIGHT "GameWindowSizeHeight"
-#define OD_EDITOR_WINDOW_SIZE_WIDTH "EditorWindowSizeWidth"
-#define OD_EDITOR_WINDOW_SIZE_HEIGHT "EditorWindowSizeHeight"
-#define OD_GAME_WINDOW_MAXIMIZED "GameWindowMaximized"
-#define OD_EDITOR_WINDOW_MAXIMIZED "EditorWindowMaximized"
-#define OD_GAME_FULLSCREEN "GameFullscreen"
-#define OD_EDITOR_FULLSCREEN "EditorFullscreen"
-#define OD_RENDERER_LAYERS "RendererLayers"
-#define OD_RESOURCES_PATH "ResourcesPath"
-#define OD_KEEP_ASPECT_RATIO_EDITOR "KeepAspectRatioEditor"
-#define OD_GAME_TITLE "GameTitle"
-#define OD_GAME_START_SCENE "StartScene"
-
-#pragma endregion
+	inline std::string_view gameResolutionX			{ "GameResolutionWidth" };
+	inline std::string_view gameResolutionY			{ "GameResolutionHeight" };
+	inline std::string_view editorResolutionX		{ "EditorResolutionWidth" };
+	inline std::string_view editorResolutionY		{ "EditorResolutionHeight" };
+	inline std::string_view gameWindowSizeX			{ "GameWindowSizeWidth" };
+	inline std::string_view gameWindowSizeY			{ "GameWindowSizeHeight" };
+	inline std::string_view editorWindowSizeX		{ "EditorWindowSizeWidth" };
+	inline std::string_view editorWindowSizeY		{ "EditorWindowSizeHeight" };
+	inline std::string_view gameWindowMaximized		{ "GameWindowMaximized" };
+	inline std::string_view editorWindowMaximized	{ "EditorWindowMaximized" };
+	inline std::string_view gameFullscreen			{ "GameFullscreen" };
+	inline std::string_view editorFullscreen		{ "EditorFullscreen" };
+	inline std::string_view rendererLayers			{ "RendererLayers" };
+	inline std::string_view resourcePath			{ "ResourcesPath" };
+	inline std::string_view editorKeepAspectRatio	{ "KeepAspectRatioEditor" };
+	inline std::string_view gameTitle				{ "GameTitle" };
+	inline std::string_view gameStartScene			{ "StartScene" };
+}

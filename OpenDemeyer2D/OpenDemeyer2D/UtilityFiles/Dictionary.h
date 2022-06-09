@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
+#include "EngineIO/Reflection.h"
 
 /**
  * This is a map that can store any type of value.
@@ -74,6 +75,8 @@ public:
 		/** used to output a value using a stream*/
 		virtual void OStreamValue(std::ostream& os) = 0;
 
+		virtual uint32_t GetTypeId() const = 0;
+
 		/*virtual void BinaryWrite(std::istream& is) = 0;
 
 		virtual void BinaryRead(std::ostream& os) = 0;*/
@@ -118,6 +121,12 @@ public:
 			}
 		}
 
+		uint32_t GetTypeId() const override
+		{
+			constexpr uint32_t id = class_id<T>();
+			return id;
+		}
+
 	private:
 		T m_Value;
 	};
@@ -143,10 +152,11 @@ public:
 		auto it = m_DictionaryValues.find(key);
 		if (it != m_DictionaryValues.end())
 		{
-			DictionaryEntry<T>* p = dynamic_cast<DictionaryEntry<T>*>(m_DictionaryValues.at(key));
-			if (p)
+			constexpr uint32_t id{ class_id<T>() };
+			auto value = *it;
+			if (id == value.second->GetTypeId())
 			{
-				p->SetValue(data);
+				reinterpret_cast<DictionaryEntry<T>*>(value.second)->SetValue(data);
 				return true;
 			}
 		}
@@ -156,10 +166,11 @@ public:
 	template<typename T>
 	bool GetData(const std::string& key, T& data) const
 	{
-		DictionaryEntry<T>* p = dynamic_cast<DictionaryEntry<T>*>(m_DictionaryValues.at(key));
-		if (p)
+		constexpr uint32_t id{ class_id<T>() };
+		auto value = m_DictionaryValues.at(key);
+		if (id == value->GetTypeId())
 		{
-			data = p->GetValue();
+			data = reinterpret_cast<DictionaryEntry<T>*>(value)->GetValue();
 			return true;
 		}
 		return false;

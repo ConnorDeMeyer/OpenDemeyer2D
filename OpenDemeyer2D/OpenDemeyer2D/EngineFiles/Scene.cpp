@@ -200,9 +200,8 @@ void Scene::AddToSceneTree(GameObject* go)
 
 void Scene::RegisterObject(GameObject* pObject)
 {
-	uint32_t id = uint32_t(m_RegisteredObjects.size()) + 1;
-	pObject->m_ObjectId = id;
-	m_RegisteredObjects.insert({ id, pObject });
+	pObject->m_ObjectId = ++m_RegistrationCounter;
+	m_RegisteredObjects.insert({ m_RegistrationCounter, pObject });
 }
 
 void Scene::UnregisterObject(GameObject* pObject)

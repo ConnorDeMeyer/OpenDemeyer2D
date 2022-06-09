@@ -31,8 +31,8 @@ void RenderManager::Init(SDL_Window* window)
 {
 	auto& settings = ENGINE.GetSettings();
 
-	settings.GetData(OD_GAME_RESOLUTION_WIDTH, m_GameResWidth);
-	settings.GetData(OD_GAME_RESOLUTION_HEIGHT, m_GameResHeight);
+	settings.GetData(EngineSettings::gameResolutionX.data(), m_GameResWidth);
+	settings.GetData(EngineSettings::gameResolutionY.data(), m_GameResHeight);
 
 	m_Window = window;
 
@@ -90,7 +90,7 @@ void RenderManager::Init(SDL_Window* window)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	int renderLayers{};
-	settings.GetData(OD_RENDERER_LAYERS, renderLayers);
+	settings.GetData(EngineSettings::rendererLayers.data(), renderLayers);
 	m_RenderLayers.reserve(renderLayers);
 	for (int i{}; i < renderLayers; ++i)
 	{

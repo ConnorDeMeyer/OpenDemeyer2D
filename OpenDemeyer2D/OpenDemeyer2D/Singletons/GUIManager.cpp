@@ -36,9 +36,9 @@ void GUIManager::Init(SDL_Window* window)
 
 	auto& settings = ENGINE.GetSettings();
 
-	settings.GetData(OD_KEEP_ASPECT_RATIO_EDITOR, m_bKeepAspectRatio);
-	settings.GetData(OD_GAME_RESOLUTION_WIDTH, m_GameResWidth);
-	settings.GetData(OD_GAME_RESOLUTION_HEIGHT, m_GameResHeight);
+	settings.GetData(EngineSettings::editorKeepAspectRatio.data(), m_bKeepAspectRatio);
+	settings.GetData(EngineSettings::gameResolutionX.data(), m_GameResWidth);
+	settings.GetData(EngineSettings::gameResolutionY.data(), m_GameResHeight);
 
 	/**
 	* IMGUI

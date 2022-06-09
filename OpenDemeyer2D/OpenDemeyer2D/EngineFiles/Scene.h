@@ -37,7 +37,7 @@ public:
 
 	/** 
 	* Creates a Game Object that is managed by the scene
-	* @param pParent: Parent of the game object. Will parent to the scene if nullptr
+	* @param pParent Parent of the game object. Will parent to the scene if nullptr
 	*/
 	GameObject* CreateGameObject(GameObject* pParent = nullptr);
 
@@ -103,6 +103,8 @@ public:
 	inline const std::filesystem::path& GetFilePath() const { return m_FilePath; }
 
 private:
+
+	uint32 m_RegistrationCounter{ };
 
 	void RegisterObject(GameObject* pObject);
 

@@ -46,15 +46,19 @@ $(SolutionDir)3rdParty\vld\include;
 			</AdditionalIncludeDirectories>
 		</ClCompile>
 		<PostBuildEvent>
-			<Command>robocopy "$(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget) " "$(OutputPath) " SDL2.dll
-robocopy "$(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget) " "$(OutputPath) " *.dll
-robocopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget) " "$(OutputPath) " *.dll
-robocopy "$(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget) " "$(OutputPath) " *.dll
-robocopy "$(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform) " "$(OutputPath) " *.dll
-robocopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\$(Platform) " "$(OutputPath) " *.dll
-robocopy "$(SolutionDir)3rdParty\vld\bin\$(PlatformTarget) " "$(OutputPath) " *.dll
-robocopy "$(SolutionDir)3rdParty\vld\bin\$(PlatformTarget) " "$(OutputPath) " Microsoft.DTfW.DHL.manifest
-robocopy "$(ProjectDir) " "$(OutputPath) " *.ini</Command>
+<Command>
+echo Copying .dll files
+robocopy "$(SolutionDir)3rdParty\SDL2\lib\$(PlatformTarget) " "$(OutputPath) " SDL2.dll /njh /njs /ndl /nc /ns /np /xo /nfl
+robocopy "$(SolutionDir)3rdParty\SDL2_image\lib\$(PlatformTarget) " "$(OutputPath) " *.dll /njh /njs /ndl /nc /ns /np /xo /nfl
+robocopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget) " "$(OutputPath) " *.dll /njh /njs /ndl /nc /ns /np /xo /nfl
+robocopy "$(SolutionDir)3rdParty\SDL2_Mixer\lib\$(PlatformTarget) " "$(OutputPath) " *.dll /njh /njs /ndl /nc /ns /np /xo /nfl
+robocopy "$(SolutionDir)3rdParty\glew-2.1.0\bin\Release\$(Platform) " "$(OutputPath) " *.dll /njh /njs /ndl /nc /ns /np /xo /nfl
+robocopy "$(SolutionDir)3rdParty\vld\bin\$(PlatformTarget) " "$(OutputPath) " *.dll /njh /njs /ndl /nc /ns /np /xo /nfl
+robocopy "$(SolutionDir)3rdParty\vld\bin\$(PlatformTarget) " "$(OutputPath) " Microsoft.DTfW.DHL.manifest /njh /njs /ndl /nc /ns /np /xo
+echo Copying .ini files
+robocopy "$(ProjectDir) " "$(OutputPath) " *.ini /njh /njs /ndl /nc /ns /np /xo
+EXIT /B 0
+</Command>
 		</PostBuildEvent>
 	</ItemDefinitionGroup>
 	<ItemGroup />

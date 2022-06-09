@@ -6,7 +6,6 @@
 #include "PeterPepper.h"
 
 #include "ResourceWrappers/Texture2D.h"
-#include "ImGuiExt/CustomImGuiFields.h"
 #include "ImGuiExt/imgui_helpers.h"
 
 void PlayerResources::DefineUserFields(UserFieldBinder& binder) const

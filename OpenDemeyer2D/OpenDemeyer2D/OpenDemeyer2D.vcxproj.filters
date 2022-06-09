@@ -62,7 +62,6 @@
     <ClCompile Include="EngineFiles\Scene.cpp" />
     <ClCompile Include="ImGuiExt\FileDetailView.cpp" />
     <ClCompile Include="ImGuiExt\imgui_helpers.cpp" />
-    <ClCompile Include="ImGuiExt\CustomImGuiFields.cpp" />
     <ClCompile Include="EngineFiles\PhysicsInterface.cpp" />
     <ClCompile Include="ImGui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="ImGui\backends\imgui_impl_sdl.cpp" />
@@ -134,7 +133,6 @@
     <ClInclude Include="ResourceWrappers\Texture2D.h" />
     <ClInclude Include="UtilityFiles\StateMachine.h" />
     <ClInclude Include="EngineIO\EngineSettings.h" />
-    <ClInclude Include="ImGuiExt\CustomImGuiFields.h" />
     <ClInclude Include="ImGuiExt\FileDetailView.h" />
     <ClInclude Include="EngineFiles\PhysicsInterface.h" />
     <ClInclude Include="ResourceWrappers\Prefab.h" />

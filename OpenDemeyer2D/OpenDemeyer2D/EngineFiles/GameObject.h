@@ -45,15 +45,12 @@ private:
 class GameObject final
 {
 
-	friend class Scene;/*
-	friend class ResourceManager;
-	friend class Prefab;*/
+	friend class Scene;
 
 private:
 
 	GameObject();
-
-public:
+	
 
 	/** 
 	* Will destroy the game object immediately.
@@ -239,13 +236,13 @@ T* GameObject::GetComponent() const
 	}
 }
 
-template <typename T>
-T* GameObject::GetComponentByCast() const
-{
-	for (auto component : m_Components)
-		if (auto returnValue{ dynamic_cast<T*>(component.second) }) return returnValue;
-	return nullptr;
-}
+//template <typename T>
+//T* GameObject::GetComponentByCast() const
+//{
+//	for (auto component : m_Components)
+//		if (auto returnValue{ dynamic_cast<T*>(component.second) }) return returnValue;
+//	return nullptr;
+//}
 
 template <typename T>
 T* GameObject::AddComponent()

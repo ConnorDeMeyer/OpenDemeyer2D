@@ -44,21 +44,21 @@ void Engine::Initialize()
 	InitializeSettings();
 
 #if defined(DEBUG) || defined(_DEBUG)
-	m_EngineSettings.GetData(OD_EDITOR_RESOLUTION_WIDTH, m_ResolutionWidth);
-	m_EngineSettings.GetData(OD_EDITOR_RESOLUTION_HEIGHT, m_ResolutionHeight);
+	m_EngineSettings.GetData(EngineSettings::editorResolutionX.data(), m_ResolutionWidth);
+	m_EngineSettings.GetData(EngineSettings::editorResolutionY.data(), m_ResolutionHeight);
 	int w, h;
-	m_EngineSettings.GetData(OD_EDITOR_WINDOW_SIZE_WIDTH, w);
-	m_EngineSettings.GetData(OD_EDITOR_WINDOW_SIZE_HEIGHT, h);
+	m_EngineSettings.GetData(EngineSettings::editorWindowSizeX.data(), w);
+	m_EngineSettings.GetData(EngineSettings::editorWindowSizeY.data(), h);
 	bool maximizeWindow{};
-	m_EngineSettings.GetData(OD_EDITOR_WINDOW_MAXIMIZED, maximizeWindow);
+	m_EngineSettings.GetData(EngineSettings::editorWindowMaximized.data(), maximizeWindow);
 #else
-	m_EngineSettings.GetData(OD_GAME_RESOLUTION_HEIGHT, m_ResolutionWidth);
-	m_EngineSettings.GetData(OD_GAME_RESOLUTION_HEIGHT, m_ResolutionHeight);
+	m_EngineSettings.GetData(EngineSettings::gameResolutionX.data(), m_ResolutionWidth);
+	m_EngineSettings.GetData(EngineSettings::gameResolutionY.data(), m_ResolutionHeight);
 	int w, h;
-	m_EngineSettings.GetData(OD_GAME_WINDOW_SIZE_WIDTH, w);
-	m_EngineSettings.GetData(OD_GAME_WINDOW_SIZE_HEIGHT, h);
+	m_EngineSettings.GetData(EngineSettings::gameWindowSizeX.data(), w);
+	m_EngineSettings.GetData(EngineSettings::gameWindowSizeY.data(), h);
 	bool maximizeWindow{};
-	m_EngineSettings.GetData(OD_GAME_WINDOW_MAXIMIZED, maximizeWindow);
+	m_EngineSettings.GetData(EngineSettings::gameWindowMaximized.data(), maximizeWindow);
 #endif
 
 	/**
@@ -102,7 +102,7 @@ void Engine::Initialize()
 	*/
 
 	std::string windowTitle;
-	m_EngineSettings.GetData(OD_GAME_TITLE, windowTitle);
+	m_EngineSettings.GetData(EngineSettings::gameTitle.data(), windowTitle);
 
 	m_Window = SDL_CreateWindow(
 		windowTitle.c_str(),
@@ -126,7 +126,7 @@ void Engine::Initialize()
 
 	// tell the resource manager where he can find the game data
 	std::string dataPath;
-	m_EngineSettings.GetData(OD_RESOURCES_PATH, dataPath);
+	m_EngineSettings.GetData(EngineSettings::resourcePath.data(), dataPath);
 	RESOURCES.Init(dataPath);
 
 #ifdef _DEBUG
@@ -156,7 +156,7 @@ void Engine::Run()
 	Initialize();
 
 	std::string startScenePath;
-	m_EngineSettings.GetData(OD_GAME_START_SCENE, startScenePath);
+	m_EngineSettings.GetData(EngineSettings::gameStartScene.data(), startScenePath);
 	auto startScene = RESOURCES.LoadScene(startScenePath);
 
 #ifdef _DEBUG
@@ -232,35 +232,35 @@ void Engine::InitializeSettings()
 {
 	// Load default values
 	int integer{ 1920 };
-	m_EngineSettings.Insert(OD_GAME_RESOLUTION_WIDTH, integer);
-	m_EngineSettings.Insert(OD_EDITOR_RESOLUTION_WIDTH, integer);
-	m_EngineSettings.Insert(OD_GAME_WINDOW_SIZE_WIDTH, integer);
-	m_EngineSettings.Insert(OD_EDITOR_WINDOW_SIZE_WIDTH, integer);
+	m_EngineSettings.Insert(EngineSettings::gameResolutionX.data(), integer);
+	m_EngineSettings.Insert(EngineSettings::editorResolutionX.data(), integer);
+	m_EngineSettings.Insert(EngineSettings::gameWindowSizeX.data(), integer);
+	m_EngineSettings.Insert(EngineSettings::editorWindowSizeX.data(), integer);
 
 	integer = 1080;
-	m_EngineSettings.Insert(OD_GAME_RESOLUTION_HEIGHT, integer);
-	m_EngineSettings.Insert(OD_EDITOR_RESOLUTION_HEIGHT, integer);
-	m_EngineSettings.Insert(OD_GAME_WINDOW_SIZE_HEIGHT, integer);
-	m_EngineSettings.Insert(OD_EDITOR_WINDOW_SIZE_HEIGHT, integer);
+	m_EngineSettings.Insert(EngineSettings::gameResolutionY.data(), integer);
+	m_EngineSettings.Insert(EngineSettings::editorResolutionY.data(), integer);
+	m_EngineSettings.Insert(EngineSettings::gameWindowSizeY.data(), integer);
+	m_EngineSettings.Insert(EngineSettings::editorWindowSizeY.data(), integer);
 
 	integer = 3;
-	m_EngineSettings.Insert(OD_RENDERER_LAYERS, integer);
+	m_EngineSettings.Insert(EngineSettings::rendererLayers.data(), integer);
 
 	bool boolean{ true };
-	m_EngineSettings.Insert(OD_GAME_WINDOW_MAXIMIZED, boolean);
-	m_EngineSettings.Insert(OD_EDITOR_WINDOW_MAXIMIZED, boolean);
-	m_EngineSettings.Insert(OD_KEEP_ASPECT_RATIO_EDITOR, boolean);
+	m_EngineSettings.Insert(EngineSettings::gameWindowMaximized.data(), boolean);
+	m_EngineSettings.Insert(EngineSettings::editorWindowMaximized.data(), boolean);
+	m_EngineSettings.Insert(EngineSettings::editorKeepAspectRatio.data(), boolean);
 
 	boolean = false;
-	m_EngineSettings.Insert(OD_GAME_FULLSCREEN, boolean);
-	m_EngineSettings.Insert(OD_EDITOR_FULLSCREEN, boolean);
+	m_EngineSettings.Insert(EngineSettings::gameFullscreen.data(), boolean);
+	m_EngineSettings.Insert(EngineSettings::editorFullscreen.data(), boolean);
 
-	m_EngineSettings.Insert(OD_RESOURCES_PATH, std::string("Data/"));
-	m_EngineSettings.Insert(OD_GAME_START_SCENE, std::string("/"));
-	m_EngineSettings.Insert(OD_GAME_TITLE, std::string("OpenDemeyer2D"));
+	m_EngineSettings.Insert(EngineSettings::resourcePath.data(), std::string("Data/"));
+	m_EngineSettings.Insert(EngineSettings::gameStartScene.data(), std::string("/"));
+	m_EngineSettings.Insert(EngineSettings::gameTitle.data(), std::string("OpenDemeyer2D"));
 
 	// Load the engineconfig.ini file
-	auto fstream = std::ifstream(OD_ENGINE_CONFIG_INI);
+	auto fstream = std::ifstream(EngineSettings::engineConfig.data());
 
 	if (!fstream.is_open()) return;
 
@@ -279,7 +279,7 @@ void Engine::InitializeSettings()
 
 void Engine::SaveSettings() const
 {
-	auto os = std::ofstream(OD_ENGINE_CONFIG_INI);
+	auto os = std::ofstream(EngineSettings::engineConfig.data());
 
 	auto it = m_EngineSettings.begin();
 	while (it != m_EngineSettings.end())
@@ -295,7 +295,7 @@ void Engine::SaveSettings() const
 void Engine::SaveGame()
 {
 	std::string title;
-	m_EngineSettings.GetData(OD_GAME_TITLE, title);
+	m_EngineSettings.GetData(EngineSettings::gameTitle.data(), title);
 
 	auto& sceneManager = SceneManager::GetInstance();
 	auto of = std::ofstream(title.c_str());
