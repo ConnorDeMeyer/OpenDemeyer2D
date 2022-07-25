@@ -1,4 +1,4 @@
-﻿
+﻿#include "pch.h"
 #include "RenderManager.h"
 
 #include "Singletons/SceneManager.h"

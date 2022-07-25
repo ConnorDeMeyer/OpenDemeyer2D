@@ -1,4 +1,5 @@
-﻿#include "CustomSerializers.h"
+﻿#include "pch.h"
+#include "CustomSerializers.h"
 #include "EngineFiles/ComponentBase.h"
 #include "TypeInformation.h"
 

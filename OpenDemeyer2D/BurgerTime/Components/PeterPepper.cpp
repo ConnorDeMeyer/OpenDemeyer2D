@@ -18,8 +18,8 @@ void PeterPepper::DefineUserFields(UserFieldBinder& binder) const
 
 void PeterPepper::BeginPlay()
 {
-	if (auto movement = GetObject()->GetComponent<StageMovement>())
-		if (auto input = GetObject()->GetComponent<InputComponent>())
+	if (auto movement = GetGameObject()->GetComponent<StageMovement>())
+		if (auto input = GetGameObject()->GetComponent<InputComponent>())
 		{
 			if (input->GetControllerId() == -1) // keyboard input
 			{
@@ -49,7 +49,7 @@ void PeterPepper::BeginPlay()
 			}
 		}
 
-	if (auto sprite = GetObject()->GetComponent<SpriteComponent>())
+	if (auto sprite = GetGameObject()->GetComponent<SpriteComponent>())
 	{
 		sprite->OnAnimationEnd.BindFunction(this, std::bind(&PeterPepper::StunEnd, this));
 	}

@@ -26,6 +26,6 @@ public:
 
 private:
 
-	float m_Health;
-	float m_MaxHealth;
+	float m_Health{};
+	float m_MaxHealth{};
 };

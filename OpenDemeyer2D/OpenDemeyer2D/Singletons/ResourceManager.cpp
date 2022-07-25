@@ -1,6 +1,7 @@
 ﻿/**
  * Open Gl code taken from the game framework from the Programming 2 course of DAE howest
  */
+#include "pch.h"
 #include "ResourceManager.h"
 
 #include <stack>

@@ -6,13 +6,14 @@
 #include "Components/Transform.h"
 #include "StageMovement.h"
 #include "Singletons/ResourceManager.h"
+#include "EngineFiles/ComponentBase.h"
 
 void PPSpriteMovement::BeginPlay()
 {
-	m_pStageMovement = GetObject()->GetComponent<StageMovement>();
+	m_pStageMovement = GetGameObject()->GetComponent<StageMovement>();
 	m_pPeterPepper = GetComponent<PeterPepper>();
 
-	m_pSpriteComponent = GetObject()->GetComponent<SpriteComponent>();
+	m_pSpriteComponent = GetGameObject()->GetComponent<SpriteComponent>();
 	if (m_pSpriteComponent)
 	{
 		//m_pSpriteComponent->SetFrameDimension({ 16,16 });
@@ -36,8 +37,8 @@ void PPSpriteMovement::Update(float dt)
 	{
 		auto& direction = m_pStageMovement->GetMovementInput();
 
-		if (GetObject()->GetTransform()->GetLocalScale().x != 1.f)
-			GetObject()->GetTransform()->SetScale({ 1,1 });
+		if (GetGameObject()->GetTransform()->GetLocalScale().x != 1.f)
+			GetGameObject()->GetTransform()->SetScale({ 1,1 });
 
 		if (!m_IsThrowing)
 		{
@@ -51,7 +52,7 @@ void PPSpriteMovement::Update(float dt)
 			{
 				m_pSpriteComponent->SetFrameOffset(3);
 				m_pSpriteComponent->SetTotalFrames(3);
-				GetObject()->GetTransform()->SetScale({ -1,1 });
+				GetGameObject()->GetTransform()->SetScale({ -1,1 });
 			}
 			else if (direction.x <= -0.05f) // going left
 			{
@@ -82,7 +83,7 @@ void PPSpriteMovement::Update(float dt)
 			else if (direction.x >= 0.05f) // going right
 			{
 				m_pSpriteComponent->SetFrameOffset(16);
-				GetObject()->GetTransform()->SetScale({ -1,1 });
+				GetGameObject()->GetTransform()->SetScale({ -1,1 });
 			}
 			else if (direction.x <= -0.05f) // going left
 			{

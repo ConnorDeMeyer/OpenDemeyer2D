@@ -1,4 +1,5 @@
-﻿#include "InputComponent.h"
+﻿#include "pch.h"
+#include "InputComponent.h"
 #include "Singletons/InputManager.h"
 #include <functional>
 #include <SDL.h>

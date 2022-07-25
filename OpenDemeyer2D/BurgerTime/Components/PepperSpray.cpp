@@ -2,6 +2,7 @@
 
 #include "Components/PhysicsComponent.h"
 #include "Enemy.h"
+#include "EngineFiles/ComponentBase.h"
 
 using namespace std::placeholders;
 
@@ -19,13 +20,13 @@ void PepperSpray::Update(float deltaTime)
 	m_TimeAlive -= deltaTime;
 	if (m_TimeAlive <= 0)
 	{
-		GetObject()->Destroy();
+		GetGameObject()->Destroy();
 	}
 }
 
 void PepperSpray::Overlap(PhysicsComponent* other)
 {
-	if (auto enemy = other->GetObject()->GetComponent<Enemy>())
+	if (auto enemy = other->GetGameObject()->GetComponent<Enemy>())
 	{
 		enemy->Stun(m_StunTime);
 	}

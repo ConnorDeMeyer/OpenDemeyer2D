@@ -1,4 +1,5 @@
-﻿#include "EngineFiles/Scene.h"
+﻿#include "pch.h"
+#include "EngineFiles/Scene.h"
 
 #include "EngineFiles/GameObject.h"
 #include "imgui.h"

@@ -1,4 +1,5 @@
-﻿#include "PhysicsComponent.h"
+﻿#include "pch.h"
+#include "PhysicsComponent.h"
 #include <intrin.h>
 #include <limits>
 
@@ -22,8 +23,8 @@ void PhysicsComponent::DefineUserFields(UserFieldBinder& binder) const
 
 PhysicsComponent::~PhysicsComponent()
 {
-	if (GetObject()) {
-		auto scene = GetObject()->GetScene();
+	if (GetGameObject()) {
+		auto scene = GetGameObject()->GetScene();
 		if (scene && m_pBody)
 		{
 			scene->GetPhysicsInterface()->DestroyBody(m_pBody);
@@ -43,7 +44,7 @@ void PhysicsComponent::BeginPlay()
 
 void PhysicsComponent::Update(float)
 {
-	auto transform = GetObject()->GetTransform();
+	auto transform = GetGameObject()->GetTransform();
 	m_pBody->SetTransform(reinterpret_cast<const b2Vec2&>(transform->GetWorldPosition()), transform->GetWorldRotation());
 }
 
@@ -470,7 +471,7 @@ void PhysicsComponent::CreateBody(b2BodyDef& def)
 		scene->GetPhysicsInterface()->DestroyBody(m_pBody);
 	}
 
-	auto& position = GetObject()->GetTransform()->GetWorldPosition();
+	auto& position = GetGameObject()->GetTransform()->GetWorldPosition();
 
 	def.userData.pointer = reinterpret_cast<uintptr_t>(this);
 	def.position.Set(position.x, position.y);

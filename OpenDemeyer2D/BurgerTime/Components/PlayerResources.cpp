@@ -53,7 +53,7 @@ void PlayerResources::BeginPlay()
 void PlayerResources::GenerateLives()
 {
 	// remove all existant children
-	for (auto child : GetObject()->GetChildren())
+	for (auto child : GetGameObject()->GetChildren())
 	{
 		child->Destroy();
 	}
@@ -65,7 +65,7 @@ void PlayerResources::GenerateLives()
 
 		for (int i{}; i < lives; ++i)
 		{
-			auto go = GetScene()->CreateGameObject(GetObject());
+			auto go = GetScene()->CreateGameObject(GetGameObject());
 			
 			auto render = go->AddComponent<RenderComponent>();
 			render->SetSourceRect(m_SourceRect);

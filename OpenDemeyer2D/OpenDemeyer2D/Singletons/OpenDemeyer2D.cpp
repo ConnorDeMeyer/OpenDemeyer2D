@@ -1,4 +1,6 @@
-﻿#define WIN32_LEAN_AND_MEAN
+﻿#include "pch.h"
+
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 #include <SDL.h>
@@ -71,7 +73,7 @@ void Engine::Initialize()
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
 	}
 
-	// Use OpenGL 3.11
+	// Use OpenGL 3.0
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 

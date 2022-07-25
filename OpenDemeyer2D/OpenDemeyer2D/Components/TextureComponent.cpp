@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "TextureComponent.h"
 
 #include "imgui.h"

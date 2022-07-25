@@ -62,9 +62,9 @@ namespace ImGui
 	template <typename T>
 	void ComponentSelect(const char* label, ComponentBase* thisComponent, std::weak_ptr<T>& component)
 	{
-		if (ImGui::BeginCombo(label, component.expired() ? std::string{ type_name<T>() }.c_str() : component.lock()->GetObject()->GetDisplayName().c_str()))
+		if (ImGui::BeginCombo(label, component.expired() ? std::string{ type_name<T>() }.c_str() : component.lock()->GetGameObject()->GetDisplayName().c_str()))
 		{
-			auto& objects = thisComponent->GetObject()->GetScene()->GetAllObjects();
+			auto& objects = thisComponent->GetGameObject()->GetScene()->GetAllObjects();
 			for (auto& object : objects)
 			{
 				auto pComponent = object.second->GetComponent<T>();

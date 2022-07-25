@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 #include <unordered_map>
 #include <functional>
 #include <memory>
@@ -220,11 +221,11 @@ public:
 		return nullptr;
 	}
 
-	const std::unordered_map<uint32_t, TypeInfo>& GetTypeInfos() const { return m_TypeInfo; }
+	const auto& GetTypeInfos() const { return m_TypeInfo; }
 
 private:
 
-	std::unordered_map<std::string, uint32_t > m_ClassNameIds;
+	std::unordered_map<std::string, uint32_t> m_ClassNameIds;
 	std::unordered_map<uint32_t, TypeInfo> m_TypeInfo;
 
 };

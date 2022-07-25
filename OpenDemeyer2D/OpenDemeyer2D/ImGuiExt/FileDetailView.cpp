@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "FileDetailView.h"
 
 #include "imgui.h"

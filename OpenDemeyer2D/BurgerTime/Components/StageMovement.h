@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "EngineFiles/ComponentBase.h"
+#include <EngineFiles/ComponentBase.h>
 #include "Stage.h"
 
 class StageMovement : public ComponentBase

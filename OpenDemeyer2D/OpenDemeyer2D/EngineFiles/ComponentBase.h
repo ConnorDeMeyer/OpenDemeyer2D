@@ -91,7 +91,7 @@ public:
 	std::weak_ptr<ComponentBase> GetWeakReference() const { return m_Reference; }
 
 	/** Returns the Gameobject that this component is attached to*/
-	inline GameObject* GetObject() const { return m_pParent; }
+	inline GameObject* GetGameObject() const { return m_pParent; }
 
 private:
 
@@ -100,12 +100,12 @@ private:
 
 protected:
 
-	inline Transform* GetTransform() const { return GetObject()->GetTransform(); }
-	inline RenderComponent* GetRenderComponent() const { return GetObject()->GetRenderComponent(); }
-	inline Scene* GetScene() const { return GetObject()->GetScene(); }
+	inline Transform* GetTransform() const { return GetGameObject()->GetTransform(); }
+	inline RenderComponent* GetRenderComponent() const { return GetGameObject()->GetRenderComponent(); }
+	inline Scene* GetScene() const { return GetGameObject()->GetScene(); }
 
 	template <typename T>
-	inline T* GetComponent() const { return GetObject()->GetComponent<T>(); }
+	inline T* GetComponent() const { return GetGameObject()->GetComponent<T>(); }
 
 private:
 
@@ -127,7 +127,7 @@ template <typename T,
 std::ostream& operator<<(std::ostream& stream, const std::weak_ptr<T> component)
 {
 	if (component.expired()) return stream << 0;
-	return stream << component.lock()->GetObject()->GetId();
+	return stream << component.lock()->GetGameObject()->GetId();
 }
 
 template <typename T,
@@ -166,7 +166,7 @@ void CopyWeakPtr(const std::weak_ptr<T>& original, std::weak_ptr<T>& copy, CopyL
 			}
 
 			// in case the referenced object was also copied we take the reference from the newly copied object instead of the old one
-			copyLinker->LinkWithNewObject(original.lock()->GetObject(), [&copy, &original](GameObject* obj)
+			copyLinker->LinkWithNewObject(original.lock()->GetGameObject(), [&copy, &original](GameObject* obj)
 				{
 					copy = std::reinterpret_pointer_cast<T>(obj->GetComponentById(original.lock()->GetComponentId())->GetWeakReference().lock());
 				});

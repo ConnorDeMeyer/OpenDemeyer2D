@@ -103,7 +103,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\vld\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -137,7 +137,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\vld\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -171,7 +171,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\vld\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -205,7 +205,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
       <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\vld\include;$(SolutionDir)\3rdParty\DearImGui;$(SolutionDir)\3rdParty\glew-2.1.0\include;$(SolutionDir)\3rdParty\box2d\include;$(SolutionDir)\3rdParty\steamworks\public\steam;$(SolutionDir)\OpenDemeyer2D;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>5105</DisableSpecificWarnings>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
@@ -231,6 +231,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Allocators\NewDeleteOverride.cpp" />
+    <ClCompile Include="Allocators\SmallObjectAllocator.cpp" />
     <ClCompile Include="Components\PhysicsComponent.cpp" />
     <ClCompile Include="Components\InputComponent.cpp" />
     <ClCompile Include="Components\RenderComponent.cpp" />
@@ -244,16 +246,52 @@
     <ClCompile Include="EngineIO\CustomSerializers.cpp" />
     <ClCompile Include="ImGuiExt\FileDetailView.cpp" />
     <ClCompile Include="ImGuiExt\imgui_helpers.cpp" />
-    <ClCompile Include="ImGui\backends\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="ImGui\backends\imgui_impl_sdl.cpp" />
-    <ClCompile Include="ImGui\imgui.cpp" />
-    <ClCompile Include="ImGui\imgui_demo.cpp" />
-    <ClCompile Include="ImGui\imgui_draw.cpp" />
-    <ClCompile Include="ImGui\imgui_tables.cpp" />
-    <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="ImGui\backends\imgui_impl_opengl3.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ImGui\backends\imgui_impl_sdl.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="EngineIO\Deserializer.cpp" />
     <ClCompile Include="EngineFiles\PhysicsInterface.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Shaders\ShaderBase.cpp" />
     <ClCompile Include="Singletons\GUIManager.cpp" />
     <ClCompile Include="Singletons\InputManager.cpp" />
     <ClCompile Include="Singletons\OpenDemeyer2D.cpp" />
@@ -262,6 +300,10 @@
     <ClCompile Include="Singletons\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Allocators\Mallocator.h" />
+    <ClInclude Include="Allocators\NewDeleteOverride.h" />
+    <ClInclude Include="Allocators\ObjectPoolAllocator.h" />
+    <ClInclude Include="Allocators\SmallObjectAllocator.h" />
     <ClInclude Include="Components\PhysicsComponent.h" />
     <ClInclude Include="Components\InputComponent.h" />
     <ClInclude Include="Components\RenderComponent.h" />
@@ -291,12 +333,14 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="ResourceWrappers\Font.h" />
     <ClInclude Include="ResourceWrappers\Prefab.h" />
     <ClInclude Include="ResourceWrappers\RenderTarget.h" />
     <ClInclude Include="ResourceWrappers\Sound.h" />
     <ClInclude Include="ResourceWrappers\Surface2D.h" />
     <ClInclude Include="ResourceWrappers\Texture2D.h" />
+    <ClInclude Include="Shaders\ShaderBase.h" />
     <ClInclude Include="Singletons\GUIManager.h" />
     <ClInclude Include="Singletons\InputManager.h" />
     <ClInclude Include="Singletons\OpenDemeyer2D.h" />

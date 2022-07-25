@@ -66,10 +66,13 @@
     <ClCompile Include="ImGui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="ImGui\backends\imgui_impl_sdl.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
-    <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Shaders\ShaderBase.cpp" />
+    <ClCompile Include="Allocators\SmallObjectAllocator.cpp" />
+    <ClCompile Include="Allocators\NewDeleteOverride.cpp" />
+    <ClCompile Include="pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Transform.h">
@@ -145,5 +148,11 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="Shaders\ShaderBase.h" />
+    <ClInclude Include="Allocators\SmallObjectAllocator.h" />
+    <ClInclude Include="Allocators\ObjectPoolAllocator.h" />
+    <ClInclude Include="Allocators\Mallocator.h" />
+    <ClInclude Include="Allocators\NewDeleteOverride.h" />
+    <ClInclude Include="pch.h" />
   </ItemGroup>
 </Project>

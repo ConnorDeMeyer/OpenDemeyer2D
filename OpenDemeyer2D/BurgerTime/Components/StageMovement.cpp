@@ -2,12 +2,13 @@
 
 #include "imgui.h"
 #include "EngineFiles/GameObject.h"
+#include "EngineFiles/ComponentBase.h"
 #include "Components/Transform.h"
 #include "ImGuiExt/imgui_helpers.h"
 
 bool StageMovement::Move(movementDirection direction)
 {
-	if (!m_pStage.expired() && m_pStage.lock()->CanMoveInDirection(GetObject()->GetTransform()->GetLocalPosition(), direction))
+	if (!m_pStage.expired() && m_pStage.lock()->CanMoveInDirection(GetGameObject()->GetTransform()->GetLocalPosition(), direction))
 	{
 		MoveUnsafe(direction);
 		return true;
@@ -49,15 +50,15 @@ void StageMovement::Update(float deltaTime)
 	movement.x *= m_HorizontalMovementSpeed;
 	movement.y *= m_VerticalMovementSpeed;
 	movement *= deltaTime;
-	GetObject()->GetTransform()->Move(movement);
+	GetGameObject()->GetTransform()->Move(movement);
 
 	if (!m_pStage.expired())
 	{
 		if (m_MovementInput.x != 0.f)
-			m_pStage.lock()->SnapToGridY(GetObject()->GetTransform());
+			m_pStage.lock()->SnapToGridY(GetGameObject()->GetTransform());
 
 		if (m_MovementInput.y != 0.f)
-			m_pStage.lock()->SnapToGridX(GetObject()->GetTransform());
+			m_pStage.lock()->SnapToGridX(GetGameObject()->GetTransform());
 	}
 
 	m_LastMovementInput = m_MovementInput;

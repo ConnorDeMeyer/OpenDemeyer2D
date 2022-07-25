@@ -56,7 +56,7 @@ void Score::Update(float deltaTime)
 
 		m_Score += score;
 
-		auto scoreSprite = GetObject()->GetScene()->CreateGameObject();
+		auto scoreSprite = GetGameObject()->GetScene()->CreateGameObject();
 		auto render = scoreSprite->AddComponent<RenderComponent>();
 		auto texture = scoreSprite->AddComponent<TextureComponent>();
 
@@ -73,7 +73,7 @@ void Score::Update(float deltaTime)
 
 	if (changed)
 	{
-		GetObject()->GetComponent<TextPixelComponent>()->SetText(std::to_string(m_Score));
+		GetGameObject()->GetComponent<TextPixelComponent>()->SetText(std::to_string(m_Score));
 	}
 
 	for (auto& scoreDisplays : m_ScoreDisplays)

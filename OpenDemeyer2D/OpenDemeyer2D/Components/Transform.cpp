@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Transform.h"
 
 #include "EngineFiles/GameObject.h"
@@ -92,7 +93,7 @@ void Transform::Rotate(float rotation)
 void Transform::UpdateLocalChanges()
 {
 	m_localTransformation = TransformationMatrix(m_LocalPosition, m_LocalScale, m_LocalRotation);
-	if (GameObject * pParent{ GetObject()->GetParent() }) {
+	if (GameObject * pParent{ GetGameObject()->GetParent() }) {
 		m_Transformation = m_localTransformation * pParent->GetTransform()->m_Transformation;
 		m_Position = GetPosFromMat(m_Transformation);
 		m_Scale = GetScaleFromMat(m_Transformation);
@@ -106,7 +107,7 @@ void Transform::UpdateLocalChanges()
 		m_Rotation = m_LocalRotation;
 	}
 
-	for (GameObject* child : GetObject()->GetChildren())
+	for (GameObject* child : GetGameObject()->GetChildren())
 		child->GetTransform()->ApplyMatrix(m_Transformation);
 }
 
@@ -123,7 +124,7 @@ void Transform::ApplyMatrix(const glm::mat3x3& matrix)
 	m_Scale = GetScaleFromMat(m_Transformation);
 	m_Rotation = GetRotationFromMat(m_Transformation);
 
-	for (GameObject* pObject : GetObject()->GetChildren())
+	for (GameObject* pObject : GetGameObject()->GetChildren())
 	{
 		pObject->GetTransform()->ApplyMatrix(m_Transformation);
 	}

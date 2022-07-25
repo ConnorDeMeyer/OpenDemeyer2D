@@ -1,4 +1,5 @@
-﻿#include "TextPixelComponent.h"
+﻿#include "pch.h"
+#include "TextPixelComponent.h"
 #include "RenderComponent.h"
 #include "Singletons/ResourceManager.h"
 #include "Singletons/RenderManager.h"

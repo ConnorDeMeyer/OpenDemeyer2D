@@ -18,7 +18,7 @@
 void BurgerPiece::Initialize()
 {
 	int i{};
-	for (auto child : GetObject()->GetChildren())
+	for (auto child : GetGameObject()->GetChildren())
 	{
 		m_pSegments[i++] = child;
 	}
@@ -37,7 +37,7 @@ void BurgerPiece::BeginPlay()
 			std::bind(&BurgerPiece::SegmentOverlap, this, m_pSegments[i], std::placeholders::_1));
 
 	}
-	m_RestHeight = GetObject()->GetTransform()->GetLocalPosition().y;
+	m_RestHeight = GetGameObject()->GetTransform()->GetLocalPosition().y;
 
 	SetType(m_Type);
 }
@@ -66,11 +66,11 @@ void BurgerPiece::Update(float deltaTime)
 	}
 	if (m_IsFalling)
 	{
-		GetObject()->GetTransform()->Move({ 0,-48.f * deltaTime });
-		auto pos = GetObject()->GetTransform()->GetLocalPosition();
+		GetGameObject()->GetTransform()->Move({ 0,-48.f * deltaTime });
+		auto pos = GetGameObject()->GetTransform()->GetLocalPosition();
 		if (pos.y <= m_RestHeight)
 		{
-			GetObject()->GetTransform()->SetPosition({ pos.x, m_RestHeight });
+			GetGameObject()->GetTransform()->SetPosition({ pos.x, m_RestHeight });
 			m_IsFalling = false;
 			m_FallDelay = 0.5f;
 			for (int i{}; i < 4; ++i)
@@ -85,7 +85,7 @@ void BurgerPiece::FallDown(const glm::vec2& location)
 {
 	if (!m_Stage.expired())
 	{
-		GetObject()->GetTransform()->Move({ 0,-2.f });
+		GetGameObject()->GetTransform()->Move({ 0,-2.f });
 
 		std::vector<Enemy*> OverlappingEnemies{};
 
@@ -100,7 +100,7 @@ void BurgerPiece::FallDown(const glm::vec2& location)
 
 				for (auto comp : components)
 				{
-					auto Object = comp->GetObject();
+					auto Object = comp->GetGameObject();
 					if (auto enemy = Object->GetComponent<Enemy>())
 					{
 						if (std::find(OverlappingEnemies.begin(), OverlappingEnemies.end(), enemy) == OverlappingEnemies.end())
@@ -124,25 +124,25 @@ void BurgerPiece::FallDown(const glm::vec2& location)
 		switch (OverlappingEnemies.size())
 		{
 		case 0:
-			ScoreEventQueue::AddMessage(ScoreEvent::drop_Burger, GetObject()->GetTransform()->GetWorldPosition());
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_Burger, GetGameObject()->GetTransform()->GetWorldPosition());
 			break;
 		case 1:
-			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_1enemy, GetObject()->GetTransform()->GetWorldPosition());
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_1enemy, GetGameObject()->GetTransform()->GetWorldPosition());
 			break;
 		case 2:
-			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_2enemy, GetObject()->GetTransform()->GetWorldPosition());
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_2enemy, GetGameObject()->GetTransform()->GetWorldPosition());
 			break;
 		case 3:
-			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_3enemy, GetObject()->GetTransform()->GetWorldPosition());
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_3enemy, GetGameObject()->GetTransform()->GetWorldPosition());
 			break;
 		case 4:
-			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_4enemy, GetObject()->GetTransform()->GetWorldPosition());
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_4enemy, GetGameObject()->GetTransform()->GetWorldPosition());
 			break;
 		case 5:
-			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_5enemy, GetObject()->GetTransform()->GetWorldPosition());
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_5enemy, GetGameObject()->GetTransform()->GetWorldPosition());
 			break;
 		case 6:
-			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_6enemy, GetObject()->GetTransform()->GetWorldPosition());
+			ScoreEventQueue::AddMessage(ScoreEvent::drop_burger_6enemy, GetGameObject()->GetTransform()->GetWorldPosition());
 			break;
 		}		
 	}
@@ -150,14 +150,14 @@ void BurgerPiece::FallDown(const glm::vec2& location)
 
 void BurgerPiece::FallDown()
 {
-	FallDown(GetObject()->GetTransform()->GetLocalPosition());
+	FallDown(GetGameObject()->GetTransform()->GetLocalPosition());
 }
 
 
 void BurgerPiece::SegmentOverlap(GameObject* pSegment, PhysicsComponent* other)
 {
-	auto otherBurgerPiece = other->GetObject()->GetParent() ? other->GetObject()->GetParent()->GetComponent<BurgerPiece>() : nullptr;
-	auto otherPeterPepper = other->GetObject()->GetComponent<PeterPepper>();
+	auto otherBurgerPiece = other->GetGameObject()->GetParent() ? other->GetGameObject()->GetParent()->GetComponent<BurgerPiece>() : nullptr;
+	auto otherPeterPepper = other->GetGameObject()->GetComponent<PeterPepper>();
 
 	if ((otherPeterPepper || otherBurgerPiece) && (!m_IsFalling && m_FallDelay <= 0.f))
 	{

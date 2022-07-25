@@ -1,4 +1,5 @@
-﻿#include "SpriteComponent.h"
+﻿#include "pch.h"
+#include "SpriteComponent.h"
 #include "RenderComponent.h"
 #include "Singletons/ResourceManager.h"
 #include "imgui.h"

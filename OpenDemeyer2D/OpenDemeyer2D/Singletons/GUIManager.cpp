@@ -1,3 +1,4 @@
+#include "pch.h"
 #ifdef _DEBUG
 
 #include "Singletons/GUIManager.h"
@@ -29,6 +30,9 @@
 #include "Components/RenderComponent.h"
 #include "Components/PhysicsComponent.h"
 #include "Components/Transform.h"
+
+#include "Allocators/NewDeleteOverride.h"
+#include "Allocators/SmallObjectAllocator.h"
 
 void GUIManager::Init(SDL_Window* window)
 {
@@ -662,6 +666,19 @@ void GUIManager::RenderImGuiEngineStats()
 	ImGui::Text("Application average %.3f ms/frame", 1000.f / ImGui::GetIO().Framerate);
 	ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 	ImGui::Text("Resolution: %.3i x %.1i", w, h);
+	ImGui::Text("SmallObjectAllocator");
+
+	auto& alloc = GetSmallObjectAllocator();
+	for (auto& pools : alloc.GetPools())
+	{
+		ImGui::Text("%zd", pools.front().GetElementSize());
+		for (auto& pool : pools)
+		{
+			char buff[32]{};
+			sprintf(buff, "%zd/%zd", pool.GetCurrentElementAmount(), pool.GetMaxElementAmount());
+			ImGui::ProgressBar(float(pool.GetCurrentElementAmount()) / float(pool.GetMaxElementAmount()), ImVec2(), buff);
+		}
+	}
 
 	ImGui::End();
 }

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "RenderComponent.h"
 
 #include "Transform.h"
@@ -135,7 +136,7 @@ void RenderComponent::RenderImGui()
 
 glm::vec2* RenderComponent::GetWorldRect(glm::vec2* vertices) const
 {
-	Transform* pTransform = GetObject()->GetTransform();
+	Transform* pTransform = GetGameObject()->GetTransform();
 
 	auto& pos = pTransform->GetWorldPosition();
 	auto& scale = pTransform->GetWorldScale();

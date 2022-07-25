@@ -1,6 +1,7 @@
 ﻿#include "Stage.h"
 
 #include "EngineFiles/GameObject.h"
+#include "EngineFiles/ComponentBase.h"
 #include "SDL.h"
 #include "Singletons/ResourceManager.h"
 #include "BurgerPiece.h"
@@ -331,7 +332,7 @@ void Stage::Initialize()
 {
 	LoadStageTexture();
 
-	if (auto renderComp{ GetObject()->GetRenderComponent() }) {
+	if (auto renderComp{ GetGameObject()->GetRenderComponent() }) {
 		renderComp->SetTexture(m_StageTexture);
 		renderComp->SetRenderAlignMode(eRenderAlignMode::bottomLeft);
 	}
@@ -414,7 +415,7 @@ void Stage::UpdateStageTexture(const std::shared_ptr<Texture2D>& texture)
 {
 	m_StageTexture = texture;
 
-	if (auto renderComp{ GetObject()->GetRenderComponent() }) {
+	if (auto renderComp{ GetGameObject()->GetRenderComponent() }) {
 		renderComp->SetTexture(m_StageTexture);
 		renderComp->SetRenderAlignMode(eRenderAlignMode::bottomLeft);
 	}

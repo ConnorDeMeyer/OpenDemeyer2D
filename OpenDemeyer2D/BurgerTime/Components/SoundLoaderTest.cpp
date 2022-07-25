@@ -2,6 +2,7 @@
 #include "Singletons/ResourceManager.h"
 #include <imgui.h>
 #include <chrono>
+#include "EngineFiles/ComponentBase.h"
 
 using namespace std::chrono_literals;
 

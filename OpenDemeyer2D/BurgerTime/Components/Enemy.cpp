@@ -5,6 +5,7 @@
 #include "Components/SpriteComponent.h"
 #include "Components/Transform.h"
 #include "Components/PhysicsComponent.h"
+#include "EngineFiles/ComponentBase.h"
 #include "PeterPepper.h"
 #include "BurgerPiece.h"
 #include "Score.h"
@@ -171,10 +172,10 @@ void Enemy::Update(float dt)
 	if (m_IsFalling)
 	{
 		GetTransform()->Move({ 0,-48.f * dt });
-		auto pos = GetObject()->GetTransform()->GetLocalPosition();
+		auto pos = GetGameObject()->GetTransform()->GetLocalPosition();
 		if (pos.y <= m_RestLocation)
 		{
-			GetObject()->GetTransform()->SetPosition({ pos.x, m_RestLocation });
+			GetGameObject()->GetTransform()->SetPosition({ pos.x, m_RestLocation });
 			m_IsFalling = false;
 			if (auto stageMovement = m_pStageMovement.lock())
 			{
@@ -243,7 +244,7 @@ void Enemy::UpdateSprite()
 		{
 			sprite->SetFrameOffset(offset + 2);
 			sprite->SetTotalFrames(2);
-			GetObject()->GetTransform()->SetScale({ -1,1 });
+			GetGameObject()->GetTransform()->SetScale({ -1,1 });
 		}
 		else if (movement.x <= -0.05f)
 		{
@@ -267,7 +268,7 @@ void Enemy::UpdateSprite()
 void Enemy::OverlapWithPlayer(PhysicsComponent* other)
 {
 	if (!m_IsDying && !m_IsStunned)
-		if (auto peterPepper{ other->GetObject()->GetComponent<PeterPepper>() })
+		if (auto peterPepper{ other->GetGameObject()->GetComponent<PeterPepper>() })
 		{
 			peterPepper->LoseLife();
 		}
@@ -275,7 +276,7 @@ void Enemy::OverlapWithPlayer(PhysicsComponent* other)
 
 void Enemy::OverlapWithBurgerPiece(PhysicsComponent* other)
 {
-	if (auto parentObject{ other->GetObject()->GetParent() })
+	if (auto parentObject{ other->GetGameObject()->GetParent() })
 		if (auto burgerPiece{ parentObject->GetComponent<BurgerPiece>() })
 			if (burgerPiece->IsFalling() && !m_IsFalling)
 				Die();
@@ -321,13 +322,13 @@ void Enemy::Die()
 		switch (m_EnemyType)
 		{
 		case EnemyType::hotDog:
-			ScoreEventQueue::AddMessage(ScoreEvent::kill_hotDog, GetObject()->GetTransform()->GetWorldPosition());
+			ScoreEventQueue::AddMessage(ScoreEvent::kill_hotDog, GetGameObject()->GetTransform()->GetWorldPosition());
 			break;
 		case EnemyType::pickle:
-			ScoreEventQueue::AddMessage(ScoreEvent::kill_pickle, GetObject()->GetTransform()->GetWorldPosition());
+			ScoreEventQueue::AddMessage(ScoreEvent::kill_pickle, GetGameObject()->GetTransform()->GetWorldPosition());
 			break;
 		case EnemyType::egg:
-			ScoreEventQueue::AddMessage(ScoreEvent::kill_egg, GetObject()->GetTransform()->GetWorldPosition());
+			ScoreEventQueue::AddMessage(ScoreEvent::kill_egg, GetGameObject()->GetTransform()->GetWorldPosition());
 			break;
 		}
 	}
