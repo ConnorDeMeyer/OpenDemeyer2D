@@ -233,6 +233,7 @@
   <ItemGroup>
     <ClCompile Include="Allocators\NewDeleteOverride.cpp" />
     <ClCompile Include="Allocators\SmallObjectAllocator.cpp" />
+    <ClCompile Include="Allocators\StackAllocator.cpp" />
     <ClCompile Include="Components\PhysicsComponent.cpp" />
     <ClCompile Include="Components\InputComponent.cpp" />
     <ClCompile Include="Components\RenderComponent.cpp" />
@@ -292,6 +293,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Shaders\ShaderBase.cpp" />
+    <ClCompile Include="Shaders\ShapesShaders.cpp" />
     <ClCompile Include="Singletons\GUIManager.cpp" />
     <ClCompile Include="Singletons\InputManager.cpp" />
     <ClCompile Include="Singletons\OpenDemeyer2D.cpp" />
@@ -304,6 +306,7 @@
     <ClInclude Include="Allocators\NewDeleteOverride.h" />
     <ClInclude Include="Allocators\ObjectPoolAllocator.h" />
     <ClInclude Include="Allocators\SmallObjectAllocator.h" />
+    <ClInclude Include="Allocators\StackAllocator.h" />
     <ClInclude Include="Components\PhysicsComponent.h" />
     <ClInclude Include="Components\InputComponent.h" />
     <ClInclude Include="Components\RenderComponent.h" />
@@ -340,9 +343,13 @@
     <ClInclude Include="ResourceWrappers\Sound.h" />
     <ClInclude Include="ResourceWrappers\Surface2D.h" />
     <ClInclude Include="ResourceWrappers\Texture2D.h" />
+    <ClInclude Include="Shaders\GlArrayBuffer.h" />
+    <ClInclude Include="Shaders\GLVertexArrayObject.h" />
     <ClInclude Include="Shaders\ShaderBase.h" />
+    <ClInclude Include="Shaders\ShapesShaders.h" />
     <ClInclude Include="Singletons\GUIManager.h" />
     <ClInclude Include="Singletons\InputManager.h" />
+    <ClInclude Include="Singletons\ShaderManager.h" />
     <ClInclude Include="Singletons\OpenDemeyer2D.h" />
     <ClInclude Include="Singletons\RenderManager.h" />
     <ClInclude Include="Singletons\ResourceManager.h" />

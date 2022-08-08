@@ -1,4 +1,6 @@
 #include "pch.h"
+
+#include "Allocators/StackAllocator.h"
 #ifdef _DEBUG
 
 #include "Singletons/GUIManager.h"
@@ -668,6 +670,7 @@ void GUIManager::RenderImGuiEngineStats()
 	ImGui::Text("Resolution: %.3i x %.1i", w, h);
 	ImGui::Text("SmallObjectAllocator");
 
+	ImGui::BeginChild("SmallObjectAllocator", ImVec2(0, 200), true);
 	auto& alloc = GetSmallObjectAllocator();
 	for (auto& pools : alloc.GetPools())
 	{
@@ -677,6 +680,43 @@ void GUIManager::RenderImGuiEngineStats()
 			char buff[32]{};
 			sprintf(buff, "%zd/%zd", pool.GetCurrentElementAmount(), pool.GetMaxElementAmount());
 			ImGui::ProgressBar(float(pool.GetCurrentElementAmount()) / float(pool.GetMaxElementAmount()), ImVec2(), buff);
+		}
+	}
+	ImGui::EndChild();
+
+	//ImGui::Text("Small Object Allocator Stack Allocator");
+	//{
+	//	auto& StackAllocator = alloc.GetStackAllocator();
+	//	char buff[32]{};
+	//	sprintf(buff, "%zd/%zd", StackAllocator.GetStackHeight(), StackAllocator.GetStackSize());
+	//	ImGui::ProgressBar(float(StackAllocator.GetStackHeight()) / float(StackAllocator.GetStackSize()), ImVec2(), buff);
+	//	if (StackAllocator.GetStacks().size())
+	//	{
+	//		ImGui::BeginChild("stackAllocatorSmallObject");
+	//		for (auto& stack : StackAllocator.GetStacks())
+	//		{
+	//			sprintf(buff, "%zd/%zd", StackAllocator.GetStackHeight(), StackAllocator.GetStackSize());
+	//			ImGui::ProgressBar(float(stack.GetHeight()) / float(stack.GetStackSize()), ImVec2(), buff);
+	//		}
+	//		ImGui::EndChild();
+	//	}
+	//}
+
+	ImGui::Text("Frame Stack Allocator");
+	{
+		auto& StackAllocator = GetStackAllocator();
+		char buff[32]{};
+		sprintf(buff, "%zd/%zd", StackAllocator.GetStackHeight(), StackAllocator.GetStackSize());
+		ImGui::ProgressBar(float(StackAllocator.GetStackHeight()) / float(StackAllocator.GetStackSize()), ImVec2(), buff);
+		if (StackAllocator.GetStacks().size())
+		{
+			ImGui::BeginChild("stackAllocator");
+			for (auto& stack : StackAllocator.GetStacks())
+			{
+				sprintf(buff, "%zd/%zd", StackAllocator.GetStackHeight(), StackAllocator.GetStackSize());
+				ImGui::ProgressBar(float(stack.GetHeight()) / float(stack.GetStackSize()), ImVec2(), buff);
+			}
+			ImGui::EndChild();
 		}
 	}
 

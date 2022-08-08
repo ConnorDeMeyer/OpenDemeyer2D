@@ -1,12 +1,24 @@
 #include "pch.h"
 #include "SmallObjectAllocator.h"
 
+#include <numeric>
+
 // SmallObjectPool
 // SmallObjectPool
 // SmallObjectPool
 
 SmallObjectPool::SmallObjectPool(size_t dataSize, size_t elementAmount)
 	: m_Data{ malloc(dataSize * elementAmount) }
+	, m_Size{ dataSize * elementAmount }
+	, m_NextFreeSpace{ m_Data }
+	, m_FreeSpaces{ elementAmount }
+	, m_OccupiedPlaces(elementAmount, false)
+{
+	assert(m_Data);
+}
+
+SmallObjectPool::SmallObjectPool(size_t dataSize, size_t elementAmount, StackAllocator& allocator)
+	: m_Data{ allocator.allocate(dataSize * elementAmount) }
 	, m_Size{ dataSize * elementAmount }
 	, m_NextFreeSpace{ m_Data }
 	, m_FreeSpaces{ elementAmount }
@@ -209,7 +221,11 @@ void SmallObjectAllocator::initialize()
 {
 	for (size_t i{ 1 }; i <= MaxElementSize; ++i)
 	{
-		auto& pool = m_Pools[i - 1].emplace_back(i, InitialMaxSize / i);
+		size_t size = InitialMaxSize;
+		size *= i & 0b11 ? 1 : Multiple4Multiplier;
+		size *= i & 0b111 ? 1 : Multiple8Multiplier;
+		size /= i;
+		auto& pool = m_Pools[i - 1].emplace_back(i, size);
 		m_AddressLookUpSet.insert(AddressLookUp{ pool.data(), i, pool.end() });
 	}
 }

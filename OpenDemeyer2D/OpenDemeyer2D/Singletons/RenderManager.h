@@ -86,5 +86,8 @@ public:
 	static void RenderPolygon(const glm::vec2* points, size_t size, bool filled = false, SDL_Color* pColor = nullptr);
 	static void RenderEllipse(const glm::vec2& center, const glm::vec2& radii, bool filled = false, SDL_Color* pColor = nullptr);
 
+
+	void RenderCircle(const glm::vec2& pos, float radius, const glm::vec4& color);
+
 };
 

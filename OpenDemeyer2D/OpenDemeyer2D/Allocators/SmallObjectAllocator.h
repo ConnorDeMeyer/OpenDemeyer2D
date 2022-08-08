@@ -4,6 +4,7 @@
 #include <array>
 #include <set>
 #include <unordered_map>
+#include "StackAllocator.h"
 
 #include "Mallocator.h"
 
@@ -12,6 +13,7 @@ class SmallObjectPool final
 public:
 
 	SmallObjectPool(size_t dataSize, size_t elementAmount);
+	SmallObjectPool(size_t dataSize, size_t elementAmount, StackAllocator& allocator);
 	~SmallObjectPool();
 
 	SmallObjectPool(SmallObjectPool&& other) noexcept;
@@ -46,10 +48,40 @@ private:
 	std::vector<bool, Mallocator<bool>> m_OccupiedPlaces;
 };
 
+constexpr size_t CalculateTotalSize(size_t maxElementSize, size_t initialMaxSize, size_t x4, size_t x8)
+{
+	size_t total{};
+	for (size_t i{ 1 }; i <= maxElementSize; ++i)
+	{
+		size_t size = initialMaxSize;
+		size *= i & 0b11 ? 1 : x4;
+		size *= i & 0b111 ? 1 : x8;
+		size /= i;
+		total += size;
+	}
+	return total;
+}
+
 class SmallObjectAllocator final
 {
-	static const size_t InitialMaxSize{ 512 * 8 };
-	static const size_t MaxElementSize{ 256 };
+	static constexpr size_t MaxElementSize{ 256 };
+	static constexpr size_t InitialMaxSize{ 256 };
+	static constexpr size_t Multiple4Multiplier{ 4 };
+	static constexpr size_t Multiple8Multiplier{ 4 };
+	static constexpr size_t CalculateTotalSize()
+	{
+		size_t total{};
+		for (size_t i{ 1 }; i <= MaxElementSize; ++i)
+		{
+			size_t size = InitialMaxSize;
+			size *= i & 0b11 ? 1 : Multiple4Multiplier;
+			size *= i & 0b111 ? 1 : Multiple8Multiplier;
+			size /= i;
+			size *= i;
+			total += size;
+		}
+		return total;
+	}
 
 public:
 
@@ -75,11 +107,15 @@ public:
 
 	const auto& GetPools() const { return m_Pools; }
 
+	//const StackAllocator& GetStackAllocator() const { return m_StackAllocator; }
+
 private:
 
 	void initialize();
 
 private:
+
+	//StackAllocator m_StackAllocator{ CalculateTotalSize() };
 
 	std::array<std::vector<SmallObjectPool, Mallocator<SmallObjectPool>>, MaxElementSize> m_Pools;
 
@@ -98,6 +134,7 @@ private:
 	};
 
 	std::set<AddressLookUp, AddressLookUpComp, Mallocator<AddressLookUp>> m_AddressLookUpSet;
+
 
 #ifdef _DEBUG
 	std::unordered_map<size_t, size_t, std::hash<size_t>, std::equal_to<size_t>, Mallocator<std::pair<const size_t, size_t>>> m_MemoryAsserter;

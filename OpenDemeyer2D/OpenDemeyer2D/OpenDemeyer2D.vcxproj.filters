@@ -73,6 +73,8 @@
     <ClCompile Include="Allocators\SmallObjectAllocator.cpp" />
     <ClCompile Include="Allocators\NewDeleteOverride.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Allocators\StackAllocator.cpp" />
+    <ClCompile Include="Shaders\ShapesShaders.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\Transform.h">
@@ -154,5 +156,10 @@
     <ClInclude Include="Allocators\Mallocator.h" />
     <ClInclude Include="Allocators\NewDeleteOverride.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Allocators\StackAllocator.h" />
+    <ClInclude Include="Shaders\GlArrayBuffer.h" />
+    <ClInclude Include="Shaders\ShapesShaders.h" />
+    <ClInclude Include="Singletons\ShaderManager.h" />
+    <ClInclude Include="Shaders\GLVertexArrayObject.h" />
   </ItemGroup>
 </Project>

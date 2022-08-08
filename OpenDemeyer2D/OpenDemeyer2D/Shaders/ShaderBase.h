@@ -51,6 +51,8 @@ public:
 
 	void SetActive() const;
 
+	virtual void Draw() const = 0;
+
 	GLint GetUniformLocation(const char* name)							const;
 	GLint GetUniformLocation(const std::string& name)					const;
 
@@ -221,5 +223,30 @@ private:
 	ShaderBase& m_OriginalShader;
 
 	std::vector<std::unique_ptr<ShaderParameter>> m_Parameters;
+};
+
+/**
+ * Shader instance reference to be put inside of shader vertex data
+ * Will always have a size of 8 bytes.
+ */
+class ShaderInstanceRef final
+{
+public:
+
+	ShaderInstanceRef(ShaderInstance& instance)
+		: m_ShaderInstance(&instance)
+	{}
+
+	ShaderInstance* Get() { return m_ShaderInstance; }
+	const ShaderInstance* Get() const { return m_ShaderInstance; }
+
+private:
+	ShaderInstance* m_ShaderInstance;
+	
+#if (_WIN32 && !_WIN64) || (__x86_64__ && !__ppc64__)
+	uint32_t m_Filler{};
+#endif
 
 };
+
+static_assert(sizeof(ShaderInstanceRef) == 8);

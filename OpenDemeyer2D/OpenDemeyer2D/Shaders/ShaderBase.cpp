@@ -76,10 +76,44 @@ GLint ShaderBase::GetUniformLocation(const std::string& name) const
 	return GetUniformLocation(name.c_str());
 }
 
+void PrintShaderType(ShaderType type)
+{
+	switch (type)
+	{
+	case ShaderType::VertexShader:
+		std::cout << "VERTEXSHADER";
+		break;
+	case ShaderType::FragmentShader:
+		std::cout << "FRAGMENTSHADER";
+		break;
+	case ShaderType::GeometryShader:
+		std::cout << "GEOMETRYSHADER";
+		break;
+	case ShaderType::ComputeShader:
+		std::cout << "COMPUTESHADER";
+		break;
+	case ShaderType::TessControlShader:
+		std::cout << "TESSCONTROLSHADER";
+		break;
+	case ShaderType::TessEvaluationShader:
+		std::cout << "TESSEVALUATIONSHADER";
+		break;
+	}
+}
+
 GLint CompileShader(const char* code, ShaderType type)
 {
+	if (!code)
+		return 0;
+
+#if _DEBUG
 	GLint success{};
-	char infoLog[512]{};
+	char infoLog[4096]{};
+#else
+	GLint success{};
+	char infoLog[4]{};
+#endif
+
 
 	GLint shader = glCreateShader(GLenum(type));
 	glShaderSource(shader, 1, &code, nullptr);
@@ -88,8 +122,10 @@ GLint CompileShader(const char* code, ShaderType type)
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (!success)
 	{
-		glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		glGetShaderInfoLog(shader, 4096, nullptr, infoLog);
+		std::cout << "ERROR::SHADER::";
+		PrintShaderType(type);
+		std::cout << "::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
 	return shader;

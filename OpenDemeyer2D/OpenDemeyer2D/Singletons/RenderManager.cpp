@@ -12,6 +12,8 @@
 #include "EngineFiles/ComponentBase.h"
 
 #include "Singletons/GUIManager.h"
+#include "Singletons/ShaderManager.h"
+#include "Shaders/ShapesShaders.h"
 
 int GetOpenGLDriverIndex()
 {
@@ -344,5 +346,13 @@ void RenderManager::RenderEllipse(const glm::vec2& center, const glm::vec2& radi
 		}
 	}
 	glEnd();
+}
+
+void RenderManager::RenderCircle(const glm::vec2& /*pos*/, float /*radius*/, const glm::vec4& /*color*/)
+{
+	//auto& circleShader = SHADERS.GetShader<CircleShader>();
+	//
+	//circleShader.SetCircle(CircleShader::CircleData(pos, radius, color));
+	//circleShader.Draw();
 }
 
