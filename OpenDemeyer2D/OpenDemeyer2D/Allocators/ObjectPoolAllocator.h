@@ -68,6 +68,9 @@ public:
 
 		--m_FreeSpaces;
 
+		if (!m_FreeSpaces)
+			return returnValue;
+
 		while (true)
 		{
 			assert(pos < m_Size);
