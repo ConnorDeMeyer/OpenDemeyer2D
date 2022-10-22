@@ -43,6 +43,7 @@ public:
 
 private:
 
+	void FullScreenDockSpace();
 	void RenderImGuiGameWindow();
 
 	void RenderImGuiRenderInfo();
