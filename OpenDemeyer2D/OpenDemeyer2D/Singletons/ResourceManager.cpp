@@ -544,11 +544,27 @@ void ResourceManager::LoadFilePaths()
 	}
 }
 
+bool CheckPathBeginning(const std::filesystem::path& p0, const std::filesystem::path& p1)
+{
+	auto it0 = p0.begin();
+	auto it1 = p1.begin();
+
+	while (it0 != p0.end() && it1 != p1.end())
+	{
+		if (*it0 != *it1)
+			return false;
+
+		++it0;
+		++it1;
+	}
+	return true;
+}
+
 path ResourceManager::GetfinalPath(const path& inputPath)
 {
-	if (!inputPath.is_absolute() && (*inputPath.begin() != m_DataPath))
+	if (!inputPath.is_absolute() && !CheckPathBeginning(inputPath, m_DataPath))
 		return m_DataPath / inputPath;
-	
+
 	return inputPath;
 }
 
